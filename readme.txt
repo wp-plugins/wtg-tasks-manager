@@ -8,7 +8,7 @@ Requires at least: 3.8.0
 Tested up to: 4.0.0
 Stable tag: trunk
 
-Adaptable data import plugin for professionals. Pro edition used by Ryanair Ltd, Trevithick Society and many more.
+Task management with a plan - this plugin will grow to meet the needs of online business managed within WordPress.
 
 == Description ==
 
