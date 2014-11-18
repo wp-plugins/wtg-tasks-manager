@@ -43,7 +43,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function meta_box_array() {
-        global $c2p_settings;
+        global $tasksmanager_settings;
 
         // array of meta boxes + used to register dashboard widgets (id, title, callback, context, priority, callback arguments (array), dashboard widget (boolean) )   
         $this->meta_boxes_array = array(
@@ -64,7 +64,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         );
         
         // add meta boxes that have conditions i.e. a global switch
-        if( isset( $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] ) && $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] == 'enabled' ) {
+        if( isset( $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] ) && $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] == 'enabled' ) {
             $this->meta_boxes_array[] = array( 'main-dashboardwidgetsettings', __( 'Dashboard Widget Settings', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'dashboardwidgetsettings' ), true, 'activate_plugins' );   
         }
         
@@ -80,10 +80,10 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
      * @param array $data Data for this view
      */
     public function setup( $action, array $data ) {
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         // create constant for view name
-        if(!defined( "WTG_WTGTASKSMANAGER_VIEWNAME") ){define( "WTG_WTGTASKSMANAGER_VIEWNAME", $this->view_name );}
+        if(!defined( "WTGTASKSMANAGER_VIEWNAME") ){define( "WTGTASKSMANAGER_VIEWNAME", $this->view_name );}
         
         // create class objects
         $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' );
@@ -175,7 +175,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'These switches disable or enable systems. Disabling systems you do not require will improve the plugins performance.', 'wtgtasksmanager' ), false );        
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         
-        global $c2p_settings;
+        global $tasksmanager_settings;
         ?>  
 
             <table class="form-table">
@@ -200,7 +200,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Basic list of projects, this is to improve.', 'wtgtasksmanager' ), false );        
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         
-        global $c2p_settings;
+        global $tasksmanager_settings;
         ?>  
 
             <table class="form-table">
@@ -239,14 +239,14 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'These switches disable or enable systems. Disabling systems you do not require will improve the plugins performance.', 'wtgtasksmanager' ), false );        
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         
-        global $c2p_settings;
+        global $tasksmanager_settings;
         ?>  
 
             <table class="form-table">
             <?php        
-            $this->UI->option_switch( __( 'Wordpress Notice Styles', 'wtgtasksmanager' ), 'uinoticestyle', 'uinoticestyle', $c2p_settings['noticesettings']['wpcorestyle'] );
-            $this->UI->option_switch( __( 'WTG Flag System', 'wtgtasksmanager' ), 'flagsystemstatus', 'flagsystemstatus', $c2p_settings['flagsystem']['status'] );
-            $this->UI->option_switch( __( 'Dashboard Widgets Switch', 'wtgtasksmanager' ), 'dashboardwidgetsswitch', 'dashboardwidgetsswitch', $c2p_settings['widgetsettings']['dashboardwidgetsswitch'], 'Enabled', 'Disabled', 'disabled' );      
+            $this->UI->option_switch( __( 'Wordpress Notice Styles', 'wtgtasksmanager' ), 'uinoticestyle', 'uinoticestyle', $tasksmanager_settings['noticesettings']['wpcorestyle'] );
+            $this->UI->option_switch( __( 'WTG Flag System', 'wtgtasksmanager' ), 'flagsystemstatus', 'flagsystemstatus', $tasksmanager_settings['flagsystem']['status'] );
+            $this->UI->option_switch( __( 'Dashboard Widgets Switch', 'wtgtasksmanager' ), 'dashboardwidgetsswitch', 'dashboardwidgetsswitch', $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'], 'Enabled', 'Disabled', 'disabled' );      
             ?>
             </table> 
             
@@ -266,7 +266,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'The plugin has its own log system with multi-purpose use. Not everything is logged for the sake of performance so please request increased log use if required.', 'wtgtasksmanager' ), false );        
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title']);
         
-        global $c2p_settings;
+        global $tasksmanager_settings;
         ?>  
 
             <table class="form-table">
@@ -276,14 +276,14 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                     <td>
                         <?php 
                         // if is not set ['admintriggers']['newcsvfiles']['status'] then it is enabled by default
-                        if(!isset( $c2p_settings['globalsettings']['uselog'] ) ){
+                        if(!isset( $tasksmanager_settings['globalsettings']['uselog'] ) ){
                             $radio1_uselog_enabled = 'checked'; 
                             $radio2_uselog_disabled = '';                    
                         }else{
-                            if( $c2p_settings['globalsettings']['uselog'] == 1){
+                            if( $tasksmanager_settings['globalsettings']['uselog'] == 1){
                                 $radio1_uselog_enabled = 'checked'; 
                                 $radio2_uselog_disabled = '';    
-                            }elseif( $c2p_settings['globalsettings']['uselog'] == 0){
+                            }elseif( $tasksmanager_settings['globalsettings']['uselog'] == 0){
                                 $radio1_uselog_enabled = ''; 
                                 $radio2_uselog_disabled = 'checked';    
                             }
@@ -301,30 +301,30 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
       
                 <?php       
                 // log rows limit
-                if(!isset( $c2p_settings['globalsettings']['loglimit'] ) || !is_numeric( $c2p_settings['globalsettings']['loglimit'] ) ){$c2p_settings['globalsettings']['loglimit'] = 1000;}
-                $this->UI->option_text( 'Log Entries Limit', 'wtgtasksmanager_loglimit', 'loglimit', $c2p_settings['globalsettings']['loglimit'] );
+                if(!isset( $tasksmanager_settings['globalsettings']['loglimit'] ) || !is_numeric( $tasksmanager_settings['globalsettings']['loglimit'] ) ){$tasksmanager_settings['globalsettings']['loglimit'] = 1000;}
+                $this->UI->option_text( 'Log Entries Limit', 'wtgtasksmanager_loglimit', 'loglimit', $tasksmanager_settings['globalsettings']['loglimit'] );
                 ?>
             </table> 
             
                     
             <h4>Outcomes</h4>
-            <label for="wtgtasksmanager_log_outcomes_success"><input type="checkbox" name="wtgtasksmanager_log_outcome[]" id="wtgtasksmanager_log_outcomes_success" value="1" <?php if( isset( $c2p_settings['logsettings']['logscreen']['outcomecriteria']['1'] ) ){echo 'checked';} ?>> Success</label>
+            <label for="wtgtasksmanager_log_outcomes_success"><input type="checkbox" name="wtgtasksmanager_log_outcome[]" id="wtgtasksmanager_log_outcomes_success" value="1" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['outcomecriteria']['1'] ) ){echo 'checked';} ?>> Success</label>
             <br> 
-            <label for="wtgtasksmanager_log_outcomes_fail"><input type="checkbox" name="wtgtasksmanager_log_outcome[]" id="wtgtasksmanager_log_outcomes_fail" value="0" <?php if( isset( $c2p_settings['logsettings']['logscreen']['outcomecriteria']['0'] ) ){echo 'checked';} ?>> Fail/Rejected</label>
+            <label for="wtgtasksmanager_log_outcomes_fail"><input type="checkbox" name="wtgtasksmanager_log_outcome[]" id="wtgtasksmanager_log_outcomes_fail" value="0" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['outcomecriteria']['0'] ) ){echo 'checked';} ?>> Fail/Rejected</label>
 
             <h4>Type</h4>
-            <label for="wtgtasksmanager_log_type_general"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_general" value="general" <?php if( isset( $c2p_settings['logsettings']['logscreen']['typecriteria']['general'] ) ){echo 'checked';} ?>> General</label>
+            <label for="wtgtasksmanager_log_type_general"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_general" value="general" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['typecriteria']['general'] ) ){echo 'checked';} ?>> General</label>
             <br>
-            <label for="wtgtasksmanager_log_type_error"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_error" value="error" <?php if( isset( $c2p_settings['logsettings']['logscreen']['typecriteria']['error'] ) ){echo 'checked';} ?>> Errors</label>
+            <label for="wtgtasksmanager_log_type_error"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_error" value="error" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['typecriteria']['error'] ) ){echo 'checked';} ?>> Errors</label>
             <br>
-            <label for="wtgtasksmanager_log_type_trace"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_trace" value="flag" <?php if( isset( $c2p_settings['logsettings']['logscreen']['typecriteria']['flag'] ) ){echo 'checked';} ?>> Trace</label>
+            <label for="wtgtasksmanager_log_type_trace"><input type="checkbox" name="wtgtasksmanager_log_type[]" id="wtgtasksmanager_log_type_trace" value="flag" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['typecriteria']['flag'] ) ){echo 'checked';} ?>> Trace</label>
 
             <h4>Priority</h4>
-            <label for="wtgtasksmanager_log_priority_low"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_low" value="low" <?php if( isset( $c2p_settings['logsettings']['logscreen']['prioritycriteria']['low'] ) ){echo 'checked';} ?>> Low</label>
+            <label for="wtgtasksmanager_log_priority_low"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_low" value="low" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['prioritycriteria']['low'] ) ){echo 'checked';} ?>> Low</label>
             <br>
-            <label for="wtgtasksmanager_log_priority_normal"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_normal" value="normal" <?php if( isset( $c2p_settings['logsettings']['logscreen']['prioritycriteria']['normal'] ) ){echo 'checked';} ?>> Normal</label>
+            <label for="wtgtasksmanager_log_priority_normal"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_normal" value="normal" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['prioritycriteria']['normal'] ) ){echo 'checked';} ?>> Normal</label>
             <br>
-            <label for="wtgtasksmanager_log_priority_high"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_high" value="high" <?php if( isset( $c2p_settings['logsettings']['logscreen']['prioritycriteria']['high'] ) ){echo 'checked';} ?>> High</label>
+            <label for="wtgtasksmanager_log_priority_high"><input type="checkbox" name="wtgtasksmanager_log_priority[]" id="wtgtasksmanager_log_priority_high" value="high" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['prioritycriteria']['high'] ) ){echo 'checked';} ?>> High</label>
             
             <h1>Custom Search</h1>
             <p>This search criteria is not currently stored, it will be used on the submission of this form only.</p>
@@ -334,8 +334,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                 <option value="notselected">Do Not Apply</option>
                 <?php
                 $current = '';
-                if( isset( $c2p_settings['logsettings']['logscreen']['page'] ) && $c2p_settings['logsettings']['logscreen']['page'] != 'notselected' ){
-                    $current = $c2p_settings['logsettings']['logscreen']['page'];
+                if( isset( $tasksmanager_settings['logsettings']['logscreen']['page'] ) && $tasksmanager_settings['logsettings']['logscreen']['page'] != 'notselected' ){
+                    $current = $tasksmanager_settings['logsettings']['logscreen']['page'];
                 } 
                 $this->UI->page_menuoptions( $current);?> 
             </select>
@@ -345,8 +345,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                 <option value="notselected">Do Not Apply</option>
                 <?php 
                 $current = '';
-                if( isset( $c2p_settings['logsettings']['logscreen']['action'] ) && $c2p_settings['logsettings']['logscreen']['action'] != 'notselected' ){
-                    $current = $c2p_settings['logsettings']['logscreen']['action'];
+                if( isset( $tasksmanager_settings['logsettings']['logscreen']['action'] ) && $tasksmanager_settings['logsettings']['logscreen']['action'] != 'notselected' ){
+                    $current = $tasksmanager_settings['logsettings']['logscreen']['action'];
                 }
                 $action_results = $this->Log->getactions( $current);
                 if( $action_results){
@@ -365,76 +365,76 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                 <option value="notselected">Do Not Apply</option>
                 <?php 
                 $current = '';
-                if( isset( $c2p_settings['logsettings']['logscreen']['screen'] ) && $c2p_settings['logsettings']['logscreen']['screen'] != 'notselected' ){
-                    $current = $c2p_settings['logsettings']['logscreen']['screen'];
+                if( isset( $tasksmanager_settings['logsettings']['logscreen']['screen'] ) && $tasksmanager_settings['logsettings']['logscreen']['screen'] != 'notselected' ){
+                    $current = $tasksmanager_settings['logsettings']['logscreen']['screen'];
                 }
                 $this->UI->screens_menuoptions( $current);?> 
             </select>
                   
             <h4>PHP Line</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_phpline" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['line'] ) ){echo $c2p_settings['logsettings']['logscreen']['line'];} ?>">
+            <input type="text" name="wtgtasksmanager_logcriteria_phpline" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['line'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['line'];} ?>">
             
             <h4>PHP File</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_phpfile" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['file'] ) ){echo $c2p_settings['logsettings']['logscreen']['file'];} ?>">
+            <input type="text" name="wtgtasksmanager_logcriteria_phpfile" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['file'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['file'];} ?>">
             
             <h4>PHP Function</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_phpfunction" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['function'] ) ){echo $c2p_settings['logsettings']['logscreen']['function'];} ?>">
+            <input type="text" name="wtgtasksmanager_logcriteria_phpfunction" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['function'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['function'];} ?>">
             
             <h4>Panel Name</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_panelname" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['panelname'] ) ){echo $c2p_settings['logsettings']['logscreen']['panelname'];} ?>">
+            <input type="text" name="wtgtasksmanager_logcriteria_panelname" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['panelname'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['panelname'];} ?>">
 
             <h4>IP Address</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_ipaddress" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['ipaddress'] ) ){echo $c2p_settings['logsettings']['logscreen']['ipaddress'];} ?>">
+            <input type="text" name="wtgtasksmanager_logcriteria_ipaddress" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['ipaddress'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['ipaddress'];} ?>">
            
             <h4>User ID</h4>
-            <input type="text" name="wtgtasksmanager_logcriteria_userid" value="<?php if( isset( $c2p_settings['logsettings']['logscreen']['userid'] ) ){echo $c2p_settings['logsettings']['logscreen']['userid'];} ?>">    
+            <input type="text" name="wtgtasksmanager_logcriteria_userid" value="<?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['userid'] ) ){echo $tasksmanager_settings['logsettings']['logscreen']['userid'];} ?>">    
           
             <h4>Display Fields</h4>                                                                                                                                        
-            <label for="wtgtasksmanager_logfields_outcome"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_outcome" value="outcome" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] ) ){echo 'checked';} ?>> <?php _e( 'Outcome', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_outcome"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_outcome" value="outcome" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] ) ){echo 'checked';} ?>> <?php _e( 'Outcome', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_line"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_line" value="line" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['line'] ) ){echo 'checked';} ?>> <?php _e( 'Line', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_line"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_line" value="line" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['line'] ) ){echo 'checked';} ?>> <?php _e( 'Line', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_file"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_file" value="file" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['file'] ) ){echo 'checked';} ?>> <?php _e( 'File', 'wtgtasksmanager' );?></label> 
+            <label for="wtgtasksmanager_logfields_file"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_file" value="file" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['file'] ) ){echo 'checked';} ?>> <?php _e( 'File', 'wtgtasksmanager' );?></label> 
             <br>
-            <label for="wtgtasksmanager_logfields_function"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_function" value="function" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['function'] ) ){echo 'checked';} ?>> <?php _e( 'Function', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_function"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_function" value="function" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['function'] ) ){echo 'checked';} ?>> <?php _e( 'Function', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_sqlresult"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlresult" value="sqlresult" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['sqlresult'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Result', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_sqlresult"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlresult" value="sqlresult" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['sqlresult'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Result', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_sqlquery"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlquery" value="sqlquery" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['sqlquery'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Query', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_sqlquery"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlquery" value="sqlquery" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['sqlquery'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Query', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_sqlerror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlerror" value="sqlerror" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['sqlerror'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Error', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_sqlerror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlerror" value="sqlerror" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['sqlerror'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Error', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_wordpresserror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'Wordpress Erro', 'wtgtasksmanager' );?>r</label>
+            <label for="wtgtasksmanager_logfields_wordpresserror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'Wordpress Erro', 'wtgtasksmanager' );?>r</label>
             <br>
-            <label for="wtgtasksmanager_logfields_screenshoturl"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_screenshoturl" value="screenshoturl" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['screenshoturl'] ) ){echo 'checked';} ?>> <?php _e( 'Screenshot URL', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_screenshoturl"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_screenshoturl" value="screenshoturl" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['screenshoturl'] ) ){echo 'checked';} ?>> <?php _e( 'Screenshot URL', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_userscomment"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_userscomment" value="userscomment" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['userscomment'] ) ){echo 'checked';} ?>> <?php _e( 'Users Comment', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_userscomment"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_userscomment" value="userscomment" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['userscomment'] ) ){echo 'checked';} ?>> <?php _e( 'Users Comment', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_page"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_page" value="page" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['page'] ) ){echo 'checked';} ?>> <?php _e( 'Page', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_page"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_page" value="page" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['page'] ) ){echo 'checked';} ?>> <?php _e( 'Page', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_version"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_version" value="version" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['version'] ) ){echo 'checked';} ?>> <?php _e( 'Plugin Version', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_version"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_version" value="version" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['version'] ) ){echo 'checked';} ?>> <?php _e( 'Plugin Version', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_panelname"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_panelname" value="panelname" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['panelname'] ) ){echo 'checked';} ?>> <?php _e( 'Panel Name', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_panelname"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_panelname" value="panelname" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['panelname'] ) ){echo 'checked';} ?>> <?php _e( 'Panel Name', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_tabscreenname"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_tabscreenname" value="tabscreenname" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] ) ){echo 'checked';} ?>> <?php _e( 'Screen Name *', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_tabscreenname"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_tabscreenname" value="tabscreenname" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] ) ){echo 'checked';} ?>> <?php _e( 'Screen Name *', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_dump"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_dump" value="dump" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['dump'] ) ){echo 'checked';} ?>> <?php _e( 'Dump', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_dump"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_dump" value="dump" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['dump'] ) ){echo 'checked';} ?>> <?php _e( 'Dump', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_ipaddress"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_ipaddress" value="ipaddress" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['ipaddress'] ) ){echo 'checked';} ?>> <?php _e( 'IP Address', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_ipaddress"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_ipaddress" value="ipaddress" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['ipaddress'] ) ){echo 'checked';} ?>> <?php _e( 'IP Address', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_userid"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_userid" value="userid" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['userid'] ) ){echo 'checked';} ?>> <?php _e( 'User ID', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_userid"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_userid" value="userid" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['userid'] ) ){echo 'checked';} ?>> <?php _e( 'User ID', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_comment"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_comment" value="comment" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['comment'] ) ){echo 'checked';} ?>> <?php _e( 'Developers Comment', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_comment"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_comment" value="comment" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['comment'] ) ){echo 'checked';} ?>> <?php _e( 'Developers Comment', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_type"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_type" value="type" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['type'] ) ){echo 'checked';} ?>> <?php _e( 'Entry Type', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_type"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_type" value="type" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['type'] ) ){echo 'checked';} ?>> <?php _e( 'Entry Type', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_category"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_category" value="category" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['category'] ) ){echo 'checked';} ?>> <?php _e( 'Category', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_category"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_category" value="category" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['category'] ) ){echo 'checked';} ?>> <?php _e( 'Category', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_action"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_action" value="action" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['action'] ) ){echo 'checked';} ?>> <?php _e( 'Action', 'wtgtasksmanager' );?></label>
+            <label for="wtgtasksmanager_logfields_action"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_action" value="action" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['action'] ) ){echo 'checked';} ?>> <?php _e( 'Action', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_priority"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_priority" value="priority" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['priority'] ) ){echo 'checked';} ?>> <?php _e( 'Priority', 'wtgtasksmanager' );?></label> 
+            <label for="wtgtasksmanager_logfields_priority"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_priority" value="priority" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['priority'] ) ){echo 'checked';} ?>> <?php _e( 'Priority', 'wtgtasksmanager' );?></label> 
             <br>
-            <label for="wtgtasksmanager_logfields_thetrigger"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_thetrigger" value="thetrigger" <?php if( isset( $c2p_settings['logsettings']['logscreen']['displayedcolumns']['thetrigger'] ) ){echo 'checked';} ?>> <?php _e( 'Trigger', 'wtgtasksmanager' );?></label> 
+            <label for="wtgtasksmanager_logfields_thetrigger"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_thetrigger" value="thetrigger" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['thetrigger'] ) ){echo 'checked';} ?>> <?php _e( 'Trigger', 'wtgtasksmanager' );?></label> 
 
     
         <?php 
@@ -464,7 +464,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         plugin author would like to hear from you regarding a specific feature. Occasionally these icons may take you to a discussion
         on other websites such as a Google circles, an official page on Facebook or a good forum thread on a users domain.' )?></p>
                           
-        <h3>Info Icon<img src="<?php echo WTG_WTGTASKSMANAGER_IMAGES_URL;?>info-icon.png" alt="<?php _e( 'Icon with an i click it to read more information in a popup.' );?>"></h3>
+        <h3>Info Icon<img src="<?php echo WTGTASKSMANAGER_IMAGES_URL;?>info-icon.png" alt="<?php _e( 'Icon with an i click it to read more information in a popup.' );?>"></h3>
         <p><?php _e( 'The information icon will not open another page. It will display a pop-up with extra information. This is mostly used within
         panels to explain forms and the status of the panel.' )?></p>        
         
@@ -579,7 +579,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function postbox_main_dashboardwidgetsettings( $data, $box ) { 
-        global $c2p_settings;
+        global $tasksmanager_settings;
            
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'This panel is new and is advanced.   
         Please seek my advice before using it.
@@ -609,8 +609,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
             
             // get dashboard activation status for the current page
             $current_for_page = '123nocurrentvalue';
-            if( isset( $c2p_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] ) ) {
-                $current_for_page = $c2p_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'];   
+            if( isset( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] ) ) {
+                $current_for_page = $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'];   
             }
             
             // display switch for current page
@@ -618,8 +618,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
             
             // get current pages minimum dashboard widget capability
             $current_capability = '123nocapability';
-            if( isset( $c2p_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {
-                $current_capability = $c2p_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'];   
+            if( isset( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {
+                $current_capability = $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'];   
             }
                             
             // capabilities menu for each page (rather than individual boxes, the boxes will have capabilities applied in code)

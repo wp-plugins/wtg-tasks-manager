@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 */
 class WTGTASKSMANAGER_Requests {  
     public function __construct() {
-        global $c2p_settings;
+        global $tasksmanager_settings;
     
         // create class objects
         $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' ); # plugin specific functions
@@ -163,51 +163,51 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */    
     public function logsettings() {
-        global $c2p_settings;
-        $c2p_settings['globalsettings']['uselog'] = $_POST['wtgtasksmanager_radiogroup_logstatus'];
-        $c2p_settings['globalsettings']['loglimit'] = $_POST['wtgtasksmanager_loglimit'];
+        global $tasksmanager_settings;
+        $tasksmanager_settings['globalsettings']['uselog'] = $_POST['wtgtasksmanager_radiogroup_logstatus'];
+        $tasksmanager_settings['globalsettings']['loglimit'] = $_POST['wtgtasksmanager_loglimit'];
                                                    
         ##################################################
         #           LOG SEARCH CRITERIA                  #
         ##################################################
         
         // first unset all criteria
-        if( isset( $c2p_settings['logsettings']['logscreen'] ) ){
-            unset( $c2p_settings['logsettings']['logscreen'] );
+        if( isset( $tasksmanager_settings['logsettings']['logscreen'] ) ){
+            unset( $tasksmanager_settings['logsettings']['logscreen'] );
         }
                                                            
         // if a column is set in the array, it indicates that it is to be displayed, we unset those not to be set, we dont set them to false
         if( isset( $_POST['wtgtasksmanager_logfields'] ) ){
             foreach( $_POST['wtgtasksmanager_logfields'] as $column){
-                $c2p_settings['logsettings']['logscreen']['displayedcolumns'][$column] = true;                   
+                $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns'][$column] = true;                   
             }
         }
                                                                                  
         // outcome criteria
         if( isset( $_POST['wtgtasksmanager_log_outcome'] ) ){    
             foreach( $_POST['wtgtasksmanager_log_outcome'] as $outcomecriteria){
-                $c2p_settings['logsettings']['logscreen']['outcomecriteria'][$outcomecriteria] = true;                   
+                $tasksmanager_settings['logsettings']['logscreen']['outcomecriteria'][$outcomecriteria] = true;                   
             }            
         } 
         
         // type criteria
         if( isset( $_POST['wtgtasksmanager_log_type'] ) ){
             foreach( $_POST['wtgtasksmanager_log_type'] as $typecriteria){
-                $c2p_settings['logsettings']['logscreen']['typecriteria'][$typecriteria] = true;                   
+                $tasksmanager_settings['logsettings']['logscreen']['typecriteria'][$typecriteria] = true;                   
             }            
         }         
 
         // category criteria
         if( isset( $_POST['wtgtasksmanager_log_category'] ) ){
             foreach( $_POST['wtgtasksmanager_log_category'] as $categorycriteria){
-                $c2p_settings['logsettings']['logscreen']['categorycriteria'][$categorycriteria] = true;                   
+                $tasksmanager_settings['logsettings']['logscreen']['categorycriteria'][$categorycriteria] = true;                   
             }            
         }         
 
         // priority criteria
         if( isset( $_POST['wtgtasksmanager_log_priority'] ) ){
             foreach( $_POST['wtgtasksmanager_log_priority'] as $prioritycriteria){
-                $c2p_settings['logsettings']['logscreen']['prioritycriteria'][$prioritycriteria] = true;                   
+                $tasksmanager_settings['logsettings']['logscreen']['prioritycriteria'][$prioritycriteria] = true;                   
             }            
         }         
 
@@ -216,42 +216,42 @@ class WTGTASKSMANAGER_Requests {
         ############################################################
         // page
         if( isset( $_POST['wtgtasksmanager_pluginpages_logsearch'] ) && $_POST['wtgtasksmanager_pluginpages_logsearch'] != 'notselected' ){
-            $c2p_settings['logsettings']['logscreen']['page'] = $_POST['wtgtasksmanager_pluginpages_logsearch'];
+            $tasksmanager_settings['logsettings']['logscreen']['page'] = $_POST['wtgtasksmanager_pluginpages_logsearch'];
         }   
         // action
         if( isset( $_POST['csv2pos_logactions_logsearch'] ) && $_POST['csv2pos_logactions_logsearch'] != 'notselected' ){
-            $c2p_settings['logsettings']['logscreen']['action'] = $_POST['csv2pos_logactions_logsearch'];
+            $tasksmanager_settings['logsettings']['logscreen']['action'] = $_POST['csv2pos_logactions_logsearch'];
         }   
         // screen
         if( isset( $_POST['wtgtasksmanager_pluginscreens_logsearch'] ) && $_POST['wtgtasksmanager_pluginscreens_logsearch'] != 'notselected' ){
-            $c2p_settings['logsettings']['logscreen']['screen'] = $_POST['wtgtasksmanager_pluginscreens_logsearch'];
+            $tasksmanager_settings['logsettings']['logscreen']['screen'] = $_POST['wtgtasksmanager_pluginscreens_logsearch'];
         }  
         // line
         if( isset( $_POST['wtgtasksmanager_logcriteria_phpline'] ) ){
-            $c2p_settings['logsettings']['logscreen']['line'] = $_POST['wtgtasksmanager_logcriteria_phpline'];
+            $tasksmanager_settings['logsettings']['logscreen']['line'] = $_POST['wtgtasksmanager_logcriteria_phpline'];
         }  
         // file
         if( isset( $_POST['wtgtasksmanager_logcriteria_phpfile'] ) ){
-            $c2p_settings['logsettings']['logscreen']['file'] = $_POST['wtgtasksmanager_logcriteria_phpfile'];
+            $tasksmanager_settings['logsettings']['logscreen']['file'] = $_POST['wtgtasksmanager_logcriteria_phpfile'];
         }          
         // function
         if( isset( $_POST['wtgtasksmanager_logcriteria_phpfunction'] ) ){
-            $c2p_settings['logsettings']['logscreen']['function'] = $_POST['wtgtasksmanager_logcriteria_phpfunction'];
+            $tasksmanager_settings['logsettings']['logscreen']['function'] = $_POST['wtgtasksmanager_logcriteria_phpfunction'];
         }
         // panel name
         if( isset( $_POST['wtgtasksmanager_logcriteria_panelname'] ) ){
-            $c2p_settings['logsettings']['logscreen']['panelname'] = $_POST['wtgtasksmanager_logcriteria_panelname'];
+            $tasksmanager_settings['logsettings']['logscreen']['panelname'] = $_POST['wtgtasksmanager_logcriteria_panelname'];
         }
         // IP address
         if( isset( $_POST['wtgtasksmanager_logcriteria_ipaddress'] ) ){
-            $c2p_settings['logsettings']['logscreen']['ipaddress'] = $_POST['wtgtasksmanager_logcriteria_ipaddress'];
+            $tasksmanager_settings['logsettings']['logscreen']['ipaddress'] = $_POST['wtgtasksmanager_logcriteria_ipaddress'];
         }
         // user id
         if( isset( $_POST['wtgtasksmanager_logcriteria_userid'] ) ){
-            $c2p_settings['logsettings']['logscreen']['userid'] = $_POST['wtgtasksmanager_logcriteria_userid'];
+            $tasksmanager_settings['logsettings']['logscreen']['userid'] = $_POST['wtgtasksmanager_logcriteria_userid'];
         }
         
-        $this->WTGTASKSMANAGER->update_settings( $c2p_settings );
+        $this->WTGTASKSMANAGER->update_settings( $tasksmanager_settings );
         $this->UI->n_postresult_depreciated( 'success', __( 'Log Settings Saved', 'wtgtasksmanager' ), __( 'It may take sometime for new log entries to be created depending on your websites activity.', 'wtgtasksmanager' ) );  
     }  
     
@@ -412,13 +412,13 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */          
     public function globalswitches() {
-        global $c2p_settings;
-        $c2p_settings['noticesettings']['wpcorestyle'] = $_POST['uinoticestyle'];        
-        $c2p_settings['standardsettings']['textspinrespinning'] = $_POST['textspinrespinning'];
-        $c2p_settings['standardsettings']['systematicpostupdating'] = $_POST['systematicpostupdating'];
-        $c2p_settings['flagsystem']['status'] = $_POST['flagsystemstatus'];
-        $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] = $_POST['dashboardwidgetsswitch'];
-        $this->WTGTASKSMANAGER->update_settings( $c2p_settings ); 
+        global $tasksmanager_settings;
+        $tasksmanager_settings['noticesettings']['wpcorestyle'] = $_POST['uinoticestyle'];        
+        $tasksmanager_settings['standardsettings']['textspinrespinning'] = $_POST['textspinrespinning'];
+        $tasksmanager_settings['standardsettings']['systematicpostupdating'] = $_POST['systematicpostupdating'];
+        $tasksmanager_settings['flagsystem']['status'] = $_POST['flagsystemstatus'];
+        $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] = $_POST['dashboardwidgetsswitch'];
+        $this->WTGTASKSMANAGER->update_settings( $tasksmanager_settings ); 
         $this->UI->create_notice( __( 'Global switches have been updated. These switches can initiate the use of 
         advanced systems. Please monitor your blog and ensure the plugin operates as you expected it to. If
         anything does not appear to work in the way you require please let WebTechGlobal know.' ),
@@ -468,7 +468,7 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */
     public function dashboardwidgetsettings() {
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         // loop through pages
         $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
@@ -476,16 +476,16 @@ class WTGTASKSMANAGER_Requests {
         foreach( $menu_array as $key => $section_array ) {
 
             if( isset( $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ] ) ) {
-                $c2p_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] = $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ];    
+                $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] = $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ];    
             }
             
             if( isset( $_POST[ $section_array['name'] . 'widgetscapability' ] ) ) {
-                $c2p_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] = $_POST[ $section_array['name'] . 'widgetscapability' ];    
+                $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] = $_POST[ $section_array['name'] . 'widgetscapability' ];    
             }
 
         }
 
-        $this->WTGTASKSMANAGER->update_settings( $c2p_settings );    
+        $this->WTGTASKSMANAGER->update_settings( $tasksmanager_settings );    
         $this->UI->create_notice( __( 'Your dashboard widget settings have been saved. Please check your dashboard to ensure it is configured as required per role.', 'wtgtasksmanager' ), 'success', 'Small', __( 'Settings Saved', 'wtgtasksmanager' ) );         
     }
     
@@ -650,483 +650,6 @@ class WTGTASKSMANAGER_Requests {
         $this->UI->create_notice( __( "The task with ID " . $_GET['task'] . " has been finished. You can find the task on the Finished screen.", 'wtgtasksmanager' ), 'success', 'Small', __( 'Task Finished', 'wtgtasksmanager' ) );                                                                    
     }
     
-    #################################################################
-    #                                                               #
-    #              BETA TESTING FUNCTIONS BEGIN HERE                #
-    #                                                               #
-    #################################################################
-    /**
-    * About
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function t1() {
-
-        $this->UI->create_notice( 'If you submitted a form on the dashboard, it must have been the one that calls
-        this notice which is just a test. Thank you for being a beta tester even if you did not signup for it!', 
-        'success', 'Small', __( 'Dashboard Test Worked', 'wtgtasksmanager' ) );
-
-    }
-    
-    /**
-    * Processes a beta test form
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function t4() {
-        
-        // we want to pass an array which determines our category set. 
-        // this is where the pre-set category would need to be set, I will run a test with pre-set and one without
-        $new_categories = array( 'Delete Me 1', 'Delete Me 2', 'Delete Me 3', 'Delete Me 4' );
-        
-        // run this without mapping to create a simplified version of the method
-        $WTGTASKSMANAGER_Categories = new WTGTASKSMANAGER_Categories();
-        $result = $WTGTASKSMANAGER_Categories->create_categories_set( $new_categories, false );
-
-        echo '<h4>Result (without Pre-Set parent or mapping)</h4>';
-        echo '<pre>';
-        var_dump( $result );
-        echo '</pre>'; 
-        
-               
-        // run again with pre-set category setting in use for the current project
-        // Delete Me 1 should be created as child of pre-set category
-        $new_categories = array( 'Delete Me 1', 'Delete Me 2', 'Delete Me 3', 'Delete Me 4' );
-        $preset_parent = 313;
-        $result = $WTGTASKSMANAGER_Categories->create_categories_set( $new_categories, $preset_parent );
-
-        echo '<h4>Result (with Pre-Set parent but no mapping)</h4>';
-        echo '<pre>';
-        var_dump( $result );
-        echo '</pre>'; 
-                                  
-   
-    }
-    
-    /**
-    * Processes a beta test form
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t1() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
-        
-        // perform sanitization
-        $url = sanitize_url( $_POST['newdatasourcetheurl'] );
-        
-        // ensure user is attempting to transfer a .csv file, this concludes validation
-        $path_parts = pathinfo( $url );
-        if( $path_parts['extension'] !== 'csv' ) {
-            $this->UI->create_notice( __( 'WTG Tasks Manager focuses on .csv files only. Please see the WebTechGlobal plugin
-            range for other solutions.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Only .csv Files Allowed', 'wtgtasksmanager' ) );
-            return false;
-        }
-          
-        $result = $WTGTASKSMANAGER_Files->file_from_url( $url, null, false );
-        
-        if( $result ) {
-            
-            $this->UI->create_notice( $result['message'], 'success', 'Small', __( 'File Imported', 'wtgtasksmanager' ) );
-               
-        } else {
-            
-            var_dump( $result );   
-             
-        }
-    }    
-    
-    /**
-    * About
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t2() {
-        global $wpdb, $c2p_settings;
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
-
-        if(empty( $_POST['newdatasourcetheurl'] ) ){
-            $this->UI->create_notice( __( 'Please enter the URL to your .csv file.', 'wtgtasksmanager' ), 'error', 'Small', __( 'URL Field Required', 'wtgtasksmanager' ) );
-            return;
-        }
-                            
-        // perform sanitization
-        $url = sanitize_url( $_POST['newdatasourcetheurl'] );
-        
-        // ensure user is attempting to transfer a .csv file
-        $path_parts = pathinfo( $url );
-        if( $path_parts['extension'] !== 'csv' ) {
-            $this->UI->create_notice( __( 'WTG Tasks Manager focuses on .csv files only. Please see the WebTechGlobal plugin
-            range for other solutions.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Only .csv Files Allowed', 'wtgtasksmanager' ) );
-            return false;
-        }
-        
-        // import file using URL to the giving path  
-        $file_import_result = $WTGTASKSMANAGER_Files->file_from_url( $url, null, false );       
-        if( !$file_import_result['outcome'] ) {             
-            $this->UI->create_notice( $file_import_result['failurereason'], 'error', 'Small', __( 'File Transfer Failed', 'wtgtasksmanager' ) );
-            return;    
-        } 
-        
-        // build array of information for this file (this can be customized to work with multiple files)
-        $files_array = array( 'total_files' => 1 );
-                
-        // add path for this file to $files_array which is then stored in data source table
-        $files_array[1]['fullpath'] = $file_import_result['file']['path'];
-            
-        // create success notice regarding file processing 
-        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Transferred', 'wtgtasksmanager' ) );   
-                
-        // establish separator
-        $files_array[1]['sep'] = $this->Files->established_separator( $file_import_result['file']['path'] );
-        
-        // we are ready to read the file
-        $file = new SplFileObject( $file_import_result['file']['path'] );
-        while (!$file->eof() ) {
-            $header_array = $file->fgetcsv( $files_array[1]['sep'], '"' );
-            break;// we just need the first line to do a count()
-        }       
-        
-        // count number of fields
-        $files_array[1]['fields'] = count( $header_array );
-        
-        // create arrays of original headers and one of sql prepared headers
-        foreach( $header_array as $key => $header ){  
-            $files_array[1]['originalheaders'][$key] = $header;
-            $files_array[1]['sqlheaders'][$key] = $this->PHP->clean_sqlcolumnname( $header );        
-        }    
-        
-        // set basename
-        $files_array[1]['basename'] = basename( $file_import_result['file']['path'] );            
-
-        // use basename to create database table name
-        $files_array[1]['tablename'] = $wpdb->prefix . $this->PHP->clean_sqlcolumnname( $files_array[1]['basename'] );
-        
-        // set data treatment, the form allows a single file so 'single' is applied
-        $files_array[1]['datatreatment'] = 'single';
-        
-        // ensure ID column is valid
-        $cleanedidcolumn = '';
-        if(!empty( $_POST['uniqueidcolumn'] ) ){
-            $cleanedidcolumn = $this->PHP->clean_sqlcolumnname( $_POST['uniqueidcolumn'] );
-            if(!in_array( $cleanedidcolumn, $files_array[1]['sqlheaders'] ) ){
-                $this->UI->create_notice( 'You entered '.$_POST['uniqueidcolumn'].' as your ID column but it
-                does not match any column header in your .csv file.', 'error', 'Small', __( "Invalid ID Column") );
-                return;
-            }
-        } 
-        
-        // set project name
-        if( empty( $_POST['newprojectname'] ) ){
-            $files_array['projectname'] = basename( $files_array[1]['fullpath'] );
-        }else{
-            $files_array['projectname'] = $_POST['newprojectname'];
-        }
-        
-        // does planned database table name exist                       
-        $table_exists_result = $this->DB->does_table_exist( $files_array[1]['tablename'] );
-        if( $table_exists_result){
-            // drop table if user entered the random number
-            if( $_POST['deleteexistingtable'] ==  $_POST['deleteexistingtablecode'] ){   
-                $this->DB->drop_table( $files_array[1]['tablename'] );           
-            }else{                
-                $this->UI->create_notice( 'A database table already exists named ' . $files_array[1]['tablename'] . '. Please delete
-                the existing table if it is not in use or change the name of your .csv file a little.', 'error', 'Small', 'Table Exists Already' );
-                return;  
-            } 
-        }
-        
-        // make entry in the c2psources table
-        $files_array[1]['sourceid'] = $this->WTGTASKSMANAGER->insert_data_source( $file_import_result['file']['path'], 0, $files_array[1]['tablename'], 'localcsv', $files_array[1], $cleanedidcolumn );
-        
-        // create database table for importing data into, this is where we prepare it 
-        $sqlheaders_array = array();
-        foreach( $files_array[1]['sqlheaders'] as $key => $header ){
-            $sqlheaders_array[$header] = 'nodetails';
-        }
-
-        $this->WTGTASKSMANAGER->create_project_table( $files_array[1]['tablename'], $sqlheaders_array ); 
-        self::a_table_was_created( $files_array[1]['tablename'] );                                                              
-                    
-        $this->UI->create_notice( __( 'Your new source of data has been setup. You can now create a project using this source. The source ID is ' . $files_array[1]['sourceid'], 'wtgtasksmanager' ), 'success', 'Small', __( 'Data Source Ready' ) );  
-    }
-    
-    /**
-    * Beta test - tests single file uploader
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t4() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );    
-        
-        $file_import_result = $WTGTASKSMANAGER_Files->singlefile_uploader( $_FILES['newsourcefileupload'] );
-        
-        // let the user know it has all gone very wrong and they are DOOMED! 
-        if( !$file_import_result['outcome'] ) {             
-            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'wtgtasksmanager' ) );
-            return;    
-        }
-        
-        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Uploaded', 'wtgtasksmanager' ) );
-
-    }  
-      
-    /**
-    * Beta test - tests single file uploader
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t5() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );    
-        
-        $file_import_result = $WTGTASKSMANAGER_Files->singlefile_uploader( $_FILES['uploadsinglefile'], array( 'path' => stripslashes( $_POST['uploadsinglefilepath'] ), 'error' => false ) );
-                               
-        // let the user know it has all gone very wrong and they are DOOMED! 
-        if( !$file_import_result['outcome'] ) {             
-            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'wtgtasksmanager' ) );
-            return;    
-        }
-        
-        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Uploaded', 'wtgtasksmanager' ) );
-
-    }
-
-    /**
-    * Beta test - tests single file uploader
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t6() {    
-        $this->UI->create_notice( 'Your project has been created and the ID is ' . $projectid . '. The default project name is ' . $project_name . ' which you can change using project settings.', 'success', 'Small', __( 'Project Created' ) );                    
-    }     
-    
-    /**
-    * About
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t18() {
-    
-        $recheck_outcome_array =  $this->WTGTASKSMANAGER->recheck_source_directory( $_POST['datasourceidforrecheck'], true, true, false, false );
-    
-        var_dump( $recheck_outcome_array );
-    }
-    
-    /**
-    * Processes a beta test form
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t19() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
-        
-        // perform sanitization
-        $url = sanitize_url( $_POST['newdatasourcetheurl'] );
-        $path = sanitize_text_field( $_POST['newdatasourcethepath'] );
-                        
-        // we cannot continue if santization results in a different path
-        if( $url !== $_POST['newdatasourcetheurl'] ) {
-            $this->UI->create_notice( __( 'Sanitization resulted in a change to your URL. This would only happen if you entered invalid characters. Please try again.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Invalid URL Entered', 'wtgtasksmanager' ) );
-            return false;            
-        }
-        if( $path !== $_POST['newdatasourcethepath'] ) {
-            $this->UI->create_notice( __( 'Sanitization of your path resulted in a change. This means your entered path has invalid characters. Please try agsin.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Invalid Path Entered', 'wtgtasksmanager' ) );
-            return false;            
-        }
-        
-        // ensure user is attempting to transfer a .csv file, this concludes validation
-        $path_parts = pathinfo( $url );
-        if( $path_parts['extension'] !== 'csv' ) {
-            $this->UI->create_notice( __( 'WTG Tasks Manager focuses on .csv files only. Please see the WebTechGlobal plugin
-            range for other solutions.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Only .csv Files Allowed', 'wtgtasksmanager' ) );
-            return false;
-        }
-        
-        $uploads = array( 'path' => $path, 
-                          'url' => $url, 
-                          'subdir' => '',// use to create a new directory
-                          'error' => false 
-        );
-          
-        $result = $WTGTASKSMANAGER_Files->file_from_url( $url, $uploads, false );
-        
-        if( $result ) {
-            
-            $this->UI->create_notice( $result['message'], 'success', 'Small', __( 'File Imported', 'wtgtasksmanager' ) );
-               
-        } else {
-            
-            $this->UI->create_notice( 'Test Success', 'success', 'Small', __( 'Test Success', 'wtgtasksmanager' ) );  
-             
-        }
-    }  
-    
-    /**
-    * Processes a beta test form
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t20() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
-        
-        // perform sanitization
-        $url = sanitize_url( $_POST['newdatasourcetheurl'] );
-
-        // we cannot continue if santization results in a different path
-        if( $url !== $_POST['newdatasourcetheurl'] ) {
-            $this->UI->create_notice( __( 'Sanitization resulted in a change to your URL. This would only happen if you entered invalid characters. Please try again.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Invalid URL Entered', 'wtgtasksmanager' ) );
-            return false;            
-        }
-        
-        // ensure user is attempting to transfer a .csv file, this concludes validation
-        $path_parts = pathinfo( $url );
-        if( $path_parts['extension'] !== 'csv' ) {
-            $this->UI->create_notice( __( 'WTG Tasks Manager focuses on .csv files only. Please see the WebTechGlobal plugin
-            range for other solutions.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Only .csv Files Allowed', 'wtgtasksmanager' ) );
-            return false;
-        }
-        
-        // get data source - directory value only
-        $source_array = $this->WTGTASKSMANAGER->get_source( $_POST['newprojectdatasource'] );
-        if( !$source_array ) {
-            $this->UI->create_notice( __( 'Problem obtaining source data. Please seek support from WebTechGlobl.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Source Query Faileda', 'wtgtasksmanager' ) );
-            return false;
-        }
-                   
-        $uploads = array( 'path' => $source_array->directory, 
-                          'url' => $url, 
-                          'subdir' => '',// use to create a new directory
-                          'error' => false 
-        );
-          
-        $result = $WTGTASKSMANAGER_Files->file_from_url( $url, $uploads, false );
-        
-        if( $result['outcome'] === true ) {
-            
-            $this->UI->create_notice( $result['message'], 'success', 'Small', __( 'File Imported', 'wtgtasksmanager' ) );
-               
-        } else {
-            
-            $this->UI->create_notice( 'Test Success', 'success', 'Small', __( 'Test Success', 'wtgtasksmanager' ) );   
-             
-        }
-    }  
-    
-    /**
-    * Beta test - tests single file uploader
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function betatest4t21() {    
-        $WTGTASKSMANAGER_Files = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );    
-        
-        // get data source - directory value only
-        $source_array = $this->WTGTASKSMANAGER->get_source( $_POST['datasourcefornewfile'] );
-        if( !$source_array ) {
-            $this->UI->create_notice( __( 'Problem obtaining source data. Please seek support from WebTechGlobl.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Source Query Faileda', 'wtgtasksmanager' ) );
-            return false;
-        }
-                   
-        $uploads = array( 'path' => $source_array->directory, 
-                          'subdir' => '',// use to create a new directory
-                          'error' => false 
-        ); 
-                
-        $file_import_result = $WTGTASKSMANAGER_Files->singlefile_uploader( $_FILES['uploadsinglefile'], $uploads );
-                               
-        // let the user know it has all gone very wrong and they are DOOMED! 
-        if( !$file_import_result['outcome'] ) {             
-            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'wtgtasksmanager' ) );
-            return;    
-        }
- 
-        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Uploaded', 'wtgtasksmanager' ) );
-    }
-    
-    /**
-    * Add new CRON job to WP.
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function newcronrepeatevent() {
-    
-        // process date   
-        $aa = $_POST['aa'];
-        $mm = $_POST['mm'];// month
-        $jj = $_POST['jj'];
-        $hh = $_POST['hh'];// hour
-        $mn = $_POST['mn'];// minute
-        $ss = 1;
-        $aa = ($aa <= 0 ) ? date('Y') : $aa;
-        $mm = ($mm <= 0 ) ? date('n') : $mm;
-        $jj = ($jj > 31 ) ? 31 : $jj;
-        $jj = ($jj <= 0 ) ? date('j') : $jj;
-        $hh = ($hh > 23 ) ? $hh -24 : $hh;
-        $mn = ($mn > 59 ) ? $mn -60 : $mn;
-        $ss = ($ss > 59 ) ? $ss -60 : $ss;
-        $new_date = sprintf( "%04d-%02d-%02d %02d:%02d:%02d", $aa, $mm, $jj, $hh, $mn, $ss );
-
-        $valid_date = wp_checkdate( $mm, $jj, $aa, $new_date );
-        if ( !$valid_date ) {
-            return new WP_Error( 'invalid_date', __( 'Looks like the provided date is invalid please try again then report this problem to WebTechGlobal.', 'wtgtasksmanager' ) );
-        }
-
-        $time = strtotime ( $new_date, time() );
-
-        // schedule the event
-        wp_schedule_event( $time, $_POST['newcronfrequency'], $_POST['newcronhook'] );
-        
-        $this->UI->create_notice( __( 'Your event has been schedule using the WP CRON system.', 'wtgtasksmanager'), 'success', 'Small', __( 'Schedule Updated', 'wtgtasksmanager' ) );    
-    }
-    
-    /**
-    * About
-    * 
-    * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function unscheduleeventbyhook() {
-        wp_clear_scheduled_hook( $_POST['cronhook2'] );
-        $this->UI->create_notice( __( 'All of the WP CRON schedule events for "' . $_POST['cronhook2'] . '" have been cancelled.', 'wtgtasksmanager'), 'success', 'Small', __( 'Schedule Updated', 'wtgtasksmanager' ) );           
-    }
-    
     /**
     * Creates a standard task
     * 
@@ -1136,77 +659,20 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */
     public function advanced() {
+        
         // set required tasks
         $required = 0;
         if( isset( $_POST['required'] ) && $_POST['required'] ) {
             $required = $_POST['required'];    
         }
         
-        $new_task_id = $this->WTGTASKSMANAGER->tasknew( $_POST['taskname'], $_POST['taskdescription'], get_current_user_id(), $_POST['projectid'], $_POST['priority'], $required );
-        $this->UI->create_notice( sprintf( __( 'Your new tasks ID is %s and you assigned it to project with ID %s.', 'wtgtasksmanager'), $new_task_id, $_POST['projectid'] ), 'success', 'Small', __( 'Schedule Updated', 'wtgtasksmanager' ) );              
-    }
-    
-    #################################################################
-    #                                                               #
-    #         BETA TESTING FUNCTIONS FOR FORM BUILDER CLASS         #
-    #                                                               #
-    #################################################################
-    public function alpha() {
-    
-    }
-    public function alphanumeric() {
-    
-    }
-    public function numeric() {
-    
-    }
-    public function unsettest() {
-    
-    }
-    public function urlstringtest () {
-        echo 'URL Processing Reached';
-    }
-    public function disabledhacked() {
-            echo 'Disabled Hacked Processing Reached';
-    }
-    public function menuhacked() {
-    
-    }
-    public function capability() {
-    
-    }
-    public function logrequest() {
-    
-    }
-    public function hiddenvaluehacked() {
-    
-    }
-    public function required() {
-    
-    }
-    public function maximumlength() {
-    
-    }    
-    public function minimumlength() {
-    
-    }
-    public function specificpattern() {
-    
-    }
-    public function maximumcheckboxes() {
-    
-    }
-    public function minimumcheckboxes() {
-    
-    }
-    public function checkboxesspecifictotal() {
-    
-    }
-    public function radiohacked() {
-    
-    }
-    public function autocomplete() {
-    
+        if( !isset( $_POST['projectid'] ) || !is_numeric( $_POST['projectid'] ) ) {
+            $this->UI->create_notice( __( 'You can create a new project on the main screen. Then you must select it when creating a task.', 'wtgtasksmanager'), 'error', 'Small', __( 'Project Required', 'wtgtasksmanager' ) );                  
+            return false;
+        }
+          
+        $new_task_id = $this->WTGTASKSMANAGER->tasknew( $_POST['taskname'], $_POST['taskdescription'], get_current_user_id(), $_POST['projectid'], $_POST['priority'], $required, $_POST['freelanceroffer'], $_POST['requiredcapability'] );
+        $this->UI->create_notice( sprintf( __( 'Your new tasks ID is %s and you assigned it to project with ID %s.', 'wtgtasksmanager'), $new_task_id, $_POST['projectid'] ), 'success', 'Small', __( 'Task Created', 'wtgtasksmanager' ) );              
     }
          
 }// WTGTASKSMANAGER_Requests       

@@ -59,10 +59,10 @@ class WTGTASKSMANAGER_Statistics_View extends WTGTASKSMANAGER_View {
      * @param array $data Data for this view
      */
     public function setup( $action, array $data ) {
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         // create constant for view name
-        if(!defined( "WTG_WTGTASKSMANAGER_VIEWNAME") ){define( "WTG_WTGTASKSMANAGER_VIEWNAME", $this->view_name );}
+        if(!defined( "WTGTASKSMANAGER_VIEWNAME") ){define( "WTGTASKSMANAGER_VIEWNAME", $this->view_name );}
         
         // create class objects
         $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' );

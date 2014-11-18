@@ -36,10 +36,10 @@ class WTGTASKSMANAGER_Install {
         $this->PHP = new WTGTASKSMANAGER_PHP();
                 
         // on activation run install_plugin() method which then runs more methods i.e. create_tables();
-        register_activation_hook( WTG_WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php', array( $this, 'install_plugin' ) ); 
+        register_activation_hook( WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php', array( $this, 'install_plugin' ) ); 
 
         // on deactivation run disabled_plugin() - not a full uninstall
-        register_deactivation_hook( WTG_WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php',  array( $this, 'deactivate_plugin' ) );
+        register_deactivation_hook( WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php',  array( $this, 'deactivate_plugin' ) );
         
         // register webtechglobal_log table
         add_action( 'init', array( $this, 'register_webtechglobal_log_table' ) );
@@ -130,7 +130,7 @@ class WTGTASKSMANAGER_Install {
     public function reinstalldatabasetables() {
         global $wpdb;
         
-        require_once( WTG_WTGTASKSMANAGER_ABSPATH . 'arrays/tableschema_array.php' );
+        require_once( WTGTASKSMANAGER_ABSPATH . 'arrays/tableschema_array.php' );
         
         if(is_array( $c2p_tables_array ) ){
             foreach( $c2p_tables_array['tables'] as $key => $table){
@@ -149,7 +149,7 @@ class WTGTASKSMANAGER_Install {
         update_option( 'wtgtasksmanager_installeddate',time() );# update the installed date, this includes the installed date of new versions
         
         // schedule settings
-        require( WTG_WTGTASKSMANAGER_ABSPATH . 'arrays/schedule_array.php' );        
+        require( WTGTASKSMANAGER_ABSPATH . 'arrays/schedule_array.php' );        
         add_option( 'wtgtasksmanager_schedule', serialize( $c2p_schedule_array ) );
 
         // notifications array (persistent notice feature)

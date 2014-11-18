@@ -40,10 +40,10 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @version 1.0
     */
     public function add_dashboard_widgets() {
-        global $c2p_settings;
+        global $tasksmanager_settings;
                      
         // if dashboard widgets switch not enabled or does not exist return now and avoid registering widgets
-        if( !isset( $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] ) || $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] !== 'enabled' ) {
+        if( !isset( $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] ) || $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] !== 'enabled' ) {
             return;    
         }
                 
@@ -70,24 +70,24 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         foreach( $menu_array as $key => $section_array ) {
             
             // has the current view been activated for dashboard widgets, if not continue to the next view
-            if( !isset( $c2p_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] ) ) {       
+            if( !isset( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] ) ) {       
                 continue;    
-            } elseif( $c2p_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] !== 'enabled' ) {    
+            } elseif( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] !== 'enabled' ) {    
                 continue;    
             }
             
             // does current user have the wp capability (permission) to access any forms on the current admin page? 
             // this is not per page/view capability checking which is for accessing the view itself, this only applies to
             // the group of meta boxes on THIS current page
-            if( !isset( $c2p_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {      
+            if( !isset( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {      
                 continue;
-            } elseif( !current_user_can( $c2p_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {    
+            } elseif( !current_user_can( $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'widgetscapability'] ) ) {    
                 continue;// user does not have required capability
             }
             
             // load the current view class then call the dashboard method which uses an array of data to build dashboard widgets
             // note that there is further security with capabilities existing on a per widget basis
-            require_once( WTG_WTGTASKSMANAGER_ABSPATH . 'classes/class-view.php' );
+            require_once( WTGTASKSMANAGER_ABSPATH . 'classes/class-view.php' );
             $view_object = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_' . ucfirst( $section_array['name'] ) . '_View', $section_array['name'] . '.php', 'views' );
             if( method_exists( $view_object, 'dashboard_widgets' ) ) {
                 $view_object->purpose = 'dashboard';// allows the view class to run in a different way
@@ -173,7 +173,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
     
     public function screenintro( $c2p_page_name, $text, $progress_array ){
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         echo '
         <div class="wtgtasksmanager_screenintro_container">
@@ -972,17 +972,17 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         $page_name = self::get_admin_page_name();
                 
         // display video icon with link to a YouTube video
-        if( isset( $help_array[ $page_name ][ WTG_WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formvideoid' ] ) ){
-            self::panel_video_icon( $help_array[ $page_name ][ WTG_WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formvideoid' ] );
+        if( isset( $help_array[ $page_name ][ WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formvideoid' ] ) ){
+            self::panel_video_icon( $help_array[ $page_name ][ WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formvideoid' ] );
             ++$total_icons;        
         } 
 
         // do we have all required values to build help content and display form_information_icon()
-        if( isset( $help_array[ $page_name ][ WTG_WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formtitle' ] )
-            && isset( $help_array[ $page_name ][ WTG_WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formabout' ] ) ){  
+        if( isset( $help_array[ $page_name ][ WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formtitle' ] )
+            && isset( $help_array[ $page_name ][ WTGTASKSMANAGER_VIEWNAME ][ 'forms' ][ $form_id ][ 'formabout' ] ) ){  
                            
             // display the icon that will show information about the box when clicked
-            self::box_information_icon( $page_name, WTG_WTGTASKSMANAGER_VIEWNAME, $form_id );
+            self::box_information_icon( $page_name, WTGTASKSMANAGER_VIEWNAME, $form_id );
         }
         
         // display a trash icon which allows box to be quickly hidden
@@ -993,12 +993,12 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
     
     public function panel_trash_icon( $form_name ){?>
-        <a href="<?php echo $form_name;?>"><img src="<?php echo WTG_WTGTASKSMANAGER_IMAGES_URL . 'trash-icon.gif';?>" alt="<?php _e( 'Reset form' );?>" title="<?php _e( 'Reset form' );?>"></a><?php 
+        <a href="<?php echo $form_name;?>"><img src="<?php echo WTGTASKSMANAGER_IMAGES_URL . 'trash-icon.gif';?>" alt="<?php _e( 'Reset form' );?>" title="<?php _e( 'Reset form' );?>"></a><?php 
     }
     
     public function panel_video_icon( $youtubeid ){
         if( $youtubeid ){
-            echo '<a href="https://www.youtube.com/watch?v=' . $youtubeid . '" target="_blank"><img src="' . WTG_WTGTASKSMANAGER_IMAGES_URL . 'video-icon.gif" alt="' . __( 'View video on YouTube' ) . '" title="' . __( 'View video on YouTube' ) . '"></a>';
+            echo '<a href="https://www.youtube.com/watch?v=' . $youtubeid . '" target="_blank"><img src="' . WTGTASKSMANAGER_IMAGES_URL . 'video-icon.gif" alt="' . __( 'View video on YouTube' ) . '" title="' . __( 'View video on YouTube' ) . '"></a>';
         }
     }
     
@@ -1009,16 +1009,16 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @param mixed $url
     */
     public function helpicon( $url ){
-        return '<a href="'.$url.'" title="'. __( 'View help for this on the plugins website.' ) .'" target="_blank"><img src="'. WTG_WTGTASKSMANAGER_IMAGES_URL . 'help-icon.png" alt="'. __( 'View help for this on the plugins website' ) .'"></a>';
+        return '<a href="'.$url.'" title="'. __( 'View help for this on the plugins website.' ) .'" target="_blank"><img src="'. WTGTASKSMANAGER_IMAGES_URL . 'help-icon.png" alt="'. __( 'View help for this on the plugins website' ) .'"></a>';
     }    
     public function videoicon( $url ){
-        return '<a href="'.$url.'" title="'. __( 'View a video about this feature.' ) .'" target="_blank"><img src="'. WTG_WTGTASKSMANAGER_IMAGES_URL . 'video-icon.png" alt="'. __( 'Video icon, click to open a video' ) .'"></a>';
+        return '<a href="'.$url.'" title="'. __( 'View a video about this feature.' ) .'" target="_blank"><img src="'. WTGTASKSMANAGER_IMAGES_URL . 'video-icon.png" alt="'. __( 'Video icon, click to open a video' ) .'"></a>';
     }     
     public function trashicon( $url ){
-        return '<a href="'.$url.'" title="'. __( 'Delete or hide the current feature.' ) .'" target="_blank"><img src="'. WTG_WTGTASKSMANAGER_IMAGES_URL . 'trash-icon.png" alt="'. __( 'Trash icon, click to delete or hide the current item' ) .'"></a>';
+        return '<a href="'.$url.'" title="'. __( 'Delete or hide the current feature.' ) .'" target="_blank"><img src="'. WTGTASKSMANAGER_IMAGES_URL . 'trash-icon.png" alt="'. __( 'Trash icon, click to delete or hide the current item' ) .'"></a>';
     }    
     public function discussicon( $url ){
-        return '<a href="'.$url.'" title="'. __( 'Discuss this feature on the WebTechGlobal forum.' ) .'" target="_blank"><img src="'. WTG_WTGTASKSMANAGER_IMAGES_URL . 'chat-icon.png" alt="'. __( 'Chat icon which you can click to discuss this feature on the WebTechGlobal forum.' ) .'"></a>';
+        return '<a href="'.$url.'" title="'. __( 'Discuss this feature on the WebTechGlobal forum.' ) .'" target="_blank"><img src="'. WTGTASKSMANAGER_IMAGES_URL . 'chat-icon.png" alt="'. __( 'Chat icon which you can click to discuss this feature on the WebTechGlobal forum.' ) .'"></a>';
     }  
     
     /**
@@ -1153,7 +1153,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         // build linked image
         $all_help_content .= '<a href="#TB_inline?width=600&height=550&inlineId=infothickbox' . $form_id . '" class="thickbox" title="';
         $all_help_content .= __( 'Help for ', 'wtgtasksmanager' ) . $help_array[ $page_name ][ $view_name ][ 'forms' ][ $form_id ][ 'formtitle' ] . '">';
-        $all_help_content .= '<img src="' . WTG_WTGTASKSMANAGER_IMAGES_URL . 'info-icon.gif" alt="';
+        $all_help_content .= '<img src="' . WTGTASKSMANAGER_IMAGES_URL . 'info-icon.gif" alt="';
         $all_help_content .= __( 'Click icon to view help for ', 'wtgtasksmanager' ) . $help_array[ $page_name ][ $view_name ][ 'forms' ][ $form_id ][ 'formtitle' ] . '"></a>';
       
         echo $all_help_content;
@@ -1243,11 +1243,11 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @param mixed $helpurl
     */
     public function notice_return( $type, $size, $title = false, $message = 'no message has been set', $helpurl = false, $forcewtgstyle = false ){
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         // Is Wordpress core style to be returned? we can force WTG style for in-content notices 
         if( $forcewtgstyle === false ) {
-            if( isset( $c2p_settings['noticesettings']['wpcorestyle'] ) && $c2p_settings['noticesettings']['wpcorestyle'] == 'enabled' ) {
+            if( isset( $tasksmanager_settings['noticesettings']['wpcorestyle'] ) && $tasksmanager_settings['noticesettings']['wpcorestyle'] == 'enabled' ) {
    
                 // apply error if warning or caution - this is for old notices
                 if( $type == 'warning' || $type == 'caution' ) {    
@@ -1375,7 +1375,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
     
     public function display_users_notices() {
-        global $c2p_notice_array, $current_user, $c2p_settings;
+        global $c2p_notice_array, $current_user, $tasksmanager_settings;
         
         $c2p_notice_array = $this->get_notice_array();
         

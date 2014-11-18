@@ -13,85 +13,85 @@
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 // install main admin settings option record
-$c2p_settings = array();                                                                                             
+$tasksmanager_settings = array();                                                                                             
 // encoding
-$c2p_settings['standardsettings']['encoding']['type'] = 'utf8';
+$tasksmanager_settings['standardsettings']['encoding']['type'] = 'utf8';
 // admin user interface settings start
-$c2p_settings['standardsettings']['ui_advancedinfo'] = false;// hide advanced user interface information by default
+$tasksmanager_settings['standardsettings']['ui_advancedinfo'] = false;// hide advanced user interface information by default
 // other
-$c2p_settings['standardsettings']['ecq'] = array();
-$c2p_settings['standardsettings']['chmod'] = '0750';
-$c2p_settings['standardsettings']['systematicpostupdating'] = 'enabled';
+$tasksmanager_settings['standardsettings']['ecq'] = array();
+$tasksmanager_settings['standardsettings']['chmod'] = '0750';
+$tasksmanager_settings['standardsettings']['systematicpostupdating'] = 'enabled';
 // testing and development
-$c2p_settings['standardsettings']['developementinsight'] = 'disabled';
+$tasksmanager_settings['standardsettings']['developementinsight'] = 'disabled';
 // global switches
-$c2p_settings['standardsettings']['textspinrespinning'] = 'enabled';// disabled stops all text spin re-spinning and sticks to the last spin
+$tasksmanager_settings['standardsettings']['textspinrespinning'] = 'enabled';// disabled stops all text spin re-spinning and sticks to the last spin
 
 ##########################################################################################
 #                                                                                        #
 #                           SETTINGS WITH NO UI OPTION                                   #
 #              array key should be the method/function the setting is used in            #
 ##########################################################################################
-$c2p_settings['create_localmedia_fromlocalimages']['destinationdirectory'] = 'wp-content/uploads/importedmedia/';
+$tasksmanager_settings['create_localmedia_fromlocalimages']['destinationdirectory'] = 'wp-content/uploads/importedmedia/';
  
 ##########################################################################################
 #                                                                                        #
 #                            DATA IMPORT AND MANAGEMENT SETTINGS                         #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['datasettings']['insertlimit'] = 100;
+$tasksmanager_settings['datasettings']['insertlimit'] = 100;
 
 ##########################################################################################
 #                                                                                        #
 #                                    WIDGET SETTINGS                                     #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['widgetsettings']['dashboardwidgetsswitch'] = 'disabled';
+$tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] = 'disabled';
 
 ##########################################################################################
 #                                                                                        #
 #                            CUSTOM POST TYPE SETTINGS                                   #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['posttypes']['wtgflags']['status'] = 'disabled';
-$c2p_settings['posttypes']['wtgtasks']['status'] = 'enabled';
-$c2p_settings['posttypes']['posts']['status'] = 'disabled';
+$tasksmanager_settings['posttypes']['wtgflags']['status'] = 'disabled';
+$tasksmanager_settings['posttypes']['wtgtasks']['status'] = 'enabled';
+$tasksmanager_settings['posttypes']['posts']['status'] = 'disabled';
 
 ##########################################################################################
 #                                                                                        #
 #                                    NOTICE SETTINGS                                     #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['noticesettings']['wpcorestyle'] = 'enabled';
+$tasksmanager_settings['noticesettings']['wpcorestyle'] = 'enabled';
 
 ##########################################################################################
 #                                                                                        #
 #                           YOUTUBE RELATED SETTINGS                                     #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['youtubesettings']['defaultcolor'] = '&color1=0x2b405b&color2=0x6b8ab6';
-$c2p_settings['youtubesettings']['defaultborder'] = 'enable';
-$c2p_settings['youtubesettings']['defaultautoplay'] = 'enable';
-$c2p_settings['youtubesettings']['defaultfullscreen'] = 'enable';
-$c2p_settings['youtubesettings']['defaultscriptaccess'] = 'always';
+$tasksmanager_settings['youtubesettings']['defaultcolor'] = '&color1=0x2b405b&color2=0x6b8ab6';
+$tasksmanager_settings['youtubesettings']['defaultborder'] = 'enable';
+$tasksmanager_settings['youtubesettings']['defaultautoplay'] = 'enable';
+$tasksmanager_settings['youtubesettings']['defaultfullscreen'] = 'enable';
+$tasksmanager_settings['youtubesettings']['defaultscriptaccess'] = 'always';
 
 ##########################################################################################
 #                                                                                        #
 #                                  LOG SETTINGS                                          #
 #                                                                                        #
 ##########################################################################################
-$c2p_settings['logsettings']['uselog'] = 1;
-$c2p_settings['logsettings']['loglimit'] = 1000;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['timestamp'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['line'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['function'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['page'] = true; 
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['panelname'] = true;   
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['userid'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['type'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['category'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['action'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['priority'] = true;
-$c2p_settings['logsettings']['logscreen']['displayedcolumns']['comment'] = true;
+$tasksmanager_settings['logsettings']['uselog'] = 1;
+$tasksmanager_settings['logsettings']['loglimit'] = 1000;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['outcome'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['timestamp'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['line'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['function'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['page'] = true; 
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['panelname'] = true;   
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['userid'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['type'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['category'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['action'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['priority'] = true;
+$tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['comment'] = true;
 ?>

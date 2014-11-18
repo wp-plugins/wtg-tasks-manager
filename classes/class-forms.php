@@ -1468,7 +1468,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
         <tr valign="top">
             <th scope="row"><label for="<?php echo $this->inputid; ?>"><?php echo $this->optiontitle; ?></label></th>
             <td>            
-                <select name="<?php echo $this->inputname;?>" id="<?php echo $this->inputid;?>"<?php if( $this->disabled ){ echo ' disabled';} ?>>
+                <select name="<?php echo $this->inputname;?>" id="<?php echo $this->inputid;?>"<?php if( isset( $this->disabled ) && $this->disabled === true ){ echo ' disabled';} ?>>
                     <?php            
                     foreach( $capabilities_array as $key => $cap ){
                         $selected = '';

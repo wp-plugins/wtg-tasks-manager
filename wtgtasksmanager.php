@@ -1,9 +1,9 @@
 <?php         
 /*
 Plugin Name: WTG Tasks Manager Beta
-Version: 0.0.1
-Plugin URI: http://www.webtechglobal.co.uk/
-Description: WordPress Tasks Manager by WebTechGlobal
+Version: 0.0.2
+Plugin URI: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress
+Description: WTG Tasks Manager
 Author: WebTechGlobal
 Author URI: http://www.webtechglobal.co.uk/
 Last Updated: November 2014
@@ -43,7 +43,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.1';# to be removed, version is now in the WTGTASKSMANAGER() class 
+$c2p_currentversion = '0.0.2';# to be removed, version is now in the WTGTASKSMANAGER() class 
 $c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               
@@ -60,16 +60,16 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
 }                               
 
 // define constants, feel free to add some of your own...                              
-if(!defined( "WTG_WTGTASKSMANAGER_NAME") ){define( "WTG_WTGTASKSMANAGER_NAME", 'WTG Tasks Manager Beta' );} 
-if(!defined( "WTG_WTGTASKSMANAGER__FILE__") ){define( "WTG_WTGTASKSMANAGER__FILE__", __FILE__);}
-if(!defined( "WTG_WTGTASKSMANAGER_BASENAME") ){define( "WTG_WTGTASKSMANAGER_BASENAME",plugin_basename( WTG_WTGTASKSMANAGER__FILE__ ) );}
-if(!defined( "WTG_WTGTASKSMANAGER_ABSPATH") ){define( "WTG_WTGTASKSMANAGER_ABSPATH", plugin_dir_path( __FILE__) );}//C:\AppServ\www\wordpress-testing\wtgplugintemplate\wp-content\plugins\wtgplugintemplate/  
-if(!defined( "WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM") ){define( "WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM", '5.3.0' );}// The minimum php version that will allow the plugin to work                                
-if(!defined( "WTG_WTGTASKSMANAGER_IMAGES_URL") ){define( "WTG_WTGTASKSMANAGER_IMAGES_URL",plugins_url( 'images/' , __FILE__ ) );}
-if(!defined( "WTG_WTGTASKSMANAGER_FREE") ){define( "WTG_WTGTASKSMANAGER_FREE", 'paid' );} 
+if(!defined( "WTGTASKSMANAGER_NAME") ){define( "WTGTASKSMANAGER_NAME", 'WTG Tasks Manager Beta' );} 
+if(!defined( "WTGTASKSMANAGER__FILE__") ){define( "WTGTASKSMANAGER__FILE__", __FILE__);}
+if(!defined( "WTGTASKSMANAGER_BASENAME") ){define( "WTGTASKSMANAGER_BASENAME",plugin_basename( WTGTASKSMANAGER__FILE__ ) );}
+if(!defined( "WTGTASKSMANAGER_ABSPATH") ){define( "WTGTASKSMANAGER_ABSPATH", plugin_dir_path( __FILE__) );}//C:\AppServ\www\wordpress-testing\wtgplugintemplate\wp-content\plugins\wtgplugintemplate/  
+if(!defined( "WTGTASKSMANAGER_PHPVERSIONMINIMUM") ){define( "WTGTASKSMANAGER_PHPVERSIONMINIMUM", '5.3.0' );}// The minimum php version that will allow the plugin to work                                
+if(!defined( "WTGTASKSMANAGER_IMAGES_URL") ){define( "WTGTASKSMANAGER_IMAGES_URL",plugins_url( 'images/' , __FILE__ ) );}
+if(!defined( "WTGTASKSMANAGER_FREE") ){define( "WTGTASKSMANAGER_FREE", 'paid' );} 
         
 // require main class...
-require_once( WTG_WTGTASKSMANAGER_ABSPATH . 'classes/class-wtgtasksmanager.php' );
+require_once( WTGTASKSMANAGER_ABSPATH . 'classes/class-wtgtasksmanager.php' );
 
 // call the Daddy (parent alright the parent lol) methods here or remove some lines as a quick configuration approach...
 $WTGTASKSMANAGER = new WTGTASKSMANAGER();

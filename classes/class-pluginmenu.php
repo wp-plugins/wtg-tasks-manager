@@ -34,7 +34,7 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['pluginupdate']['menu'] = __( 'WTG Tasks Manager Update Ready', 'wtgtasksmanager' );// plugin admin menu
         $menu_array['pluginupdate']['pluginmenu'] = __( 'Update Information' ,'wtgtasksmanager' );// for tabbed menu
         $menu_array['pluginupdate']['name'] = "pluginupdate";// name of page (slug) and unique
-        $menu_array['pluginupdate']['title'] = __( 'WTG Tasks Manager Update Ready', 'wtgtasksmanager' );// title at the top of the admin page
+        $menu_array['pluginupdate']['title'] = __( 'Update Ready', 'wtgtasksmanager' );// title at the top of the admin page
         $menu_array['pluginupdate']['parent'] = 'parent';// either "parent" or the name of the parent - used for building tab menu 
         $menu_array['pluginupdate']['tabmenu'] = false;
         

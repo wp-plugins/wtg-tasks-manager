@@ -95,7 +95,7 @@ class WTGTASKSMANAGER {
     * This class is being introduced gradually, we will move various lines and config functions from the main file to load here eventually
     */
     public function __construct() {
-        global $c2p_settings;
+        global $tasksmanager_settings;
 
         self::debugmode(); 
                   
@@ -105,7 +105,7 @@ class WTGTASKSMANAGER {
         $this->Install = self::load_class( 'WTGTASKSMANAGER_Install', 'class-install.php', 'classes' );
         $this->Files = self::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
   
-        $c2p_settings = self::adminsettings();
+        $tasksmanager_settings = self::adminsettings();
   
         $this->add_actions();
         $this->add_filters();
@@ -175,7 +175,7 @@ class WTGTASKSMANAGER {
     public function enqueue_style( $name, array $dependencies = array() ) {
         $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $css_file = "css/{$name}{$suffix}.css";
-        $css_url = plugins_url( $css_file, WTG_WTGTASKSMANAGER__FILE__ );
+        $css_url = plugins_url( $css_file, WTGTASKSMANAGER__FILE__ );
         wp_enqueue_style( "wtgtasksmanager-{$name}", $css_url, $dependencies, WTGTASKSMANAGER::version );
     }
     
@@ -193,7 +193,7 @@ class WTGTASKSMANAGER {
     public function enqueue_script( $name, array $dependencies = array(), $localize_script = false, $force_minified = false ) {
         $suffix = ( ! $force_minified && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $js_file = "js/{$name}{$suffix}.js";
-        $js_url = plugins_url( $js_file, WTG_WTGTASKSMANAGER__FILE__ );
+        $js_url = plugins_url( $js_file, WTGTASKSMANAGER__FILE__ );
         wp_enqueue_script( "wtgtasksmanager-{$name}", $js_url, $dependencies, WTGTASKSMANAGER::version, true );
     }  
         
@@ -259,7 +259,7 @@ class WTGTASKSMANAGER {
      * @param string $folder Name of the folder with $class's $file
      */
     public static function load_file( $file, $folder ) {   
-        $full_path = WTG_WTGTASKSMANAGER_ABSPATH . $folder . '/' . $file;
+        $full_path = WTGTASKSMANAGER_ABSPATH . $folder . '/' . $file;
         //Filter the full path of a file that shall be loaded
         $full_path = apply_filters( 'wtgtasksmanager_load_file_full_path', $full_path, $file, $folder );
         if ( $full_path ) {   
@@ -312,7 +312,7 @@ class WTGTASKSMANAGER {
         global $c2pm;
         
         // include the view class
-        require_once( WTG_WTGTASKSMANAGER_ABSPATH . 'classes/class-view.php' );
+        require_once( WTGTASKSMANAGER_ABSPATH . 'classes/class-view.php' );
         
         // make first letter uppercase for a better looking naming pattern
         $ucview = ucfirst( $page_slug );// this is page name 
@@ -451,7 +451,7 @@ class WTGTASKSMANAGER {
     * @param mixed $whenToLoad
     */
     private function filteraction_should_beloaded( $whenToLoad) {
-        $c2p_settings = $this->adminsettings();
+        $tasksmanager_settings = $this->adminsettings();
           
         switch( $whenToLoad) {
             case 'all':    
@@ -485,7 +485,7 @@ class WTGTASKSMANAGER {
                 return true;    
             break;            
             case 'systematicpostupdating':  
-                if(!isset( $c2p_settings['standardsettings']['systematicpostupdating'] ) || $c2p_settings['standardsettings']['systematicpostupdating'] != 'enabled' ){
+                if(!isset( $tasksmanager_settings['standardsettings']['systematicpostupdating'] ) || $tasksmanager_settings['standardsettings']['systematicpostupdating'] != 'enabled' ){
                     return false;    
                 }      
                 return true;
@@ -866,7 +866,7 @@ class WTGTASKSMANAGER {
     * @version 1.2.8
     */
     public function admin_menu() {    
-        global $c2p_currentversion, $c2pm, $c2p_settings;
+        global $c2p_currentversion, $c2pm, $tasksmanager_settings;
          
         $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
         $WTGTASKSMANAGER_Menu = $WTGTASKSMANAGER_TabMenu->menu_array();
@@ -1080,7 +1080,7 @@ class WTGTASKSMANAGER {
     * Popup and content for media button displayed just above the WYSIWYG editor 
     */
     public function pluginmediabutton_popup() {
-        global $c2p_settings; ?>
+        global $tasksmanager_settings; ?>
         
         <div id="wtgtasksmanager_popup_container" style="display:none;">
 
@@ -1364,7 +1364,7 @@ class WTGTASKSMANAGER {
     * @link http://www.webtechglobal.co.uk/hacking/event-types
     */
     public function event_decide() {
-        global $c2p_schedule_array, $c2p_settings;
+        global $c2p_schedule_array, $tasksmanager_settings;
         
         // return focused event if active
         $override_event = $this->event_decide_focus();// returns false if no override settings in place    
@@ -1441,7 +1441,7 @@ class WTGTASKSMANAGER {
     * @param mixed $run_event_type, see event_decide() for list of event types 
     */
     public function event_action( $run_event_type){    
-        global $c2p_settings, $WTGTASKSMANAGER;
+        global $tasksmanager_settings, $WTGTASKSMANAGER;
         $c2p_schedule_array = WTGTASKSMANAGER::get_option_schedule_array();       
         $c2p_schedule_array['history']['lasteventaction'] = $run_event_type . ' Requested'; 
             
@@ -1649,25 +1649,25 @@ class WTGTASKSMANAGER {
     * Use this function when installing admin settings during use of the plugin. 
     */
     public function install_admin_settings() {
-        require_once( WTG_WTGTASKSMANAGER_ABSPATH . 'arrays/settings_array.php' );
-        return $this->option( 'wtgtasksmanager_settings', 'update', $c2p_settings );# update creates record if it does not exist   
+        require_once( WTGTASKSMANAGER_ABSPATH . 'arrays/settings_array.php' );
+        return $this->option( 'wtgtasksmanager_settings', 'update', $tasksmanager_settings );# update creates record if it does not exist   
     } 
      
     /**
     * includes a file per custom post type, we can customize this to include or exclude based on settings
     */
     public function custom_post_types() { 
-        global $c2p_settings;                          
-        if( isset( $c2p_settings['posttypes']['wtgflags']['status'] ) && $c2p_settings['posttypes']['wtgflags']['status'] === 'enabled' ) {    
-            require( WTG_WTGTASKSMANAGER_ABSPATH . 'posttypes/flags.php' );   
+        global $tasksmanager_settings;                          
+        if( isset( $tasksmanager_settings['posttypes']['wtgflags']['status'] ) && $tasksmanager_settings['posttypes']['wtgflags']['status'] === 'enabled' ) {    
+            require( WTGTASKSMANAGER_ABSPATH . 'posttypes/flags.php' );   
         }     
 
-        if( isset( $c2p_settings['posttypes']['posts']['status'] ) && $c2p_settings['posttypes']['posts']['status'] === 'enabled' ) {    
-            require( WTG_WTGTASKSMANAGER_ABSPATH . 'posttypes/posts.php' );   
+        if( isset( $tasksmanager_settings['posttypes']['posts']['status'] ) && $tasksmanager_settings['posttypes']['posts']['status'] === 'enabled' ) {    
+            require( WTGTASKSMANAGER_ABSPATH . 'posttypes/posts.php' );   
         }
         
-        if( !isset( $c2p_settings['posttypes']['wtgtasks']['status'] ) || isset( $c2p_settings['posttypes']['wtgtasks']['status'] ) && $c2p_settings['posttypes']['wtgtasks']['status'] === 'enabled' ) {    
-            require( WTG_WTGTASKSMANAGER_ABSPATH . 'posttypes/tasks.php' );   
+        if( !isset( $tasksmanager_settings['posttypes']['wtgtasks']['status'] ) || isset( $tasksmanager_settings['posttypes']['wtgtasks']['status'] ) && $tasksmanager_settings['posttypes']['wtgtasks']['status'] === 'enabled' ) {    
+            require( WTGTASKSMANAGER_ABSPATH . 'posttypes/tasks.php' );   
         } 
     }
  
@@ -1770,12 +1770,12 @@ class WTGTASKSMANAGER {
     * @link http://www.wtgtasksmanager.com/hacking/log-table
     */
     public function newlog( $atts ){     
-        global $c2p_settings, $wpdb, $c2p_currentversion;
+        global $tasksmanager_settings, $wpdb, $c2p_currentversion;
 
         $table_name = $wpdb->prefix . 'webtechglobal_log';
         
         // if ALL logging is off - if ['uselog'] not set then logging for all files is on by default
-        if( isset( $c2p_settings['globalsettings']['uselog'] ) && $c2p_settings['globalsettings']['uselog'] == 0){
+        if( isset( $tasksmanager_settings['globalsettings']['uselog'] ) && $tasksmanager_settings['globalsettings']['uselog'] == 0){
             return false;
         }
         
@@ -2020,11 +2020,11 @@ class WTGTASKSMANAGER {
     * Adds Script Start and Stylesheets to the beginning of pages
     */
     public function pageheader( $pagetitle, $layout ){
-        global $current_user, $c2pm, $c2p_settings, $c2p_pub_set;
+        global $current_user, $c2pm, $tasksmanager_settings, $c2p_pub_set;
 
         // get admin settings again, all submissions and processing should update settings
         // if the interface does not show expected changes, it means there is a problem updating settings before this line
-        $c2p_settings = self::adminsettings(); 
+        $tasksmanager_settings = self::adminsettings(); 
 
         get_currentuserinfo();?>
                     
@@ -2066,14 +2066,14 @@ class WTGTASKSMANAGER {
         $requirement_missing = false;
 
         // php version
-        if( defined( WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM ) ){
-            if( WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM > phpversion() ){
+        if( defined( WTGTASKSMANAGER_PHPVERSIONMINIMUM ) ){
+            if( WTGTASKSMANAGER_PHPVERSIONMINIMUM > phpversion() ){
                 $requirement_missing = true;
                 if( $display == true ){
                     self::notice_depreciated(sprintf( __( 'The plugin detected an older PHP version than the minimum requirement which 
                     is %s. You can requests an upgrade for free from your hosting, use .htaccess to switch
-                    between PHP versions per WP installation or sometimes hosting allows customers to switch using their control panel.', 'wtgtasksmanager' ),WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM)
-                    , 'warning', 'Large', __( 'WTG Tasks Manager Requires PHP ', 'wtgtasksmanager' ) . WTG_WTGTASKSMANAGER_PHPVERSIONMINIMUM);                
+                    between PHP versions per WP installation or sometimes hosting allows customers to switch using their control panel.', 'wtgtasksmanager' ),WTGTASKSMANAGER_PHPVERSIONMINIMUM)
+                    , 'warning', 'Large', __( 'WTG Tasks Manager Requires PHP ', 'wtgtasksmanager' ) . WTGTASKSMANAGER_PHPVERSIONMINIMUM);                
                 }
             }
         }
@@ -2264,8 +2264,8 @@ class WTGTASKSMANAGER {
         return update_option( 'wtgtasksmanager_schedule', $schedule_array_serialized);    
     }
     
-    public function update_settings( $c2p_settings ){
-        $admin_settings_array_serialized = maybe_serialize( $c2p_settings );
+    public function update_settings( $tasksmanager_settings ){
+        $admin_settings_array_serialized = maybe_serialize( $tasksmanager_settings );
         return update_option( 'wtgtasksmanager_settings', $admin_settings_array_serialized);    
     }
     
@@ -2472,15 +2472,15 @@ class WTGTASKSMANAGER {
     public function create_localmedia_fromlocalimages( $file_url, $post_id ){           
         require_once(ABSPATH . 'wp-load.php' );
         require_once(ABSPATH . 'wp-admin/includes/image.php' );
-        global $wpdb, $c2p_settings;
+        global $wpdb, $tasksmanager_settings;
                
         if(!$post_id ) {
             return false;
         }
 
         //directory to import to 
-        if( isset( $c2p_settings['create_localmedia_fromlocalimages']['destinationdirectory'] ) ){   
-            $artDir = $c2p_settings['create_localmedia_fromlocalimages']['destinationdirectory'];
+        if( isset( $tasksmanager_settings['create_localmedia_fromlocalimages']['destinationdirectory'] ) ){   
+            $artDir = $tasksmanager_settings['create_localmedia_fromlocalimages']['destinationdirectory'];
         }else{
             $artDir = 'wp-content/uploads/importedmedia/';
         }
@@ -2620,14 +2620,14 @@ class WTGTASKSMANAGER {
     * @param array $atts
     */
     public function update_posts( $project_id, $total = 1, $post_id = false, $atts = array() ){
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         extract( shortcode_atts( array( 
             'rows' => false
         ), $atts ) );
                 
         $autoblog = new WTGTASKSMANAGER_UpdatePost();
-        $autoblog->settings = $c2p_settings;
+        $autoblog->settings = $tasksmanager_settings;
         $autoblog->maintable = $database_table;
 
         // we will control how and when we end the operation
@@ -2745,13 +2745,13 @@ class WTGTASKSMANAGER {
     * @since 0.0.1
     * @version 1.0
     */
-    public function tasknew( $name, $content, $author, $project_id, $priority, $requires ) {
+    public function tasknew( $name, $content, $author, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability ) {
         $new_task = array();
         $new_task['post_title'] = $name;
         $new_task['post_content'] = $content;
         $new_task['post_author'] = $author;
         $new_task['post_type'] = 'wtgtasks';
-        $new_task['post_status'] = 'publish';
+        $new_task['post_status'] = 'newtask';
         $post_id = wp_insert_post( $new_task );
 
         // add meta project progress
@@ -2768,7 +2768,16 @@ class WTGTASKSMANAGER {
         
         // add "requires" - the tasks that must be complete before this
         add_post_meta( $post_id, 'wtgrequires', $requires, true );     
-                
+            
+        // add "freelancerpayout" 
+        add_post_meta( $post_id, 'wtgfreelancerpayout', '0.00', true );     
+            
+        // add "freelanceroffer" 
+        add_post_meta( $post_id, 'wtgfreelanceroffer', $freelanceroffer, true );     
+        
+        // add "requiredcapability" 
+        add_post_meta( $post_id, 'wtgrequiredcapability', $requiredcapability, true );     
+    
         // return what is now a project id
         return $post_id;
     }

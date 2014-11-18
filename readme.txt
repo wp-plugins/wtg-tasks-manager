@@ -52,16 +52,27 @@ on this subject.
 2. Simple Import Statistics.
 3. Category Data Selection.
 
-== Languages ==
-
-Translators needed - Long term recognition will be giving and in some cases ad-space on the plugins portal and forum.
-
 == Upgrade Notice ==
 
 Please do not update without backing up your database.
 
 == Changelog == 
 
+= 0.0.2 =
+* Feature Changes
+    * Freelancer Offer field: enter the amount of cash (with currency symbol) that your happy to pay a freelancer who completes the task.
+    * Required Capability menu: select the capability required to view a task. Not fully applied - only admin will be able to view tasks for some versions to come. Security related changes will always be rolled out slowly.
+    * Now users must select a project before submitting New Task form.
+* Technical Information
+    * Beta views removed from package.
+    * Plugin update view added to package.
+* Known Issues
+    * Search ability still to be complete.
+    * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+* Author Updates
+    * New Donators: None
+    * New Contributors: None
+    
 = 0.0.1 =
 * Feature Changes
     * Beta plugin - just getting started!
@@ -74,12 +85,37 @@ Please do not update without backing up your database.
 
 Thank you for considering WTG Tasks Manager. 
 
+== Donators ==
+These donators have giving their permission to add their site to this list so that plugin authors can
+request their support for their own project. Please do not request donations but instead visit their site,
+show interest and tell them about your plugin - you may get lucky. 
+
+* None Yet
+
+== Contributors: Translation ==
+These contributors helped to localize WTG Tasks Manager by translating my endless dialog text.
+
+* None Yet
+
+== Contributors: Code ==
+These contributers typed some PHP or HTML or CSS or JavaScript or Ajax for WTG Tasks Manager. Bunch of geeks really! 
+
+* None Yet
+
+== Contributors: Design ==
+These contributors created graphics for the plugin and are good with Photoshop. The "fake celebrity pics" creators no doubt!
+
+* None Yet
+
+== Contributors: Video Tutorials ==
+These contributors published videos on YouTube or another video streaming website. Please take interest in any ads that may appear while watching them!
+
+* None Yet
+
 == Version Numbers and Updating ==
 
 Explanation of versioning used by myself Ryan Bayne. The versioning scheme I use is called "Semantic Versioning 2.0.0" and more
 information about it can be found at http://semver.org/ 
-
-= Summary =
 
 These are the rules followed to increase the WTG Tasks Manager plugin version number. Given a version number MAJOR.MINOR.PATCH, increment the:
 

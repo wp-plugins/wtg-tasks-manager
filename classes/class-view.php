@@ -262,10 +262,10 @@ abstract class WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function dashboard_widgets( $meta_box_array ) { 
-        global $c2p_settings;
+        global $tasksmanager_settings;
         
         // if dashboard widgets switch not enabled we do nothing, this check should really be done earlier also
-        if( !isset( $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] ) || $c2p_settings['widgetsettings']['dashboardwidgetsswitch'] !== 'enabled' ) {
+        if( !isset( $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] ) || $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'] !== 'enabled' ) {
             return;    
         }
 
