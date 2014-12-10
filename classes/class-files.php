@@ -44,7 +44,7 @@ class WTGTASKSMANAGER_Files {
     }
     
     /**
-    * Handles single file upload
+    * Handles single file upload - very basic.
     * 
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager

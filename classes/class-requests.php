@@ -671,8 +671,157 @@ class WTGTASKSMANAGER_Requests {
             return false;
         }
           
-        $new_task_id = $this->WTGTASKSMANAGER->tasknew( $_POST['taskname'], $_POST['taskdescription'], get_current_user_id(), $_POST['projectid'], $_POST['priority'], $required, $_POST['freelanceroffer'], $_POST['requiredcapability'] );
+        $new_task_id = $this->WTGTASKSMANAGER->tasknew( $_POST['taskname'], $_POST['taskdescription'], '', get_current_user_id(), $_POST['projectid'], $_POST['priority'], $required, $_POST['freelanceroffer'], $_POST['requiredcapability'] );
         $this->UI->create_notice( sprintf( __( 'Your new tasks ID is %s and you assigned it to project with ID %s.', 'wtgtasksmanager'), $new_task_id, $_POST['projectid'] ), 'success', 'Small', __( 'Task Created', 'wtgtasksmanager' ) );              
+    }
+    
+    /**
+    * Import tasks for multiple projects (Projects header) from .csv file.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.2
+    * @version 1.0
+    */
+    public function csvimporttasksmultipleprojects() {
+        global $wpdb;
+
+        // handle file upload, create the uploads array
+        $uploads = array( 'path' => WP_CONTENT_DIR,
+                          'subdir' => '',
+                          'error' => false 
+        ); 
+                
+        $file_import_result = $this->Files->singlefile_uploader( $_FILES['taskscsv'], $uploads );
+        
+        // let the user know it has all gone very wrong and they are DOOMED! 
+        if( $file_import_result['outcome'] === false ) {   
+            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'csv2post' ) );
+            return;    
+        }
+        
+        // build array of information for this file (this can be customized to work with multiple files)
+        $files_array = array( 'total_files' => 1 );
+        $files_array[1]['fullpath'] = $file_import_result['filepath'];
+                                                           
+        // create success notice regarding file processing 
+        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Transferred', 'csv2post' ) );   
+                           
+        // establish separator
+        $files_array[1]['sep'] = $this->Files->established_separator( $file_import_result['filepath'] );
+                    
+        // read file to get first row as header
+        $file = new SplFileObject( $file_import_result['filepath'] );
+        while (!$file->eof() ) {
+            $header_array = $file->fgetcsv( $files_array[1]['sep'], '"' );
+            break;// we just need the first line to do a count()
+        }                                             
+        unset( $file );
+        
+        // count number of fields
+        $files_array[1]['fields'] = count( $header_array );
+        
+        // create arrays of original headers and one of sql prepared headers
+        foreach( $header_array as $key => $header ){  
+            $files_array[1]['originalheaders'][$key] = $header;
+            $files_array[1]['sqlheaders'][$key] = $this->PHP->clean_sqlcolumnname( $header );        
+        }                                                                   
+        
+        // ensure all headers are valid
+        $cleanedidcolumn = '';
+        if( !empty( $id_column ) && is_string( $id_column ) ){
+            $cleanedidcolumn = $this->PHP->clean_sqlcolumnname( $id_column );
+            if(!in_array( $cleanedidcolumn, $files_array[1]['sqlheaders'] ) ){
+                $this->UI->create_notice( 'You entered ' . $id_column . ' as your ID column but it does not match any column header in your .csv file.', 'error', 'Small', __( "Invalid ID Column") );
+                return;
+            }
+        }
+        
+        // create tasks
+        $total_tasks_created = 0;
+        $total_tasks_failed = 0;
+        
+        /*            
+            0. Priority
+            1. Task Name
+            2. Project Name
+            3. Short Description
+            4. Long Description
+            5. Required Task
+            6. Notify Email
+            7. URL
+            8. Code
+        */
+  
+        if( ( $handle = fopen( $file_import_result['filepath'], "r" ) ) !== FALSE ) {
+            while ( ( $row = fgetcsv( $handle, 1000, "," ) ) !== FALSE ) {
+                $projectid = false;
+
+                // set priority
+                if( !$row[0] ) { $priority = 3; } else{ $priority = $row[0]; }
+
+                // set project name
+                if( !$row[2] ) { $projectid = 0; } else { $projectname = $this->WTGTASKSMANAGER->get_projectid_byname($row[2]); }
+        
+                // set short description
+                $shortdescription = $row[3];
+                
+                // set long (html included) description
+                $longdescription = $row[4];
+                                
+                // we will populate descriptions further: long using short or short using log
+                if( empty( $shortdescription ) && is_string( $longdescription ) ) {
+                    $shortdescription = $this->PHP->truncate( $longdescription, 150 );
+                } 
+                if( empty( $longdescription ) && is_string( $shortdescription ) ) {
+                    $longdescription = $shortdescription;    
+                }
+                
+                // set task name (must be after descriptions should we need them)
+                if( !$row[1] ) { 
+                
+                    // explode from commonly used : 
+                    $arr = explode(":", $shortdescription, 2);
+                    
+                    // if the first item matches the original then we try another method
+                    if( $arr[0] === $shortdescription ) {
+                        
+                        // create a task name using short description    
+                        $taskname = $this->PHP->truncate( $shortdescription, 50 );
+                    
+                    } else {
+                        $taskname = $arr[0];// first item in array becomes task title     
+                    }
+                
+                } else { 
+                    $taskname = $row[1]; 
+                }
+                                
+                // set required task
+                if( !$row[5] || $row[5] === 0 ) { $required_task = false; } else { $required_task = $row[5]; }
+                
+                // set notification email address
+                if( !$row[6] ) { $notificationemailaddress = false; } else { $notificationemailaddress = $row[6]; }
+                
+                // set URL
+                if( !$row[7] ) { $task_URL = ''; } else { $task_URL = $row[7]; }
+                
+                // set code sample
+                if( !$row[8] ) { $task_code = ''; } else { $task_code = $row[8]; }
+                
+                $new_task_id = $this->WTGTASKSMANAGER->tasknew( $taskname, $longdescription, $shortdescription, get_current_user_id(), $projectid, $priority, $required_task, false, 'activate_plugins', $notificationemailaddress );
+                
+                if( $new_task_id ) { 
+                    ++$total_tasks_created;
+                } else {
+                    ++$total_tasks_failed;    
+                }
+            }
+            fclose($handle);
+        }
+    
+        // create a new task per row 
+        $this->UI->create_notice( sprintf( __( 'A total of %s tasks have been created and %s could to be added.', 'csv2post' ), $total_tasks_created, $total_tasks_failed ), 'success', 'Small', __( 'Data Source Ready' ) );  
     }
          
 }// WTGTASKSMANAGER_Requests       

@@ -297,7 +297,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 0.0.1
-    * @version 1.0
+    * @version 1.1
     */
     public function apply_input_validation( $formid ) {
         // set result, default true to allow processing to complete, change to false if user made invalid entry
@@ -315,10 +315,14 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
        
             // if current field is required   
             if( isset( $input_array['required']) && $input_array['required'] === true ) {
-                
-                // ensure required checkboxes selected
-                if( $input_array['inputtype'] === 'checkboxes' ) {
-                             
+                if( $input_array['inputtype'] === 'file' ) {
+                    /* do nothing for file inputs as they are handled by $_FILES */
+                    if( !isset( $_FILES[ $input_name ] ) || $_FILES[ $input_name ]['name'] === '' ) {
+                        $this->UI->create_notice( sprintf( __( 'Please select a file for %s as it is a required option.', 'wtgtasksmanager' ), $input_array['optiontitle'] ), 'error', 'Small', __( 'Required Option', 'wtgtasksmanager' ) );                    
+                        return false;                        
+                    }
+                } elseif( $input_array['inputtype'] === 'checkboxes' ) {
+                    // ensure required checkboxes selected
                     // loop through items and ensure one more checkboxes have been selected (if not selected, it will not be in $_POST)    
                     $box_checked = 0;
                     $i = 0;
@@ -353,10 +357,10 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
                 }elseif( !isset( $_POST[ $input_name ] ) || empty( $_POST[ $input_name ] ) || in_array( $_POST[ $input_name ], $this->common_defaults ) ) {
                     
                     // arriving here indicates a required input has not been used
-                    $this->UI->create_notice( sprintf( __( 'Sorry the %s is a required option.', 'wtgtasksmanager' ), $input_array['optiontitle'] ), 'error', 'Small', __( 'Required Option', 'wtgtasksmanager' ) );                    
+                    $this->UI->create_notice( sprintf( __( 'Form not complete because %s is a required option.', 'wtgtasksmanager' ), $input_array['optiontitle'] ), 'error', 'Small', __( 'Required Option', 'wtgtasksmanager' ) );                    
                     return false;                      
                 }
-            }           
+            }// if field is required (check $_POST and more specific checks for grouped fields)           
         }
         
         // loop through $_POST values and if the name is registered apply validation    

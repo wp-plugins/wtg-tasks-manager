@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.1';
+    const version = '0.0.3';
     
     /**
      * WTGTASKSMANAGER major version
@@ -2743,15 +2743,22 @@ class WTGTASKSMANAGER {
     * @author Ryan R. Bayne
     * @package Wordpress Plugin Framework Pro
     * @since 0.0.1
-    * @version 1.0
+    * @version 1.1
     */
-    public function tasknew( $name, $content, $author, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability ) {
+    public function tasknew( $name, $long_description, $short_description, $author, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability, $notificationemailaddress = false ) {
+              
         $new_task = array();
         $new_task['post_title'] = $name;
-        $new_task['post_content'] = $content;
+        $new_task['post_excerpt'] = $short_description;
+        $new_task['post_content'] = $long_description;
         $new_task['post_author'] = $author;
         $new_task['post_type'] = 'wtgtasks';
         $new_task['post_status'] = 'newtask';
+        
+        if( empty( $shortdescription ) && is_string( $longdescription ) ) {
+            $shortdescription = $this->WTGTASKSMANAGER->truncate( $longdescription, 150 );
+        }
+            
         $post_id = wp_insert_post( $new_task );
 
         // add meta project progress
@@ -2769,15 +2776,18 @@ class WTGTASKSMANAGER {
         // add "requires" - the tasks that must be complete before this
         add_post_meta( $post_id, 'wtgrequires', $requires, true );     
             
-        // add "freelancerpayout" 
-        add_post_meta( $post_id, 'wtgfreelancerpayout', '0.00', true );     
-            
+        // add "freelancerpayouttotal" 
+        add_post_meta( $post_id, 'freelancerpayouttotal', '0.00', true );     
+
         // add "freelanceroffer" 
         add_post_meta( $post_id, 'wtgfreelanceroffer', $freelanceroffer, true );     
         
         // add "requiredcapability" 
         add_post_meta( $post_id, 'wtgrequiredcapability', $requiredcapability, true );     
     
+        // add 'notificationemailaddress'
+        add_post_meta( $post_id, 'notificationemailaddress', $notificationemailaddress , false );
+        
         // return what is now a project id
         return $post_id;
     }
@@ -2826,19 +2836,35 @@ class WTGTASKSMANAGER {
     }  
          
     /**
-    * Get a projects name.
+    * Get a projects name using the ID.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0             
     * 
-    * @param mixed $id_or_name
+    * @param mixed $project_id
     */
     public function get_projectname_byid( $project_id ) {
         global $wpdb;
         $tablename = $wpdb->webtechglobal_projects;
-        return $wpdb->get_var( "SELECT name FROM $tablename WHERE project_id = $project_id" );
+        return $wpdb->get_var( "SELECT projectname FROM $tablename WHERE project_id = $project_id" );
+    }       
+    
+    /**
+    * Get a projects ID using its name.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0             
+    * 
+    * @param mixed $project_name
+    */
+    public function get_projectid_byname( $project_name ) {
+        global $wpdb;
+        $tablename = $wpdb->webtechglobal_projects;
+        return $wpdb->get_var( "SELECT project_id FROM $tablename WHERE projectname = '$project_name'" );
     }       
     
 }// end WTGTASKSMANAGER class 

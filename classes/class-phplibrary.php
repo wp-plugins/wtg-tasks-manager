@@ -746,6 +746,23 @@ class WTGTASKSMANAGER_PHP {
         $string = preg_replace( "/[^a-zA-Z0-9s_]/", "", $column);
         return strtolower ( $string );        
     }  
-        
+    
+    /**
+    * Use to make excerpt or a sentence that fits into a specific place on a page.
+    * 
+    * @param mixed $str
+    * @param mixed $len
+    * 
+    * @author Ryan R. Bayne
+    * @package Wordpress Plugin Framework Pro
+    * @since 0.0.1
+    * @version 1.0
+    */
+    function truncate( $str, $len ) {
+        $tail = max(0, $len-10);
+        $trunk = substr($str, 0, $tail);
+        $trunk .= strrev(preg_replace('~^..+?[\s,:]\b|^...~', '...', strrev(substr($str, $tail, $len-$tail))));
+        return $trunk;
+    }        
 }// end class WTGTASKSMANAGER_PHP
 ?>

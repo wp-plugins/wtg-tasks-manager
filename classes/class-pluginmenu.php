@@ -130,6 +130,16 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['createtasks']['parent'] = 'alltasks'; 
         $menu_array['createtasks']['tabmenu'] = true; 
         
+        // Import Tasks
+        $menu_array['importtasks']['groupname'] = 'tasks';
+        $menu_array['importtasks']['slug'] = 'wtgtasksmanager_importtasks'; 
+        $menu_array['importtasks']['menu'] = __( 'Import Tasks', 'wtgtasksmanager' );
+        $menu_array['importtasks']['pluginmenu'] = __( 'Import Tasks', 'wtgtasksmanager' );
+        $menu_array['importtasks']['name'] = "importtasks";
+        $menu_array['importtasks']['title'] = __( 'Import Tasks', 'wtgtasksmanager' ); 
+        $menu_array['importtasks']['parent'] = 'alltasks'; 
+        $menu_array['importtasks']['tabmenu'] = true; 
+
         /*                            
         ######################################################
         #                                                    #

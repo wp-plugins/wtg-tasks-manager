@@ -1,16 +1,14 @@
 <?php         
 /*
 Plugin Name: WTG Tasks Manager Beta
-Version: 0.0.2
+Version: 0.0.3
 Plugin URI: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress
 Description: WTG Tasks Manager
 Author: WebTechGlobal
 Author URI: http://www.webtechglobal.co.uk/
-Last Updated: November 2014
+Last Updated: December 2014
 Text Domain: wtgtasksmanager
 Domain Path: /languages
-
-Wordpress Plugin WTG Tasks Manager Pro License (does not apply to customised copies or premium plugins created using the wtgtasksmanager)
 
 GPL v3 
 
@@ -43,7 +41,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.2';# to be removed, version is now in the WTGTASKSMANAGER() class 
+$c2p_currentversion = '0.0.3';# to be removed, version is now in the WTGTASKSMANAGER() class 
 $c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               

@@ -24,6 +24,10 @@ as my business grows. I will be using it daily and whenever I need it to do more
 *   <a href="https://www.facebook.com/pages/WTG-Tasks-Manager-for-WordPress/302610946614839" title="WTG Task Manager Facebook Page">Plugins Facebook</a>
 *   <a href="http://www.webtechglobal.co.uk/category/wordpress/wtg-tasks-manager/" title="WebTechGlobal blog category for tasks manager">Plugins Blog</a>
 *   <a href="http://www.twitter.com/WebTechGlobal" title="WebTechGlobal Tweets">Plugins Twitter</a>
+*   <a href="http://www.youtube.com/playlist?list=PLMYhfJnWwPWD5P2vNf2c9gRsRNqRSVSoV" title="Official YouTube channel for WTG Tasks Manager">YouTube Playlist</a>
+*   <a href="#" title="WTG Tasks Manager Review One">Review 1: get your review here</a>
+*   <a href="#" title="WTG Tasks Manager Review Two">Review 2: get your review here</a>
+*   <a href="#" title="WTG Tasks Manager Review Three">Review 3: get your review here</a>
 
 = Feature List = 
 
@@ -58,6 +62,16 @@ Please do not update without backing up your database.
 
 == Changelog == 
 
+= 0.0.3 =
+* Feature Changes
+    * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum
+* Technical Information
+    * None
+* Known Issues
+    * Search ability still to be complete.
+    * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * post-new.php (Create Task) view cannot be used yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+    
 = 0.0.2 =
 * Feature Changes
     * Freelancer Offer field: enter the amount of cash (with currency symbol) that your happy to pay a freelancer who completes the task.
@@ -69,10 +83,7 @@ Please do not update without backing up your database.
 * Known Issues
     * Search ability still to be complete.
     * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
-* Author Updates
-    * New Donators: None
-    * New Contributors: None
-    
+
 = 0.0.1 =
 * Feature Changes
     * Beta plugin - just getting started!
@@ -88,9 +99,9 @@ Thank you for considering WTG Tasks Manager.
 == Donators ==
 These donators have giving their permission to add their site to this list so that plugin authors can
 request their support for their own project. Please do not request donations but instead visit their site,
-show interest and tell them about your plugin - you may get lucky. 
+show interest and tell them about your own plugin - you may get lucky. 
 
-* None Yet
+* <a href="" title="">Ryan Bayne from WebTechGlobal</a>
 
 == Contributors: Translation ==
 These contributors helped to localize WTG Tasks Manager by translating my endless dialog text.
@@ -103,12 +114,12 @@ These contributers typed some PHP or HTML or CSS or JavaScript or Ajax for WTG T
 * None Yet
 
 == Contributors: Design ==
-These contributors created graphics for the plugin and are good with Photoshop. The "fake celebrity pics" creators no doubt!
+These contributors created graphics for the plugin and are good with Photoshop. No doubt they spend their time merging different species together!
 
 * None Yet
 
 == Contributors: Video Tutorials ==
-These contributors published videos on YouTube or another video streaming website. Please take interest in any ads that may appear while watching them!
+These contributors published videos on YouTube or another video streaming website for the community to enjoy...and maybe to get some ad clicks.
 
 * None Yet
 
