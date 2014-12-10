@@ -1,7 +1,7 @@
 <?php         
 /*
 Plugin Name: WTG Tasks Manager Beta
-Version: 0.0.3
+Version: 0.0.31
 Plugin URI: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress
 Description: WTG Tasks Manager
 Author: WebTechGlobal

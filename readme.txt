@@ -62,11 +62,11 @@ Please do not update without backing up your database.
 
 == Changelog == 
 
-= 0.0.3 =
+= 0.0.31 =
 * Feature Changes
     * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum
 * Technical Information
-    * None
+    * New view file added to package (missed on 0.0.30)
 * Known Issues
     * Search ability still to be complete.
     * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.

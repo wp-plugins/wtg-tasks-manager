@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.3';
+    const version = '0.0.31';
     
     /**
      * WTGTASKSMANAGER major version
