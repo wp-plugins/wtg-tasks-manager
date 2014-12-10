@@ -1,6 +1,6 @@
 <?php
 /** 
- * Wordpress close to core class and functions i.e. WP functions slightly adapted or
+ * WordPress close to core class and functions i.e. WP functions slightly adapted or
  * functions which take global WP values and change them before using them
  * 
  * @package Opus
@@ -8,11 +8,11 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
- * Wordpress close to core class and functions i.e. WP functions slightly adapted or
+ * WordPress close to core class and functions i.e. WP functions slightly adapted or
  * functions which take global WP values and change them before using them
 * 
 * @author Ryan R. Bayne

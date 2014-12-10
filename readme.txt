@@ -3,7 +3,7 @@ Contributors: WebTechGlobal
 Donate link: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: WTG Tasks Manager, Task Manager, Tasks, Task Management, Task, todo, TO DO, to-do, Workflow
+Tags: WTG, Task Manager, Tasks, Task Management, Task, todo, TO DO, to-do, Workflow, project management
 Requires at least: 3.8.0
 Tested up to: 4.0.0
 Stable tag: trunk
@@ -12,7 +12,7 @@ Task management with a plan - this plugin will grow to meet the needs of online 
 
 == Description ==
 
-Released 2014 and created to manage over 100 projects. The project has a design plan which may take until 2016 to complete
+Released November 2014 and created to manage multiple projects. The project has a design plan which may take until 2016 to complete
 due to some specifications involving integration with plugins not even created yet. Use of Google Docs and other
 cloud services is planned. I have a long list of features that will make WTG Tasks Manager more than just a fancy todo list.
 Right now the plugin is in-line with most task manager plugins for WordPress but I need more. So you can bet it will grow
@@ -40,8 +40,8 @@ Remember this plugin is a beta so the list will be short for a while.
 == Installation ==
 
 1. You can place the wtgtasksmanager folder in the plugins directory using FTP
-1. You can also upload the plugin using Wordpress plugin screen (wp-admin/plugin-install.php)
-1. If your Wordpress installation is on a path that includes "wtgtasksmanager" it will trigger debugging to activate. This is meant for localhost development and can be disabled.
+1. You can also upload the plugin using WordPress plugin screen (wp-admin/plugin-install.php)
+1. If your WordPress installation is on a path that includes "wtgtasksmanager" it will trigger debugging to activate. This is meant for localhost development and can be disabled.
 
 == Frequently Asked Questions ==
 
@@ -62,36 +62,17 @@ Please do not update without backing up your database.
 
 == Changelog == 
 
-= 0.0.31 =
+= 0.0.32 =
 * Feature Changes
     * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum
+    * Automatically generated task titles (not handy for everyone) shortened from 50 to 30 characters.
 * Technical Information
-    * New view file added to package (missed on 0.0.30)
+    * Fix in tasknew() which will allow post excerpt (short description) to be set when it has not been by user.
 * Known Issues
     * Search ability still to be complete.
-    * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
     * post-new.php (Create Task) view cannot be used yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
     
-= 0.0.2 =
-* Feature Changes
-    * Freelancer Offer field: enter the amount of cash (with currency symbol) that your happy to pay a freelancer who completes the task.
-    * Required Capability menu: select the capability required to view a task. Not fully applied - only admin will be able to view tasks for some versions to come. Security related changes will always be rolled out slowly.
-    * Now users must select a project before submitting New Task form.
-* Technical Information
-    * Beta views removed from package.
-    * Plugin update view added to package.
-* Known Issues
-    * Search ability still to be complete.
-    * Posts view "All" does not show all posts - it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
-
-= 0.0.1 =
-* Feature Changes
-    * Beta plugin - just getting started!
-* Technical Information
-    * The plugin now adds a custom post type (tasks) and two new tables to the database.
-* Known Issues
-    * Search ability still to be complete.
-
 == Plugin Author == 
 
 Thank you for considering WTG Tasks Manager. 

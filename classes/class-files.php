@@ -7,7 +7,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /** 
@@ -207,7 +207,7 @@ class WTGTASKSMANAGER_Files {
             ob_end_clean();  // turn output buffering back off
         }
     
-        // if $uploads is empty use Wordpress default uploads directory function wp_upload_dir()       
+        // if $uploads is empty use WordPress default uploads directory function wp_upload_dir()       
         if ( empty( $uploads ) ) {
             $uploads = wp_upload_dir();
         }
@@ -223,7 +223,7 @@ class WTGTASKSMANAGER_Files {
 
         // if WP error return $result array and error
         if ( false !== $uploads['error'] ) {
-            $result['message'] = __( 'Wordpress wp_upload_dir() returned an error.', 'wtgtasksmanager' );
+            $result['message'] = __( 'WordPress wp_upload_dir() returned an error.', 'wtgtasksmanager' );
             $result['error'] = $uploads['error'];
             return $result;    
         } 

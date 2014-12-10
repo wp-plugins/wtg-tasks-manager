@@ -9,7 +9,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
  
 //class WTGTASKSMANAGER_PHP extends WTGTASKSMANAGER_Flags { commented 14092014
@@ -314,7 +314,25 @@ class WTGTASKSMANAGER_PHP {
     }
   
     /**
-    * truncate string to a specific length 
+    * Shorten string and add trailing "..." 
+    * 
+    * @param mixed $str
+    * @param mixed $len
+    * 
+    * @author Ryan R. Bayne
+    * @package WordPress Plugin Framework Pro
+    * @since 0.0.1
+    * @version 1.0
+    */
+    function truncate( $str, $len ) {
+        $tail = max(0, $len-10);
+        $trunk = substr($str, 0, $tail);
+        $trunk .= strrev(preg_replace('~^..+?[\s,:]\b|^...~', '...', strrev(substr($str, $tail, $len-$tail))));
+        return $trunk;
+    }
+      
+    /**
+    * Shorten string, removes trailing letters but does not add "..."
     * 
     * @param string $string, string to be shortened if too long
     * @param integer $max_length, maximum length the string is allowed to be
@@ -746,23 +764,6 @@ class WTGTASKSMANAGER_PHP {
         $string = preg_replace( "/[^a-zA-Z0-9s_]/", "", $column);
         return strtolower ( $string );        
     }  
-    
-    /**
-    * Use to make excerpt or a sentence that fits into a specific place on a page.
-    * 
-    * @param mixed $str
-    * @param mixed $len
-    * 
-    * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
-    * @since 0.0.1
-    * @version 1.0
-    */
-    function truncate( $str, $len ) {
-        $tail = max(0, $len-10);
-        $trunk = substr($str, 0, $tail);
-        $trunk .= strrev(preg_replace('~^..+?[\s,:]\b|^...~', '...', strrev(substr($str, $tail, $len-$tail))));
-        return $trunk;
-    }        
+            
 }// end class WTGTASKSMANAGER_PHP
 ?>

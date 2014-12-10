@@ -88,7 +88,7 @@ class WTGTASKSMANAGER_Statistics_View extends WTGTASKSMANAGER_View {
     * Displays one or more tables of data at the top of the page before post boxes
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */

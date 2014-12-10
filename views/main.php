@@ -49,7 +49,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->meta_boxes_array = array(
             
             // array( id, title, callback (usually parent, approach created by Ryan Bayne), context (position), priority, call back arguments array, add to dashboard (boolean), required capability
-            array( 'main-welcome', __( 'Wordpress Plugin WTG Tasks Manager Pro by Ryan Bayne', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'welcome' ), true, 'activate_plugins' ),
+            array( 'main-welcome', __( 'About WTG Tasks Manager', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'welcome' ), true, 'activate_plugins' ),
             array( 'main-createproject', __( 'Start New Project', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'startnewproject' ), true, 'activate_plugins' ),
             array( 'main-projectlist', __( 'Project List', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'projectlist' ), true, 'activate_plugins' ),
 
@@ -244,7 +244,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
 
             <table class="form-table">
             <?php        
-            $this->UI->option_switch( __( 'Wordpress Notice Styles', 'wtgtasksmanager' ), 'uinoticestyle', 'uinoticestyle', $tasksmanager_settings['noticesettings']['wpcorestyle'] );
+            $this->UI->option_switch( __( 'WordPress Notice Styles', 'wtgtasksmanager' ), 'uinoticestyle', 'uinoticestyle', $tasksmanager_settings['noticesettings']['wpcorestyle'] );
             $this->UI->option_switch( __( 'WTG Flag System', 'wtgtasksmanager' ), 'flagsystemstatus', 'flagsystemstatus', $tasksmanager_settings['flagsystem']['status'] );
             $this->UI->option_switch( __( 'Dashboard Widgets Switch', 'wtgtasksmanager' ), 'dashboardwidgetsswitch', 'dashboardwidgetsswitch', $tasksmanager_settings['widgetsettings']['dashboardwidgetsswitch'], 'Enabled', 'Disabled', 'disabled' );      
             ?>
@@ -404,7 +404,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
             <br>
             <label for="wtgtasksmanager_logfields_sqlerror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_sqlerror" value="sqlerror" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['sqlerror'] ) ){echo 'checked';} ?>> <?php _e( 'SQL Error', 'wtgtasksmanager' );?></label>
             <br>
-            <label for="wtgtasksmanager_logfields_wordpresserror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'Wordpress Erro', 'wtgtasksmanager' );?>r</label>
+            <label for="wtgtasksmanager_logfields_wordpresserror"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_wordpresserror" value="wordpresserror" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['wordpresserror'] ) ){echo 'checked';} ?>> <?php _e( 'WordPress Erro', 'wtgtasksmanager' );?>r</label>
             <br>
             <label for="wtgtasksmanager_logfields_screenshoturl"><input type="checkbox" name="wtgtasksmanager_logfields[]" id="wtgtasksmanager_logfields_screenshoturl" value="screenshoturl" <?php if( isset( $tasksmanager_settings['logsettings']['logscreen']['displayedcolumns']['screenshoturl'] ) ){echo 'checked';} ?>> <?php _e( 'Screenshot URL', 'wtgtasksmanager' );?></label>
             <br>

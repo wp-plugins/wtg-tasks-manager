@@ -1,6 +1,6 @@
 <?php
 /** 
-* WebTechGlobal Flag system for Wordpress (plan is for this to be a shared system when two or more WTG plugins installed)
+* WebTechGlobal Flag system for WordPress (plan is for this to be a shared system when two or more WTG plugins installed)
 * 
 * Use to flag anything that matters. Creates a task list but can also be configured or developed into a global alert system for many 
 * administrators or all staff in a business. The flag itself holding all information to be communicated. It is temporary until manually
@@ -11,7 +11,7 @@
 * @since 0.0.1
 */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 add_action( 'init', 'wtgtasksmanager_register_customposttype_flags' );   

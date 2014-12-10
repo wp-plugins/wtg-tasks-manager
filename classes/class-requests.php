@@ -18,7 +18,7 @@
 * @since 0.0.1
 */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
@@ -96,7 +96,7 @@ class WTGTASKSMANAGER_Requests {
         
         // $_POST security
         if( $method == 'post' ) {                      
-            // check_admin_referer() wp_die()'s if security fails so if we arrive here Wordpress security has been passed
+            // check_admin_referer() wp_die()'s if security fails so if we arrive here WordPress security has been passed
             // now we validate individual values against their pre-registered validation method
             // some generic notices are displayed - this system makes development faster
             $post_result = true;
@@ -493,7 +493,7 @@ class WTGTASKSMANAGER_Requests {
     * Insert new entry to the webtechglobal_projects table.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -506,7 +506,7 @@ class WTGTASKSMANAGER_Requests {
     * Handles request to cancel a single task.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -543,7 +543,7 @@ class WTGTASKSMANAGER_Requests {
     * Changes a tasks status to "startedtask"
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -580,7 +580,7 @@ class WTGTASKSMANAGER_Requests {
     * Changes a tasks status to "closedtask"
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -617,7 +617,7 @@ class WTGTASKSMANAGER_Requests {
     * Changes a tasks status to "finishedstatus"
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -681,7 +681,7 @@ class WTGTASKSMANAGER_Requests {
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 0.0.2
-    * @version 1.0
+    * @version 1.1
     */
     public function csvimporttasksmultipleprojects() {
         global $wpdb;
@@ -761,7 +761,7 @@ class WTGTASKSMANAGER_Requests {
                 if( !$row[0] ) { $priority = 3; } else{ $priority = $row[0]; }
 
                 // set project name
-                if( !$row[2] ) { $projectid = 0; } else { $projectname = $this->WTGTASKSMANAGER->get_projectid_byname($row[2]); }
+                if( !$row[2] ) { $projectname = __( 'Unknown', 'wtgtasksmanager' ); } else { $projectname = $row[2]; }
         
                 // set short description
                 $shortdescription = $row[3];
@@ -787,7 +787,7 @@ class WTGTASKSMANAGER_Requests {
                     if( $arr[0] === $shortdescription ) {
                         
                         // create a task name using short description    
-                        $taskname = $this->PHP->truncate( $shortdescription, 50 );
+                        $taskname = $this->PHP->truncate( $shortdescription, 35 );
                     
                     } else {
                         $taskname = $arr[0];// first item in array becomes task title     
@@ -808,6 +808,9 @@ class WTGTASKSMANAGER_Requests {
                 
                 // set code sample
                 if( !$row[8] ) { $task_code = ''; } else { $task_code = $row[8]; }
+                
+                // get project ID
+                $projectid = $this->WTGTASKSMANAGER->get_projectid_byname( $row[2] );
                 
                 $new_task_id = $this->WTGTASKSMANAGER->tasknew( $taskname, $longdescription, $shortdescription, get_current_user_id(), $projectid, $priority, $required_task, false, 'activate_plugins', $notificationemailaddress );
                 

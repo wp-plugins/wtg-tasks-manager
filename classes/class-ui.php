@@ -8,7 +8,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
@@ -206,7 +206,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @since 0.0.1
     * @version 1.2
     * 
-    * @return string html a href link nonced by Wordpress  
+    * @return string html a href link nonced by WordPress  
     * 
     * @param mixed $page - $_GET['page']
     * @param mixed $action - examplenonceaction
@@ -228,7 +228,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
         
     /**
-    * table row with two choice radio group styled by Wordpress and used for switch type settings
+    * table row with two choice radio group styled by WordPress and used for switch type settings
     * 
     * $current_value should be enabled or disabled, use another method and do not change this if you need other values
     *     
@@ -300,7 +300,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     } 
         
     /**
-    * add text input to Wordpress style form which is tabled and has optional HTML5 support
+    * add text input to WordPress style form which is tabled and has optional HTML5 support
     * 
     * 1. the $capability value is set systematically, by default it is 'active_plugins' so minimum use is fine, it
     * is also not required if forms are being hidden from users who shouldnt see them. The security is there as a 
@@ -748,7 +748,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
                 }
             }
             
-            // add post last, if none of the previous post types are the default, then we display this as default as it would be in Wordpress
+            // add post last, if none of the previous post types are the default, then we display this as default as it would be in WordPress
             $post_default = '';
             if(!$current_applied){
                 $post_default = 'checked="checked"';            
@@ -1223,7 +1223,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
      
     /**
     * use to create an in-content notice i.e. the notice is built and echoed straight away it is not
-    * stored within an array for output at a later point in the plugin or Wordpress loading 
+    * stored within an array for output at a later point in the plugin or WordPress loading 
     */
     
     /**
@@ -1245,7 +1245,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     public function notice_return( $type, $size, $title = false, $message = 'no message has been set', $helpurl = false, $forcewtgstyle = false ){
         global $tasksmanager_settings;
         
-        // Is Wordpress core style to be returned? we can force WTG style for in-content notices 
+        // Is WordPress core style to be returned? we can force WTG style for in-content notices 
         if( $forcewtgstyle === false ) {
             if( isset( $tasksmanager_settings['noticesettings']['wpcorestyle'] ) && $tasksmanager_settings['noticesettings']['wpcorestyle'] == 'enabled' ) {
    
@@ -1339,7 +1339,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * Displays a no permission notice
     * 
     * Call the method and follow it up with a return. Use it before a procedure within a method. Only step into the procedure
-    * if user has the required Wordpress capability. So this method is called within the if statement. 
+    * if user has the required WordPress capability. So this method is called within the if statement. 
     */
     public function adminonly() {
         $this->create_notice( 'You do not have permission to complete that action.', 'warning', 'Small', 'No Permission' );
@@ -1349,7 +1349,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * 
     */
     public function invaliduserid() {
-        $this->create_notice( 'You did not enter a valid Wordpress user ID which are always numeric and do not have any special characters.', 'warning', 'Small', 'Invalid User ID' );
+        $this->create_notice( 'You did not enter a valid WordPress user ID which are always numeric and do not have any special characters.', 'warning', 'Small', 'Invalid User ID' );
     }
     
     /**
@@ -1420,7 +1420,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         // begin building output
         $output = '';
                         
-        // if clickable (only allowed when no other links being used) - $helpurl will actually be a local url to another plugin or Wordpress page
+        // if clickable (only allowed when no other links being used) - $helpurl will actually be a local url to another plugin or WordPress page
         if( $clickable){
             $output .= '<div class="stepLargeTest"><a href="'.$helpurl.'">';
         }
@@ -1503,7 +1503,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
             return false;
         }
                 
-        // arriving here means normal, most common output to the backend of Wordpress
+        // arriving here means normal, most common output to the backend of WordPress
         $c2p_notice_array = $this->persistentnotifications_array();
         
         // set next array key value
@@ -1546,7 +1546,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
     
     /**
-    * Updates notifications array in Wordpress options table
+    * Updates notifications array in WordPress options table
     * 
     * @param array $notifications_array
     * @return bool
@@ -1629,7 +1629,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
     
     /**
-    * Gets notifications array if it exists in Wordpress options table else returns empty array
+    * Gets notifications array if it exists in WordPress options table else returns empty array
     */
     public function persistentnotifications_array() {
         $a = get_option( 'wtgtasksmanager_notifications' );
@@ -1666,14 +1666,14 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     } 
     
     /**
-    * Builds a nonced admin link styled as button by Wordpress
+    * Builds a nonced admin link styled as button by WordPress
     *
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     *
-    * @return string html a href link nonced by Wordpress  
+    * @return string html a href link nonced by WordPress  
     * 
     * @param mixed $page - $_GET['page']
     * @param mixed $action - examplenonceaction
@@ -1818,7 +1818,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     }
 
     /**
-    * A table row with menu of all Wordpress capabilities
+    * A table row with menu of all WordPress capabilities
     * 
     * @param mixed $title
     * @param mixed $id
@@ -1987,7 +1987,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
 }// class WTGTASKSMANAGER_UI 
   
 /**
-* Adds a Wordpress pointer
+* Adds a WordPress pointer
 * 
 * @author Ryan R. Bayne
 * @package WTG Tasks Manager

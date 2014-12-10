@@ -11,7 +11,7 @@
  * @since 0.0.1
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /** 
@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.31';
+    const version = '0.0.32';
     
     /**
      * WTGTASKSMANAGER major version
@@ -62,7 +62,7 @@ class WTGTASKSMANAGER {
                                 
         // add_action() controller
         // Format: array( event | function in this class(in an array if optional arguments are needed) | loading circumstances)
-        // Other class requiring Wordpress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
+        // Other class requiring WordPress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
         // create a method in this class for each hook required plugin wide
         $plugin_actions = array( 
             array( 'admin_menu',                     'admin_menu',                                             'all' ),
@@ -529,10 +529,10 @@ class WTGTASKSMANAGER {
     /**
     * Error display and debugging 
     * 
-    * When request will display maximum php errors including Wordpress errors 
+    * When request will display maximum php errors including WordPress errors 
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -594,7 +594,7 @@ class WTGTASKSMANAGER {
     }
     
     /**
-    * Control Wordpress option functions using this single function.
+    * Control WordPress option functions using this single function.
     * This function will give us the opportunity to easily log changes and some others ideas we have.
     * 
     * @param mixed $option
@@ -667,7 +667,7 @@ class WTGTASKSMANAGER {
     }
       
     /**
-    * Wordpress Help tab content builder
+    * WordPress Help tab content builder
     * 
     * Using class-help.php we can make use of help information and add extensive support text.
     * The plan is to use a SOAP API that gets the help text from the WebTechGlobal server.
@@ -858,7 +858,7 @@ class WTGTASKSMANAGER {
     }   
     
     /**
-    * Wordpress plugin menu
+    * WordPress plugin menu
     * 
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
@@ -1091,7 +1091,7 @@ class WTGTASKSMANAGER {
     
     /**
     * 
-    * Part of the WTG Schedule System for Wordpress
+    * Part of the WTG Schedule System for WordPress
     * 1. Does not use WP CRON or normal server CRON
     * 2. Another system is being created to use WP CRON
     * 3. WTG system does not allow specific timing, only restriction of specific hours
@@ -1112,7 +1112,7 @@ class WTGTASKSMANAGER {
     public function event_check() {
         $c2p_schedule_array = self::get_option_schedule_array();
         
-        // do not continue if Wordpress is DOING_AJAX
+        // do not continue if WordPress is DOING_AJAX
         if( self::request_made() ){return;}
                       
         self::log_schedule( __( 'The schedule is being checked. There should be further log entries explaining the outcome.', 'wtgtasksmanager' ), __( 'schedule being checked', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -2138,7 +2138,7 @@ class WTGTASKSMANAGER {
     }
     
     /**
-    * Returns the plugins standard date (MySQL Date Time Formatted) with common format used in Wordpress.
+    * Returns the plugins standard date (MySQL Date Time Formatted) with common format used in WordPress.
     * Optional $time parameter, if false will return the current time().
     * 
     * @param integer $timeaddition, number of seconds to add to the current time to create a future date and time
@@ -2155,7 +2155,7 @@ class WTGTASKSMANAGER {
             return current_time( 'mysql',0);// example 2005-08-05 10:41:13
         }
         
-        // default to standard PHP with a common format used by Wordpress and MySQL but not the actual database time
+        // default to standard PHP with a common format used by WordPress and MySQL but not the actual database time
         return date( 'Y-m-d H:i:s', $thetime + $timeaddition);    
     }   
     
@@ -2270,7 +2270,7 @@ class WTGTASKSMANAGER {
     }
     
     /**
-    * Returns Wordpress version in short
+    * Returns WordPress version in short
     * 1. Default returned example by get_bloginfo( 'version' ) is 3.6-beta1-24041
     * 2. We remove everything after the first hyphen
     */
@@ -2429,7 +2429,7 @@ class WTGTASKSMANAGER {
     }  
     
     /**
-    * Uses wp-admin/includes/image.php to store an image in Wordpress files and database
+    * Uses wp-admin/includes/image.php to store an image in WordPress files and database
     * from HTTP
     * 
     * @uses wp_insert_attachment()
@@ -2741,9 +2741,9 @@ class WTGTASKSMANAGER {
     * Enter a new task
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
-    * @version 1.1
+    * @version 1.2
     */
     public function tasknew( $name, $long_description, $short_description, $author, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability, $notificationemailaddress = false ) {
               
@@ -2755,8 +2755,8 @@ class WTGTASKSMANAGER {
         $new_task['post_type'] = 'wtgtasks';
         $new_task['post_status'] = 'newtask';
         
-        if( empty( $shortdescription ) && is_string( $longdescription ) ) {
-            $shortdescription = $this->WTGTASKSMANAGER->truncate( $longdescription, 150 );
+        if( empty( $short_description ) && is_string( $long_description ) ) {
+            $short_description = $this->PHP->truncate( $long_description, 150 );
         }
             
         $post_id = wp_insert_post( $new_task );
@@ -2796,7 +2796,7 @@ class WTGTASKSMANAGER {
     * Insert a new project into the webtechglobal_projects table.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -2809,7 +2809,7 @@ class WTGTASKSMANAGER {
     * Query projects.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0             
     * 
@@ -2824,7 +2824,7 @@ class WTGTASKSMANAGER {
     * Get a project by its ID.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0             
     * 
@@ -2874,7 +2874,7 @@ if(!class_exists( 'WP_List_Table' ) ){
 }
         
 /**
-* Lists tickets post type using standard Wordpress list table
+* Lists tickets post type using standard WordPress list table
 */
 class WTGTASKSMANAGER_Log_Table extends WP_List_Table {
     

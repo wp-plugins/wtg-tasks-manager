@@ -1,6 +1,6 @@
 <?php
 /** 
- * Class for Wordpress category related functions 
+ * Class for WordPress category related functions 
  * 
  * @package WTG Tasks Manager
  * @author Ryan Bayne   
@@ -8,12 +8,12 @@
  * @version 1.0
  */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
  
 /**
- * Categories for Wordpress
+ * Categories for WordPress
  * 
  * Create, modify and search categories in ways that plugins can use 
  * 
@@ -142,7 +142,7 @@ class WTGTASKSMANAGER_Categories {
     
     /**
     * gets a categories parents (every level upwards) and returns ID
-    * use Wordpress own get_category_parents() if you want to return the term names.
+    * use WordPress own get_category_parents() if you want to return the term names.
     * 
     * this function assumes that the $category_id exists as a term id 
     * 

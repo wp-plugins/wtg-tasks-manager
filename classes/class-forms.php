@@ -1,6 +1,6 @@
 <?php
 /** 
- * Form builder and handler classes for Wordpress only
+ * Form builder and handler classes for WordPress only
  * 
  * @package WTG Tasks Manager
  * @author Ryan Bayne   
@@ -9,7 +9,7 @@
  */  
 
 /** 
-* Main form builder and handler class for Wordpress
+* Main form builder and handler class for WordPress
 * 
 * @package WTG Tasks Manager
 * @author Ryan Bayne   
@@ -205,7 +205,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Register the form, done before registering each input
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -228,7 +228,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * after form processing.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -662,7 +662,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Function to aid the building of a validation array
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -684,7 +684,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Function aids the building of the parameters array
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -816,7 +816,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Ensure submitted input is no longer than giving length
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     * 
@@ -836,7 +836,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Ensure submitted input is no shorter than giving length
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     * 
@@ -856,7 +856,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Match regex.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -873,7 +873,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * No pre or trailing slash allow
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin Framework Pro
+    * @package WordPress Plugin Framework Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -912,7 +912,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     } 
     
     /**
-    * add text input to Wordpress style form which is tabled and has optional HTML5 support
+    * add text input to WordPress style form which is tabled and has optional HTML5 support
     * 
     * 1. the $capability value is set systematically, by default it is 'active_plugins' so minimum use is fine, it
     * is also not required if forms are being hidden from users who shouldnt see them. The security is there as a 
@@ -984,7 +984,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     }
     
     /**
-    * table row with two choice radio group styled by Wordpress and used for switch type settings
+    * table row with two choice radio group styled by WordPress and used for switch type settings
     * 
     * $current_value should be enabled or disabled, use another method and do not change this if you need other values
     *     
@@ -1111,7 +1111,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     }
     
     /**
-    * HTML form textarea with Wordpress table structure.
+    * HTML form textarea with WordPress table structure.
     * 
     * @param mixed $title
     * @param mixed $id
@@ -1193,7 +1193,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * @param mixed $label
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1356,7 +1356,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
                 }
             }
             
-            // add post last, if none of the previous post types are the default, then we display this as default as it would be in Wordpress
+            // add post last, if none of the previous post types are the default, then we display this as default as it would be in WordPress
             $post_default = '';
             if(!$current_applied){
                 $post_default = 'checked="checked"';            
@@ -1449,7 +1449,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     }      
     
     /**
-    * A table row with menu of all Wordpress capabilities
+    * A table row with menu of all WordPress capabilities
     * 
     * @param mixed $title
     * @param mixed $id
@@ -1664,7 +1664,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Hidden input, basic parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1676,7 +1676,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Data and time - group of fields as used on Edit Post screen by WP.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1688,7 +1688,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Text input with basic parameters for common requirements. 
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1700,7 +1700,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Form menu with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1712,7 +1712,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * File upload input with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1724,7 +1724,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Radiogroup with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1736,7 +1736,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Checkboxes with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1748,7 +1748,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Text area input with common parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1760,7 +1760,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Switch configuration (two radios for switching between two states, modes)
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1772,7 +1772,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Hidden input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1784,7 +1784,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Data and time input group with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1796,7 +1796,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Text input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1808,7 +1808,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Menu input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1820,7 +1820,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * File upload input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1832,7 +1832,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Radiogroup input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1844,7 +1844,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Checkboxes input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1856,7 +1856,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Text area input with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */
@@ -1868,7 +1868,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Switch setup (using two radios) with advanced parameters.
     * 
     * @author Ryan R. Bayne
-    * @package Wordpress Plugin WTG Tasks Manager Pro
+    * @package WordPress Plugin WTG Tasks Manager Pro
     * @since 0.0.1
     * @version 1.0
     */

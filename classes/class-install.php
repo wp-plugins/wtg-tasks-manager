@@ -11,7 +11,7 @@
 * @since 0.0.1
 */
 
-// load in Wordpress only
+// load in WordPress only
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
 /**
@@ -105,7 +105,7 @@ class WTGTASKSMANAGER_Install {
         // tabscreenname - the on screen name of the tab in question, if any i.e. Downloads Overview
         // dump - anything the developer thinks will help with debugging or training
         // ipaddress - security side of things, record who is using the site
-        // userid - if user logged into Wordpress
+        // userid - if user logged into WordPress
         // comment - developers comment in-code i.e. recommendation on responding to the log entry
         // type - general|error|trace
         // category - any term that suits the section or system

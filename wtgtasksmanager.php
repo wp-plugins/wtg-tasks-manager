@@ -1,9 +1,9 @@
 <?php         
 /*
 Plugin Name: WTG Tasks Manager Beta
-Version: 0.0.31
+Version: 0.0.32
 Plugin URI: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress
-Description: WTG Tasks Manager
+Description: One of many plugins that can be brought together to create a custom project management environment.
 Author: WebTechGlobal
 Author URI: http://www.webtechglobal.co.uk/
 Last Updated: December 2014
@@ -12,7 +12,7 @@ Domain Path: /languages
 
 GPL v3 
 
-This program is free software downloaded from Wordpress.org: you can redistribute it and/or modify
+This program is free software downloaded from WordPress.org: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -41,11 +41,11 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.3';# to be removed, version is now in the WTGTASKSMANAGER() class 
+$c2p_currentversion = '0.0.31';# to be removed, version is now in the WTGTASKSMANAGER() class 
 $c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               
-if( strstr( ABSPATH, 'OFFprojecttasksmanager' ) ){
+if( strstr( ABSPATH, 'projecttasksmanager' ) ){
     $c2p_debug_mode = true;     
 }               
 

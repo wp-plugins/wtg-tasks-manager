@@ -161,7 +161,7 @@ class WTGTASKSMANAGER_Log_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function postbox_log_deleteentirelog( $data, $box ) {    
-        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Basic options all posts have. If you do not submit this form all posts will use your blogs own defaults. So feel free to make use of Wordpress own core settings instead.', 'wtgtasksmanager' ), false );        
+        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Basic options all posts have. If you do not submit this form all posts will use your blogs own defaults. So feel free to make use of WordPress own core settings instead.', 'wtgtasksmanager' ), false );        
         $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         ?>  
 
@@ -176,7 +176,7 @@ class WTGTASKSMANAGER_Log_View extends WTGTASKSMANAGER_View {
 * Table of cancelled tasks.
 * 
 * @author Ryan R. Bayne
-* @package Wordpress Plugin Framework Pro
+* @package WordPress Plugin Framework Pro
 * @since 0.0.1
 * @version 1.0
 */
