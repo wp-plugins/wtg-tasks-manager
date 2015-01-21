@@ -12,11 +12,11 @@ Task management with a plan - this plugin will grow to meet the needs of online 
 
 == Description ==
 
-Released November 2014 and created to manage multiple projects. The project has a design plan which may take until 2016 to complete
-due to some specifications involving integration with plugins not even created yet. Use of Google Docs and other
-cloud services is planned. I have a long list of features that will make WTG Tasks Manager more than just a fancy todo list.
-Right now the plugin is in-line with most task manager plugins for WordPress but I need more. So you can bet it will grow
-as my business grows. I will be using it daily and whenever I need it to do more I'll make it do more. 
+Released November 2014 and created to act as a workflow system. This task management solution is already being
+used on the WebTechGlobal website. Such early use will drive the project forward and turn the plugin into something
+more than a fancy todo list. A planned feature includes a reward system with the purpose of attracting freelancers or 
+talented members within a softwares community. I also intend for the plugin to make use of social networking and cloud
+services. WTG needs this projects to be complete so you can trust that this is just the beginning. 
 
 = Main Links = 
 *   <a href="http://www.webtechglobal.co.uk/wtg-tasks-manager/" title="WebTechGlobals Task Manager Portal">Plugins Portal</a>
@@ -63,15 +63,17 @@ priority can be increased based on your WebTechGlobal subscription status, donat
 
 == Upgrade Notice ==
 
-Please upgrade by update the plugin from WordPress.org by using your WordPress admin which will notify you when an update is ready - this is safer than using any other source for this software.
+Please update this plugin using your WordPress Installed Plugins screen. Click on Update Now under this plugins details when an update is ready.
+This method is safer than using any other source for the files.
 
 == Changelog == 
 
-= 0.0.32 =
+= 0.0.33 =
 * Feature Changes
     * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum
     * Automatically generated task titles (not handy for everyone) shortened from 50 to 30 characters.
     * New Project Focus: the ability to focus on a single project, hiding tasks for all other projects, this is on a per user basis with the focused project ID stored in user meta.
+    * Update process simplified - relying on the update process within the WP core and reducing manual actions.
 * Technical Information
     * Fix in tasknew() which will allow post excerpt (short description) to be set when it has not been by user.
     * postbox_content_footer() function improved including documentation added.

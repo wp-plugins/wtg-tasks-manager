@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.32';
+    const version = '0.0.33';
     
     /**
      * WTGTASKSMANAGER major version
@@ -874,138 +874,75 @@ class WTGTASKSMANAGER {
         // set the callback, we can change this during the loop and call methods more dynamically
         // this approach allows us to call the same function for all pages
         $subpage_callback = array( $this, 'show_admin_page' );
-                
-        // get installed version for comparing database and data setup to requirements in new package
-        $installed_version = self::get_installed_version();                
-   
-        // step by step installation NOT CURRENTLY IN USE
-        $is_installed = self::is_installed(); 
-        $is_installed = true;
+       
+        // add menu
+        $this->page_hooks[] = add_menu_page( $WTGTASKSMANAGER_Menu['main']['title'], 
+        __( 'WTG Tasks Manager', 'wtgtasksmanager' ), 
+        'administrator', 
+        'wtgtasksmanager',  
+        $subpage_callback ); 
         
-        // check if installation page should be displayed: Install or Update
-        if(!$is_installed && !isset( $_POST['wtgtasksmanager_plugin_install_now'] ) ){   
-           
-            // if URL user is attempting to visit any screen other than page=wtgtasksmanager then redirect to it
-            if( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgtasksmanager_' ) ){
-                wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=wtgtasksmanager' );           
-                exit;    
-            }
-            
-            // if plugin not installed
-            $this->page_hooks[] = add_menu_page( __( 'Install' ), 
-            __( 'Install WTG Tasks Manager' ), 
-            'administrator', 
-            'wtgtasksmanager', 
-            $subpage_callback );
-            
-            
-       /* 
-        $hook = add_menu_page('My Plugin List Table', 'My List Table Example', 'activate_plugins', 'my_list_test', 'wtgtasksmanager_alltasks');
-        add_action( "load-$hook", 'add_options' );
+        // help tab                                                 
+        add_action( 'load-toplevel_page_wtgtasksmanager', array( $this, 'help_tab' ) );
 
-        function add_options() {
-          $option = 'per_page';
-          $args = array(
-                 'label' => 'Books',
-                 'default' => 10,
-                 'option' => 'books_per_page'
-                 );
-          add_screen_option( $option, $args );
-        }
-         */   
-            
-        }elseif( isset( $c2p_currentversion) 
-        && isset( $installed_version) 
-        && $installed_version != false
-        && $c2p_currentversion > $installed_version){
-            
-            // if URL user is attempting to visit any screen other than page=wtgtasksmanager then redirect to it
-            if( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgtasksmanager_' && $_GET['page'] !== 'wtgtasksmanager_pluginupdate' ) ){
-                wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=wtgtasksmanager_pluginupdate' );
-                exit;    
+        // track which group has already been displayed using the parent name
+        $groups = array();
+        
+        // remove arrayinfo from the menu array
+        unset( $WTGTASKSMANAGER_Menu['arrayinfo'] );
+        
+        // get all group menu titles
+        $group_titles_array = array();
+        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
+            if( $page_array['parent'] === 'parent' ){                
+                $group_titles_array[ $page_array['groupname'] ]['grouptitle'] = $page_array['menu'];
             }
-                    
-            // if $installed_version = false it indicates no installation so we should not be displaying an update screen
-            // update screen will be displayed after installation submission if this is not in place
-            
-            // add menu
-            $this->page_hooks[] = add_menu_page( __( 'Update' ), 
-            __( 'Tasks Manager Update Ready' ), 
-            'administrator', 
-            'wtgtasksmanager_pluginupdate',  
-            $subpage_callback );
-            
-        }else{
-                
-            // add menu
-            $this->page_hooks[] = add_menu_page( $WTGTASKSMANAGER_Menu['main']['title'], 
-            __( 'WTG Tasks Manager', 'wtgtasksmanager' ), 
-            'administrator', 
-            'wtgtasksmanager',  
-            $subpage_callback ); 
-            
-            // help tab                                                 
-            add_action( 'load-toplevel_page_wtgtasksmanager', array( $this, 'help_tab' ) );
-   
-            // track which group has already been displayed using the parent name
-            $groups = array();
-            
-            // remove arrayinfo from the menu array
-            unset( $WTGTASKSMANAGER_Menu['arrayinfo'] );
-            
-            // get all group menu titles
-            $group_titles_array = array();
-            foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
-                if( $page_array['parent'] === 'parent' ){                
-                    $group_titles_array[ $page_array['groupname'] ]['grouptitle'] = $page_array['menu'];
-                }
-            }          
-            
-            // loop through sub-pages - remove pages that are not to be registered
-            foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){                 
+        }          
+        
+        // loop through sub-pages - remove pages that are not to be registered
+        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){                 
 
-                // if not visiting this plugins pages, simply register all the parents
-                if( !isset( $_GET['page'] ) || !strstr( $_GET['page'], 'wtgtasksmanager' ) ){
-                    
-                    // remove none parents
-                    if( $page_array['parent'] !== 'parent' ){    
-                        unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] ); 
-                    }        
+            // if not visiting this plugins pages, simply register all the parents
+            if( !isset( $_GET['page'] ) || !strstr( $_GET['page'], 'wtgtasksmanager' ) ){
                 
-                }elseif( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgtasksmanager' ) ){
-                    
-                    // remove pages that are not the main, the current visited or a parent
-                    if( $key_pagename !== 'main' && $page_array['slug'] !== $_GET['page'] && $page_array['parent'] !== 'parent' ){
-                        unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] );
-                    }     
-                    
-                } 
+                // remove none parents
+                if( $page_array['parent'] !== 'parent' ){    
+                    unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] ); 
+                }        
+            
+            }elseif( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgtasksmanager' ) ){
                 
-                // remove the parent of a group for the visited page
-                if( isset( $_GET['page'] ) && $page_array['slug'] === $_GET['page'] ){
-                    unset( $WTGTASKSMANAGER_Menu[ $WTGTASKSMANAGER_Menu[ $key_pagename ]['parent'] ] );
-                }
-                
-                // remove update page as it is only meant to show when new version of files applied
-                if( $page_array['slug'] == 'wtgtasksmanager_pluginupdate' ) {
+                // remove pages that are not the main, the current visited or a parent
+                if( $key_pagename !== 'main' && $page_array['slug'] !== $_GET['page'] && $page_array['parent'] !== 'parent' ){
                     unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] );
-                }
-            }
-
-            foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
+                }     
                 
-                $new_hook = add_submenu_page( 'wtgtasksmanager', 
-                       $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
-                       $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
-                       self::get_page_capability( $key_pagename ), 
-                       $WTGTASKSMANAGER_Menu[ $key_pagename ]['slug'], 
-                       $subpage_callback );     
-             
-                $this->page_hooks[] = $new_hook;
-                       
-                // help tab                                                 
-                add_action( 'load-wtgtasksmanager_page_wtgtasksmanager_' . $key_pagename, array( $this, 'help_tab' ) );              
+            } 
+            
+            // remove the parent of a group for the visited page
+            if( isset( $_GET['page'] ) && $page_array['slug'] === $_GET['page'] ){
+                unset( $WTGTASKSMANAGER_Menu[ $WTGTASKSMANAGER_Menu[ $key_pagename ]['parent'] ] );
             }
+            
+            // remove update page as it is only meant to show when new version of files applied
+            if( $page_array['slug'] == 'wtgtasksmanager_pluginupdate' ) {
+                unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] );
+            }
+        }
+
+        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
+            
+            $new_hook = add_submenu_page( 'wtgtasksmanager', 
+                   $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
+                   $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
+                   self::get_page_capability( $key_pagename ), 
+                   $WTGTASKSMANAGER_Menu[ $key_pagename ]['slug'], 
+                   $subpage_callback );     
+         
+            $this->page_hooks[] = $new_hook;
+                   
+            // help tab                                                 
+            add_action( 'load-wtgtasksmanager_page_wtgtasksmanager_' . $key_pagename, array( $this, 'help_tab' ) );              
         }
     }
     
