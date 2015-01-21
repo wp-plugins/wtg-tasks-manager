@@ -658,8 +658,7 @@ class WTGTASKSMANAGER_Requests {
     * @since 0.0.1
     * @version 1.0
     */
-    public function advanced() {
-        
+    public function advanced() {     
         // set required tasks
         $required = 0;
         if( isset( $_POST['required'] ) && $_POST['required'] ) {
@@ -824,7 +823,33 @@ class WTGTASKSMANAGER_Requests {
         }
     
         // create a new task per row 
-        $this->UI->create_notice( sprintf( __( 'A total of %s tasks have been created and %s could to be added.', 'csv2post' ), $total_tasks_created, $total_tasks_failed ), 'success', 'Small', __( 'Data Source Ready' ) );  
+        $this->UI->create_notice( sprintf( __( 'A total of %s tasks have been created and %s failed (reasons could vary and require investigation with the help of WebTechGlobal).', 'csv2post' ), $total_tasks_created, $total_tasks_failed ), 'success', 'Small', __( 'Data Source Ready' ) );  
+    }
+
+    /**
+    * Handles request to focus on a specific project.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function projectfocus() {
+        if( !isset( $_GET['projectid'] ) )
+        {
+            $this->UI->create_notice( __( 'To request focus on a specific project you must include a projet ID in your request.' ),'error', 'Small', __( 'Missing Project ID', 'wtgtasksmanager' ) );
+            return false;    
+        }
+        
+        if( !is_numeric( $_GET['projectid'] ) ) 
+        {
+            $this->UI->create_notice( __( 'The project ID you have included in your request does not appear to be valid, please try again.' ),'error', 'Small', __( 'Invalid Project ID', 'wtgtasksmanager' ) );
+            return false;    
+        }
+            
+        update_user_meta( get_current_user_id(), 'wtgprojectfocus', $_GET['projectid'] ); 
+        
+        $this->UI->create_notice( __( 'Your project with ID ' . $_GET['projectid'] . ' is now being focused on. All of the plugins interfaces will hide information about other projects. This does not apply to the custom post type which allows all projects tasks to be viewed as a secondary method.' ),'success', 'Small', __( 'Project Focused', 'wtgtasksmanager' ) );
     }
          
 }// WTGTASKSMANAGER_Requests       

@@ -197,9 +197,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function postbox_main_projectlist( $data, $box ) {    
-        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Basic list of projects, this is to improve.', 'wtgtasksmanager' ), false );        
-        $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
-        
+        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'A list of projects with quick actions.', 'wtgtasksmanager' ), false );        
+
         global $tasksmanager_settings;
         ?>  
 
@@ -218,13 +217,14 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                   'archived' => string '0' (length=1)
                   */
       
-                $this->UI->option_subline( '', $project['projectname'] );
+                $link = $this->UI->linkaction( 'wtgtasksmanager', 'projectfocus', __( 'WTG Tasks Manager admin link', 'wtgtasksmanager' ), __( 'Focus', 'wtgtasksmanager' ), '&projectid=' . $project['project_id'], ' class="button c2pbutton"', 'admin.php' );
+                $this->UI->option_subline( $link, $project['projectname'] );
+                //$this->UI->
             }       
             ?>
             </table> 
             
         <?php 
-        $this->UI->postbox_content_footer();
     } 
                
     /**

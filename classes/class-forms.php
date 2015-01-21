@@ -1,6 +1,9 @@
 <?php
 /** 
- * Form builder and handler classes for WordPress only
+ * Form builder and handler classes for WordPress only. 
+ * 
+ * Includes links and buttons that do not need to be within <form> but do
+ * have actions that require processing.
  * 
  * @package WTG Tasks Manager
  * @author Ryan Bayne   
@@ -1146,14 +1149,10 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     /**
     * Basic form menu within table row.
     * 
-    * @param mixed $title
-    * @param mixed $id
-    * @param mixed $name
-    * @param mixed $array
-    * @param mixed $current
-    * @param mixed $defaultvalue
-    * @param mixed $defaulttitle
-    * @param mixed $validation
+    * @author Ryan R. Bayne
+    * @package CSV 2 POST
+    * @since 0.0.1
+    * @version 1.2
     */
     public function input_menu(){
         ?>
@@ -1168,10 +1167,10 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
                             echo '<option selected="selected" value="notrequired123">Not Required</option>';
                         }                    
                     }
-                    
-                    $selected = '';            
+                
                     foreach( $this->itemsarray as $key => $option_title ){
                         
+                        $selected = '';
                         if( $key == $this->currentvalue ){
                             $selected = 'selected="selected"';
                         } 
@@ -1184,7 +1183,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
         </tr>
         <!-- Option End --><?php          
     }   
-    
+        
     /**
     * Creates one or more checkboxes. Pass an array using $this->currentvalue to put boxes on. 
     * 
@@ -1731,7 +1730,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     public function radiogroup_basic( $form_id, $id, $name, $title, $items_array, $current_value, $required = false, $validation_array = array() ) {
         self::input( $form_id, 'radiogroup', $id, $name, $title, $title, $required, $current_value, array( 'itemsarray' => $items_array ), $validation_array );
     }
- 
+        
     /**
     * Checkboxes with common parameters.
     * 

@@ -25,9 +25,6 @@ and we do not promise it is ready for any one persons specific needs.
 See the GNU General Public License for more details.
 
 See <http://www.gnu.org/licenses/>.
-
-This license does not apply to the paid edition which comes with premium
-services not just software. License and agreement is seperate.
 */           
   
 // Prohibit direct script loading
@@ -41,7 +38,7 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$c2p_currentversion = '0.0.31';# to be removed, version is now in the WTGTASKSMANAGER() class 
+$c2p_currentversion = '0.0.32';# to be removed, version is now in the WTGTASKSMANAGER() class 
 $c2p_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
 
 // go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               

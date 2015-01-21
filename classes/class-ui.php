@@ -214,7 +214,7 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @param mixed $text - link text
     * @param mixed $values - begin with & followed by values
     * 
-    * @deprecated this method has been moved to the WTGTASKSMANAGER_UI class
+    * @deprecated use the method in class-forms.php which allows registration, validation of $_GET values is applied by the system
     */
     public function linkaction( $page_name_or_post_id, $action, $title = 'WTG Tasks Manager admin link', $text = 'Click Here', $values = '', $class = ' class="button c2pbutton"', $file = 'admin.php' ){
         
@@ -1049,8 +1049,25 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         <?php 
     }
     
-    public function postbox_content_footer() {
-                echo '<input class="button button-primary" type="submit" value="Submit" /> 
+    
+    /**
+    * Ends form-end and submit button in post box and adds ending paragraph.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.2
+    * 
+    * @param mixed $submit_title
+    */
+    public function postbox_content_footer( $submit_title = false ) {
+        
+        // submit button title
+        if( $submit_title === false ) {
+            $submit_title = __( 'Submit', 'wtgtasksmanager' );    
+        }
+        
+                echo '<input class="button button-primary" type="submit" value="' . $submit_title . '" /> 
             </form>
         </p>';    
     }
@@ -1734,6 +1751,8 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
     * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
+    * 
+    * @deprecated only used by methods in this file and they are depreciated, now using class-forms.php
     */
     public function register_input_validation( $input_title, $input_name, $input_id, $input_validation ) {
                            

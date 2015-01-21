@@ -31,7 +31,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
      *
      * @var int
      */
-    protected $screen_columns = 2;
+    protected $screen_columns = 1;
     
     protected $view_name = 'pluginupdate';
     

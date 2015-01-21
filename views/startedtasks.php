@@ -429,6 +429,19 @@ class WTGTASKSMANAGER_WPTable_StartedTasks extends WP_List_Table {
         $hidden = array();
         $sortable = $this->get_sortable_columns();
         
+        // does current user have project focus set
+        $meta_key = '';
+        $meta_value = '';
+        $project_focus_id = get_user_meta( get_current_user_id(), 'wtgprojectfocus', true );
+        if( $project_focus_id )
+        {
+            if( is_numeric( $project_focus_id ) )
+            {
+                $meta_key = 'wtgprojectid';
+                $meta_value = $project_focus_id;                
+            }    
+        }
+                
         // get all tasks posts
         $data = array();
     
@@ -439,7 +452,9 @@ class WTGTASKSMANAGER_WPTable_StartedTasks extends WP_List_Table {
         'orderby'          => 'post_date',
         'order'            => 'DESC',
         'include'          => '',
-        'exclude'          => '',
+        'exclude'          => '',   
+        'meta_key'         => $meta_key,
+        'meta_value'       => $meta_value,                  
         'post_type'        => 'wtgtasks',
         'post_mime_type'   => '',
         'post_parent'      => '',

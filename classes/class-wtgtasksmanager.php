@@ -1219,7 +1219,7 @@ class WTGTASKSMANAGER {
         // has hourly target counter been reset for this hour - if not, reset now then return (this is an event)
         // does not actually start at the beginning of an hour, it is a 60 min allowance not hour to hour
         $hour_reset_time = $c2p_schedule_array['history']['hour_lastreset'] + 3600;
-        if(time() > $hour_reset_time )
+        if( time() > $hour_reset_time )
         {     
             // reset hour_lastreset value and the hourlycounter
             $c2p_schedule_array['history']['hour_lastreset'] = time();
@@ -1233,7 +1233,7 @@ class WTGTASKSMANAGER {
 
         // have all target counters been reset for today - if not we will reset now and end event check (in otherwords this was the event)
         $day_reset_time = $c2p_schedule_array['history']['day_lastreset'] + 86400;
-        if(time() > $day_reset_time )
+        if( time() > $day_reset_time )
         {
             $c2p_schedule_array['history']['hour_lastreset'] = time();
             $c2p_schedule_array['history']['day_lastreset'] = time();
@@ -1633,15 +1633,6 @@ class WTGTASKSMANAGER {
     }
     
     /**
-    * Uses database table arrays to check if any installed tables have not been updated yet 
-    * 
-    * @todo I have deleted everything in this function, a new approach using later methods is required 
-    */
-    public function diagnostics_databasecomparison_alertonly( $expected_tables_array ){
-
-    } 
-    
-    /**
     * DO NOT CALL DURING FULL PLUGIN INSTALL
     * This function uses update. Do not call it during full install because user may be re-installing but
     * wishing to keep some existing option records.
@@ -2034,13 +2025,22 @@ class WTGTASKSMANAGER {
             <div id="icon-options-general" class="icon32"><br /></div>
             
             <?php 
-            $name = '';
+            // build page H2 title
+            $a = '';
+            $h2_title = '';
+            
+            // if not "WTG Tasks Manager" set this title
             if( $pagetitle !== 'WTG Tasks Manager' ) {
-                $name = 'WTG Tasks Manager: ';    
+                $h2_title = 'WTG Tasks Manager: ' . $pagetitle;    
             }
+
+            // if update screen set this title
+            if( $_GET['page'] == 'wtgtasksmanager_pluginupdate' ){
+                $h2_title = __( 'New WTG Tasks Manager Update Ready', 'wtgtasksmanager' );
+            }           
             ?>
             
-            <h2><?php echo $name . $pagetitle;?></h2>
+            <h2><?php echo $h2_title;?></h2>
 
             <?php 
             // run specific admin triggered automation tasks, this way an output can be created for admin to see

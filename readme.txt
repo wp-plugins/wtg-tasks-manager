@@ -5,7 +5,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: WTG, Task Manager, Tasks, Task Management, Task, todo, TO DO, to-do, Workflow, project management
 Requires at least: 3.8.0
-Tested up to: 4.0.0
+Tested up to: 4.1.0
 Stable tag: trunk
 
 Task management with a plan - this plugin will grow to meet the needs of online business managed within WordPress.
@@ -25,9 +25,6 @@ as my business grows. I will be using it daily and whenever I need it to do more
 *   <a href="http://www.webtechglobal.co.uk/category/wordpress/wtg-tasks-manager/" title="WebTechGlobal blog category for tasks manager">Plugins Blog</a>
 *   <a href="http://www.twitter.com/WebTechGlobal" title="WebTechGlobal Tweets">Plugins Twitter</a>
 *   <a href="http://www.youtube.com/playlist?list=PLMYhfJnWwPWD5P2vNf2c9gRsRNqRSVSoV" title="Official YouTube channel for WTG Tasks Manager">YouTube Playlist</a>
-*   <a href="#" title="WTG Tasks Manager Review One">Review 1: get your review here</a>
-*   <a href="#" title="WTG Tasks Manager Review Two">Review 2: get your review here</a>
-*   <a href="#" title="WTG Tasks Manager Review Three">Review 3: get your review here</a>
 
 = Feature List = 
 
@@ -39,9 +36,7 @@ Remember this plugin is a beta so the list will be short for a while.
  
 == Installation ==
 
-1. You can place the wtgtasksmanager folder in the plugins directory using FTP
-1. You can also upload the plugin using WordPress plugin screen (wp-admin/plugin-install.php)
-1. If your WordPress installation is on a path that includes "wtgtasksmanager" it will trigger debugging to activate. This is meant for localhost development and can be disabled.
+Please install WTG Tasks Manager from WordPress.org by going to Plugins --> Add New and searching "WTG Tasks Manager". This is safer and quicker than any other methods.
 
 == Frequently Asked Questions ==
 
@@ -49,7 +44,17 @@ Remember this plugin is a beta so the list will be short for a while.
 You can import tasks to WTG Tasks Manager from a .csv file using my CSV 2 POST plugin. Tasks in this plugin are
 simply posts and CSV 2 POST allows the creation of posts for custom post types. Please use my forum to get help
 on this subject.
-  
+
+= As a WebTechGlobal subscriber can I get higher priority support for this plugin? =
+Yes - subscribers are put ahead of my Free Workflow and will not only result in a quicker response for support
+but requests for new features are marked with higher priority.
+
+= Can I hire you to customize the plugin for me? =
+Yes - you can pay to improve the plugin to suit your needs. However many improvements will be done free.
+Please post your requirements on the plugins forum first before sending me Paypal or Bitcoins. If your request is acceptable
+within my plans it will always be added to the WTG Tasks Management plugin which is part of my workflow system. The tasks
+priority can be increased based on your WebTechGlobal subscription status, donations or contributions you have made.
+
 == Screenshots ==
 
 1. Manage Multiple Projects.
@@ -58,7 +63,7 @@ on this subject.
 
 == Upgrade Notice ==
 
-Please do not update without backing up your database.
+Please upgrade by update the plugin from WordPress.org by using your WordPress admin which will notify you when an update is ready - this is safer than using any other source for this software.
 
 == Changelog == 
 
@@ -66,12 +71,14 @@ Please do not update without backing up your database.
 * Feature Changes
     * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum
     * Automatically generated task titles (not handy for everyone) shortened from 50 to 30 characters.
+    * New Project Focus: the ability to focus on a single project, hiding tasks for all other projects, this is on a per user basis with the focused project ID stored in user meta.
 * Technical Information
     * Fix in tasknew() which will allow post excerpt (short description) to be set when it has not been by user.
+    * postbox_content_footer() function improved including documentation added.
 * Known Issues
-    * Search ability still to be complete.
+    * Search abilities are limited.
     * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
-    * post-new.php (Create Task) view cannot be used yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+    * post-new.php (Create Task) view cannot be used properly yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
     
 == Plugin Author == 
 
@@ -118,7 +125,7 @@ Additional labels for pre-release and build metadata are available as extensions
 
 = When To Update = 
 
-Browse the changes log and decide if an update is required. There is nothing wrong with skipping version if it does not
+Browse the changes log and decide if you need any recent changes. There is nothing wrong with skipping versions if changes do not
 help you - look for security related changes or new features that could really benefit you. If you do not see any you may want
 to avoid updating. If you decide to apply the new version - do so after you have backedup your entire WordPress installation 
 (files and data). Files only or data only is not a suitable backup. Every WordPress installation is different and creates a different
