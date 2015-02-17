@@ -183,7 +183,10 @@ class WTGTASKSMANAGER_WPTable_ClosedTasks extends WP_List_Table {
      ***************************************************************************/
     function __construct() {
         global $status, $page;
-             
+           
+        $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' ); # plugin specific functions
+        $this->UI = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); # interface, mainly notices
+                     
         //Set parent defaults
         parent::__construct( array(
             'singular'  => 'task',     //singular name of the listed records
@@ -307,7 +310,7 @@ class WTGTASKSMANAGER_WPTable_ClosedTasks extends WP_List_Table {
     function column_ID( $item ) {
         $actions = array(                      
             'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID ),
-            //'delete'    => sprintf( '<a href="post_type=wtgtasks&action=delete&book=%s">Delete</a>', $item->ID ),
+            'continuetask'    => $this->UI->linkaction( 'wtgtasksmanager_closedtasks', 'continuetask', __( 'Continue this task.', 'wtgtasksmanager' ), __( 'Continue', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
         );
 
         return sprintf( '%1$s %2$s', $item->ID, $this->row_actions($actions) );

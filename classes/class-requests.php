@@ -493,12 +493,19 @@ class WTGTASKSMANAGER_Requests {
     * Insert new entry to the webtechglobal_projects table.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
     public function startnewproject() {
         $project_id = $this->WTGTASKSMANAGER->insertproject( $_POST['newprojectname'] );  
+        
+        if( $project_id === false )
+        {
+            $this->UI->create_notice( __( 'The project name "' . $_POST['newprojectname'] . '" already exists. No changes have been made.', 'wtgtasksmanager' ), 'error', 'Small', __( 'Project Name Exists', 'wtgtasksmanager' ) );                                                          
+            return;
+        }
+        
         $this->UI->create_notice( __( "The project ID is $project_id and you can begin assigning tasks to it.", 'wtgtasksmanager' ), 'success', 'Small', __( 'Project Created', 'wtgtasksmanager' ) );                                              
     }
     
@@ -506,7 +513,7 @@ class WTGTASKSMANAGER_Requests {
     * Handles request to cancel a single task.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -538,12 +545,49 @@ class WTGTASKSMANAGER_Requests {
         
         $this->UI->create_notice( __( "The task with ID " . $_GET['task'] . " has been cancelled.", 'wtgtasksmanager' ), 'success', 'Small', __( 'Task Cancelled', 'wtgtasksmanager' ) );                                                                 
     }
-    
+        
     /**
-    * Changes a tasks status to "startedtask"
+    * Changes a waiting (new) task status to "startedtask".
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function starttask() {
+        // if no task value in URL 
+        if( !isset( $_GET['task'] ) ) {
+            $this->UI->create_notice( __( "Cannot begin a task because no task ID has been submitted.", 'wtgtasksmanager' ), 'error', 'Small', __( 'Task ID Required', 'wtgtasksmanager' ) );                                               
+            return false;    
+        }
+        
+        // if task value not numeric
+        if( !is_numeric( $_GET['task'] ) ) {
+            $this->UI->create_notice( __( "Your request could not be complete because the submitted task ID is not a number.", 'wtgtasksmanager' ), 'error', 'Small', __( 'Invalid Task ID', 'wtgtasksmanager' ) );                                                           
+            return false;    
+        }
+        
+        // ensure task post exists (do not assume ID is a task post it may be another post)
+        $task = get_post( $_GET['task'] );
+        if( !$task || $task->post_type == 'post_type' ) {
+            $this->UI->create_notice( __( "The submitted ID does not match any task.", 'wtgtasksmanager' ), 'warning', 'Small', __( 'Task Does Not Exist', 'wtgtasksmanager' ) );                                                           
+            return false;    
+        }        
+        
+        // update task post
+        $my_post = array();
+        $my_post['ID'] = $_GET['task'];
+        $my_post['post_status'] = 'startedtask';
+        wp_update_post( $my_post );
+        
+        $this->UI->create_notice( __( "The task with ID " . $_GET['task'] . " has been started. You will find the task on the Started screen.", 'wtgtasksmanager' ), 'success', 'Small', __( 'Task Begun', 'wtgtasksmanager' ) );                                                                    
+    }    
+            
+    /**
+    * Changes a tasks status to "startedtask" from a state other than waiting i.e. closed, cancelled.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -580,7 +624,7 @@ class WTGTASKSMANAGER_Requests {
     * Changes a tasks status to "closedtask"
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -607,7 +651,7 @@ class WTGTASKSMANAGER_Requests {
         // update task post
         $my_post = array();
         $my_post['ID'] = $_GET['task'];
-        $my_post['post_status'] = 'startedtask';
+        $my_post['post_status'] = 'closedtask';
         wp_update_post( $my_post );
         
         $this->UI->create_notice( __( "The task with ID " . $_GET['task'] . " has been closed. You can find the task on the Closed screen.", 'wtgtasksmanager' ), 'success', 'Small', __( 'Task Closed', 'wtgtasksmanager' ) );                                                                    
@@ -617,7 +661,7 @@ class WTGTASKSMANAGER_Requests {
     * Changes a tasks status to "finishedstatus"
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -695,7 +739,7 @@ class WTGTASKSMANAGER_Requests {
         
         // let the user know it has all gone very wrong and they are DOOMED! 
         if( $file_import_result['outcome'] === false ) {   
-            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'csv2post' ) );
+            $this->UI->create_notice( $file_import_result['message'], 'error', 'Small', __( 'File Upload Failed', 'wtgtasksmanager' ) );
             return;    
         }
         
@@ -704,7 +748,7 @@ class WTGTASKSMANAGER_Requests {
         $files_array[1]['fullpath'] = $file_import_result['filepath'];
                                                            
         // create success notice regarding file processing 
-        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Transferred', 'csv2post' ) );   
+        $this->UI->create_notice( $file_import_result['message'], 'success', 'Small', __( 'File Transferred', 'wtgtasksmanager' ) );   
                            
         // establish separator
         $files_array[1]['sep'] = $this->Files->established_separator( $file_import_result['filepath'] );
@@ -823,7 +867,7 @@ class WTGTASKSMANAGER_Requests {
         }
     
         // create a new task per row 
-        $this->UI->create_notice( sprintf( __( 'A total of %s tasks have been created and %s failed (reasons could vary and require investigation with the help of WebTechGlobal).', 'csv2post' ), $total_tasks_created, $total_tasks_failed ), 'success', 'Small', __( 'Data Source Ready' ) );  
+        $this->UI->create_notice( sprintf( __( 'A total of %s tasks have been created and %s failed (reasons could vary and require investigation with the help of WebTechGlobal).', 'wtgtasksmanager' ), $total_tasks_created, $total_tasks_failed ), 'success', 'Small', __( 'Data Source Ready' ) );  
     }
 
     /**

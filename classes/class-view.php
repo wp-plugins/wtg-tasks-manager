@@ -434,7 +434,7 @@ abstract class WTGTASKSMANAGER_View {
     * Normally it would be a single table though.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */

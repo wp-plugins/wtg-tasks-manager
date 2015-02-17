@@ -169,7 +169,7 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
 * @author Ryan R. Bayne
 * @package WTG Tasks Manager
 * @since 0.0.1
-* @version 1.0
+* @version 1.1
 */
 class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
     
@@ -225,6 +225,9 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
                 break;
             case 'post_title':
                 return $item->post_title;
+                break;            
+            case 'post_status':
+                return $this->UI->human_status( $item->post_status );
                 break;                
             case 'post_date':
                 return $item->post_date;    
@@ -308,6 +311,7 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
             'ID' => 'ID',
+            'post_status' => __( 'Status', 'wtgtasksmanager' ),
             'post_title'     => __( 'Task Title', 'wtgtasksmanager' ),            
             'post_date' => __( 'Task Created', 'wtgtasksmanager' ),
             'wtgtaskproject' => __( 'Project Name', 'wtgtasksmanager' ),
@@ -332,11 +336,35 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
      
     function column_ID( $item ) {
         $actions = array(                      
-            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID ),
-            'canceltask'    => $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'canceltask', __( 'Cancel this task.', 'wtgtasksmanager' ), __( 'Cancel', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
-            'finishtask'    => $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'finishtask', __( 'Finish this task.', 'wtgtasksmanager' ), __( 'Finish', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
+            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID )
         );
-   
+           
+        // add another action button based on the tasks state
+        if( $item->post_status == 'newtask' &&  $item->post_status == 'publish' )
+        {        
+            $actions['canceltask'] = $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'canceltask', __( 'Cancel this task.', 'wtgtasksmanager' ), __( 'Cancel', 'wtgtasksmanager' ), $values = '&task=' . $item->ID );
+        }
+        
+        if( $item->post_status == 'newtask' )
+        {
+            $actions['starttask'] = $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'starttask', __( 'Begin this task.', 'wtgtasksmanager' ), __( 'Start', 'wtgtasksmanager' ), $values = '&task=' . $item->ID );
+        }
+        
+        if( $item->post_status == 'finishedtask' )
+        {    
+             $actions['closetask'] = $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'closetask', __( 'Close this task.', 'wtgtasksmanager' ), __( 'Close', 'wtgtasksmanager' ), $values = '&task=' . $item->ID );
+        }
+        
+        if( $item->post_status == 'startedtask' )
+        {
+             $actions['finishtask'] = $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'finishtask', __( 'Finish this task.', 'wtgtasksmanager' ), __( 'Finish', 'wtgtasksmanager' ), $values = '&task=' . $item->ID );
+        }
+ 
+        if( $item->post_status == 'cancelledtask' || $item->post_status == 'closedtask' )
+        {
+             $actions['continuetask'] = $this->UI->linkaction( 'wtgtasksmanager_alltasks', 'continuetask', __( 'Continue this task.', 'wtgtasksmanager' ), __( 'Continue', 'wtgtasksmanager' ), $values = '&task=' . $item->ID );
+        }        
+    
         return sprintf( '%1$s %2$s', $item->ID, $this->row_actions($actions) );
     }
  

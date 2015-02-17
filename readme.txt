@@ -68,6 +68,19 @@ This method is safer than using any other source for the files.
 
 == Changelog == 
 
+= 0.0.34 =
+* Feature Changes
+    * Attempting to use the same project name twice now displays a clearer error.
+    * Naming of some tabs and views changed to be a little easier to understand.
+    * All Tasks view now offers actions per task more suited to the tasks status.
+    * Status column added to the All Tasks view.
+* Technical Information
+    * Closing a task now sets the post to closedtask rather than startedtask.
+* Known Issues
+    * Search abilities are limited.
+    * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * post-new.php for the plugins custom post type (Create Task) cannot be used properly yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+    
 = 0.0.33 =
 * Feature Changes
     * Import Tasks CSV: new tab on Tasks page for importing .csv file - it is a basic importer, if you need more done to it please make a request in the plugins forum

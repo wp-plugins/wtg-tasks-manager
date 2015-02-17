@@ -22,7 +22,7 @@ add_action( 'add_meta_boxes', 'add_meta_boxes_wtgtasks' );
 * REPLACEABOUT
 * 
 * @author Ryan R. Bayne
-* @package WordPress Plugin Framework Pro
+* @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.0
 */
@@ -251,7 +251,7 @@ function projecttaskmanager_append_post_status_list(){
 * Change the post data or respond to inputs.
 * 
 * @author Ryan R. Bayne
-* @package WordPress Plugin Framework Pro
+* @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.0
 */

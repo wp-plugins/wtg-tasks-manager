@@ -2002,7 +2002,34 @@ class WTGTASKSMANAGER_UI extends WTGTASKSMANAGER {
         $close = implode( ',', $clodeids);
         update_user_option( $userid, $optionname, $close );
     }    
-           
+    
+    /**
+    * Change task status value to a human readable status.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function human_status( $task_status ) {
+        switch ( $task_status ) {
+           case 'startedtask':
+             return __( 'Started', 'wtgtasksmanager' );
+           case 'newtask':
+             return __( 'New', 'wtgtasksmanager' ); 
+           case 'publish':
+             return __( 'New', 'wtgtasksmanager' );      
+           case 'cancelledtask':
+             return __( 'Cancelled', 'wtgtasksmanager' );
+           case 'closedtask':
+             return __( 'Closed', 'wtgtasksmanager' );  
+           case 'finishedtask':
+             return __( 'Finished', 'wtgtasksmanager' );
+           default:
+             return __( 'Started', 'wtgtasksmanager' );
+        }
+    }     
+      
 }// class WTGTASKSMANAGER_UI 
   
 /**

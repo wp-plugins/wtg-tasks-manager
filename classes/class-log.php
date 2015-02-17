@@ -2,7 +2,7 @@
 /** 
  * WebTechGlobal Log entry and display classes for WordPress.
  * 
- * To be used with WordPress Plugin Framework Pro. The wp_webtechglobal_log table is shared between
+ * To be used with WTG Tasks Manager. The wp_webtechglobal_log table is shared between
  * all WebTechGlobal plugins. The package is stored in the table to separate log entries.
  * 
  * @package WTG Tasks Manager
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 /** 
  * WebTechGlobal Log class for WordPress. This is the main class.
  * 
- * To be used with WordPress Plugin Framework Pro
+ * To be used with WTG Tasks Manager
  * 
  * @package WTG Tasks Manager
  * @subpackage WebTechGlobal Log for WordPress

@@ -5,7 +5,7 @@
  * This page displays when the plugin requires updating. The idea is to layout all changes
  * and warn the user importing changes that might need to be tested.  
  *
- * @package CSV 2 POST
+ * @package WTG Tasks Manager
  * @subpackage Views
  * @author Ryan Bayne   
  * @since 8.1.3
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 /**
  * Update the plugin [page] 
  * 
- * @package CSV 2 POST
+ * @package WTG Tasks Manager
  * @subpackage Views
  * @author Ryan Bayne
  * @since 8.1.3
@@ -41,7 +41,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * Array of meta boxes, looped through to register them on views and as dashboard widgets
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 8.1.33
     * @version 1.0.0
     */
@@ -104,7 +104,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * Outputs the meta boxes
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 0.0.3
     * @version 1.0.0
     */
@@ -119,7 +119,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * @uses dashboard_widgets() in parent class WTGTASKSMANAGER_View which loops through meta boxes and registeres widgets
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 0.0.2
     * @version 1.0.0
     */
@@ -133,7 +133,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * This function also offers a place to apply more security or arguments.
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 8.1.32
     * @version 1.0.1
     */
@@ -145,7 +145,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * post box function for testing
     * 
     * @author Ryan Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 8.1.3
     * @version 1.0.0
     */
@@ -158,7 +158,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * post box function for testing
     * 
     * @author Ryan Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 8.1.3
     * @version 1.0.0
     */
@@ -170,7 +170,7 @@ class WTGTASKSMANAGER_Pluginupdate_View extends WTGTASKSMANAGER_View {
     * post box function for testing
     * 
     * @author Ryan Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 8.1.3
     * @version 1.0.0
     */

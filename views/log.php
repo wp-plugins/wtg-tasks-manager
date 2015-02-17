@@ -176,7 +176,7 @@ class WTGTASKSMANAGER_Log_View extends WTGTASKSMANAGER_View {
 * Table of cancelled tasks.
 * 
 * @author Ryan R. Bayne
-* @package WordPress Plugin Framework Pro
+* @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.0
 */

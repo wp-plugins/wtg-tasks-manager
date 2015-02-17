@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.33';
+    const version = '0.0.34';
     
     /**
      * WTGTASKSMANAGER major version
@@ -558,7 +558,7 @@ class WTGTASKSMANAGER {
     * after save_post has run." 
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -2678,7 +2678,7 @@ class WTGTASKSMANAGER {
     * Enter a new task
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.2
     */
@@ -2733,12 +2733,21 @@ class WTGTASKSMANAGER {
     * Insert a new project into the webtechglobal_projects table.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
+    * 
+    * @returns string 'exists' if project found by name
     */
     public function insertproject( $project_name ) {
         global $wpdb;
+        
+        // does project already exist
+        $exists = self::get_projectid_byname( $project_name );
+        if( $exists ) {
+            return false;
+        }
+        
         return $this->DB->insert( $wpdb->webtechglobal_projects, array( 'projectname' => $project_name ) );   
     }
     
@@ -2746,7 +2755,7 @@ class WTGTASKSMANAGER {
     * Query projects.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0             
     * 
@@ -2761,7 +2770,7 @@ class WTGTASKSMANAGER {
     * Get a project by its ID.
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0             
     * 

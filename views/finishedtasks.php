@@ -167,7 +167,7 @@ class WTGTASKSMANAGER_Finishedtasks_View extends WTGTASKSMANAGER_View {
 * Table Example
 * 
 * @author Ryan R. Bayne
-* @package WordPress Plugin Framework Pro
+* @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.0
 */

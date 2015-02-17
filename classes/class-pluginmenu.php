@@ -73,10 +73,10 @@ class WTGTASKSMANAGER_TabMenu {
         // All Tasks
         $menu_array['alltasks']['groupname'] = 'tasks';
         $menu_array['alltasks']['slug'] = 'wtgtasksmanager_alltasks'; 
-        $menu_array['alltasks']['menu'] = __( 'Tasks', 'wtgtasksmanager' );
-        $menu_array['alltasks']['pluginmenu'] = __( 'Tasks', 'wtgtasksmanager' );
+        $menu_array['alltasks']['menu'] = __( 'All', 'wtgtasksmanager' );
+        $menu_array['alltasks']['pluginmenu'] = __( 'All', 'wtgtasksmanager' );
         $menu_array['alltasks']['name'] = "alltasks";
-        $menu_array['alltasks']['title'] = __( 'Tasks', 'wtgtasksmanager' ); 
+        $menu_array['alltasks']['title'] = __( 'All Tasks', 'wtgtasksmanager' ); 
         $menu_array['alltasks']['parent'] = 'parent'; 
         $menu_array['alltasks']['tabmenu'] = true; 
         
@@ -86,7 +86,7 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['startedtasks']['menu'] = __( 'Started', 'wtgtasksmanager' );
         $menu_array['startedtasks']['pluginmenu'] = __( 'Started', 'wtgtasksmanager' );
         $menu_array['startedtasks']['name'] = "startedtasks";
-        $menu_array['startedtasks']['title'] = __( 'Started', 'wtgtasksmanager' ); 
+        $menu_array['startedtasks']['title'] = __( 'Started Tasks', 'wtgtasksmanager' ); 
         $menu_array['startedtasks']['parent'] = 'alltasks'; 
         $menu_array['startedtasks']['tabmenu'] = true; 
         
@@ -96,7 +96,7 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['finishedtasks']['menu'] = __( 'Finished', 'wtgtasksmanager' );
         $menu_array['finishedtasks']['pluginmenu'] = __( 'Finished', 'wtgtasksmanager' );
         $menu_array['finishedtasks']['name'] = "finishedtasks";
-        $menu_array['finishedtasks']['title'] = __( 'Finished', 'wtgtasksmanager' ); 
+        $menu_array['finishedtasks']['title'] = __( 'Finished Tasks', 'wtgtasksmanager' ); 
         $menu_array['finishedtasks']['parent'] = 'alltasks'; 
         $menu_array['finishedtasks']['tabmenu'] = true;     
            
@@ -106,7 +106,7 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['closedtasks']['menu'] = __( 'Closed', 'wtgtasksmanager' );
         $menu_array['closedtasks']['pluginmenu'] = __( 'Closed', 'wtgtasksmanager' );
         $menu_array['closedtasks']['name'] = "closedtasks";
-        $menu_array['closedtasks']['title'] = __( 'Closed', 'wtgtasksmanager' ); 
+        $menu_array['closedtasks']['title'] = __( 'Closed Tasks', 'wtgtasksmanager' ); 
         $menu_array['closedtasks']['parent'] = 'alltasks'; 
         $menu_array['closedtasks']['tabmenu'] = true; 
         
@@ -116,7 +116,7 @@ class WTGTASKSMANAGER_TabMenu {
         $menu_array['cancelledtasks']['menu'] = __( 'Cancelled', 'wtgtasksmanager' );
         $menu_array['cancelledtasks']['pluginmenu'] = __( 'Cancelled', 'wtgtasksmanager' );
         $menu_array['cancelledtasks']['name'] = "cancelledtasks";
-        $menu_array['cancelledtasks']['title'] = __( 'Cancelled', 'wtgtasksmanager' ); 
+        $menu_array['cancelledtasks']['title'] = __( 'Cancelled Tasks', 'wtgtasksmanager' ); 
         $menu_array['cancelledtasks']['parent'] = 'alltasks'; 
         $menu_array['cancelledtasks']['tabmenu'] = true; 
         

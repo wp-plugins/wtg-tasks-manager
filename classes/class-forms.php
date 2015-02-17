@@ -876,7 +876,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * No pre or trailing slash allow
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin Framework Pro
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
     */
@@ -1150,7 +1150,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * Basic form menu within table row.
     * 
     * @author Ryan R. Bayne
-    * @package CSV 2 POST
+    * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.2
     */
