@@ -43,49 +43,218 @@ function register_customposttype_wtgtasks() {
         'menu_name' => __( 'Task Posts', 'wtgtasksmanager' )
     );
     $args = array(
-        'labels' => $labels,
-        'public' => false,
+        'labels'             => $labels,
+        'public'             => false,
         'publicly_queryable' => false,
-        'show_ui' => true, 
-        'show_in_menu' => true, 
-        'query_var' => true,
-        'rewrite' => true,
-        'capability_type' => 'post',
-        'has_archive' => true, 
-        'hierarchical' => false,
-        'menu_position' => 100,
-        'supports' => array( 'title', 'editor', 'custom-fields' )
+        'show_ui'            => true, 
+        'show_in_menu'       => true, 
+        'query_var'          => true,
+        'rewrite'            => true,
+        'capability_type'    => 'post',
+        'has_archive'        => true, 
+        'hierarchical'       => false,
+        'menu_position'      => 100,
+        'supports'           => array( 'title', 'editor', 'custom-fields' ),
+        'taxonomies'         =>  array('post_tag')
     );   
 
     register_post_type( 'wtgtasks', $args );    
 } 
 
+####################################################################################
+#                                                                                  #
+#                                 ADD META BOXES                                   #
+#                                                                                  #
+####################################################################################
+function add_meta_boxes_wtgtasks() {
+  
+    // main options
+    add_meta_box(
+        'wtgtasks-meta-mainoptions',//  id            
+        esc_html__( 'Main Options' ),// meta box title       
+        'metabox_wtgtasks_mainoptions',// callback function name        
+        'wtgtasks',                  
+        'normal',                 
+        'default'                  
+    ); 
+}
+
+// project meta box
+function metabox_wtgtasks_mainoptions( $object, $box ) {
+    wp_nonce_field( basename( __FILE__ ), 'wtgtasks_mainoptionsnonce' );
+     
+    $WTGTASKSMANAGER = new WTGTASKSMANAGER;
+    $FORMS = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Formbuilder', 'class-forms.php', 'classes' );
+        
+    // get all active (none archived) projects
+    $result = $WTGTASKSMANAGER->get_projects();
+    $projects_array = array( 'noneselected' => __( 'Please Select Project', 'wtgtaskmanager' ) );
+    if( $result ) {
+        foreach( $result as $key => $pro ) {
+            $projects_array[ $pro['project_id'] ] = $pro['projectname'];    
+        }
+    }
+    
+    // register form, set values used for security later, also allows easy validation to be setup
+    $FORMS->form_start( 'wtgtasksmainoptions', 'wtgtasksmainoptions', 'Create Task Main Options', false, false );
+     
+    echo '<table class="form-table">';
+                
+    $FORMS->input(  $box['args']['formid'], 'menu', 'projectid', 'projectid', __( 'Project', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => $projects_array ), array( 'numeric' ) );            
+                
+    $FORMS->input(  $box['args']['formid'], 'menu', 'priority', 'priority', __( 'Priority', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => array( 1 => __( 'Urgent' ), 2 => __( 'High' ), 3 => __( 'Important' ), 4 => __( 'Low' ), 5 => __( 'Optional' ) ) ) );    
+    
+    $FORMS->input(  $box['args']['formid'], 'text', 'requiredtasks', 'requiredtasks', __( 'Required Tasks', 'wtgtasksmanager' ), '', false, '', array(), array( 'numericlist' ) );                    
+    
+    $FORMS->input(  $box['args']['formid'], 'text', 'freelanceroffer', 'freelanceroffer', __( 'Freelancer Offer', 'wtgtasksmanager' ), '', false, '', array(), array( 'numeric' ) );                                    
+    
+    $FORMS->input(  $box['args']['formid'], 'menu_capabilities', 'requiredcapability', 'requiredcapability', __( 'Required Capability', 'wtgtasksmanager' ), '', false, '', array(), array() );                                    
+    
+    echo '</table>';
+}
+
 /**
-* Optional keywords for task.
+* Save flag meta box's
+* 
+* @param mixed $post_id
+* @param mixed $post
+*/
+function save_meta_boxes_wtgtasks( $post_id, $post ) {   
+
+    /* Verify the nonce before proceeding. */
+    if ( !isset( $_POST['wtgtasks_mainoptionsnonce'] ) || !wp_verify_nonce( $_POST['wtgtasks_mainoptionsnonce'], basename( __FILE__ ) ) )    
+        return $post_id;
+              
+    // check autosave
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return $post_id;
+    }
+                                          
+    // check permissions
+    if ( (key_exists( 'post_type', $post ) ) && ( 'page' == $post->post_type ) ) {
+        if (!current_user_can( 'edit_page', $post_id ) ) {
+            return $post_id;
+        }
+    } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
+        return $post_id;
+    }        
+         
+    /* Get the post type object. */
+    $post_type = get_post_type_object( $post->post_type );
+     
+    // run WebTechGlobal form security and process the request if security does not fail
+    $WTGTASKSMANAGER_REQ = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Requests', 'class-requests.php', 'classes' );
+    $WTGTASKSMANAGER_REQ->process_admin_request( 'post', 'wtgtasksmainoptions' );    
+    
+    return $post_id;
+} 
+
+####################################################################################
+#                                                                                  #
+#                               CUSTOM TABLE COLUMNS                               #
+#                                                                                  #
+####################################################################################
+
+add_filter( 'manage_edit-wtgtasks_columns', 'set_custom_edit_book_columns' );
+add_action( 'manage_wtgtasks_posts_custom_column' , 'custom_book_column', 10, 2 );
+
+function set_custom_edit_book_columns($columns) {
+    //unset( $columns['author'] );
+    $columns['project_name'] = __( 'Project Name', 'wtgtasksmanager' );
+    $columns['task_priority'] = __( 'Priority', 'wtgtasksmanager' );
+    return $columns;
+}
+
+function custom_book_column( $column, $post_id ) {
+    switch ( $column ) {
+        case 'project_name' :
+            global $wpdb;
+            
+            $project_id = get_post_meta( $post_id , 'wtgprojectid' , true ); 
+            
+            if( !empty( $project_id ) && $project_id !== '' ) {    
+                echo $wpdb->get_var( "SELECT projectname FROM " . $wpdb->webtechglobal_projects . " WHERE project_id = '$project_id'" );    
+                return;
+            }
+            
+            _e( 'Not Found', 'wtgtasksmanager' );
+                            
+            break;
+        case 'task_priority' :
+            global $wpdb;
+            
+            $priority = get_post_meta( $post_id , 'wtgpriority' , true ); 
+            
+                if( is_numeric( $priority ) ) {    
+                    switch( $priority ) {
+                        case 1:
+                            _e( 'Urgent', 'wtgtasksmanager' );
+                            return;
+                            break;
+                        case 2:
+                            _e( 'High', 'wtgtasksmanager' );
+                            return;
+                            break;
+                        case 3:
+                            _e( 'Important', 'wtgtasksmanager' );
+                            return;
+                            break;
+                        case 4:
+                            _e( 'Low', 'wtgtasksmanager' );
+                            return;
+                            break;
+                        case 5:
+                            _e( 'Optional', 'wtgtasksmanager' );
+                            return;
+                            break;
+                    }    
+                }
+            
+            _e( 'Not Found', 'wtgtasksmanager' );
+                            
+            break;
+
+    }
+} 
+
+####################################################################################
+#                                                                                  #
+#                                   TAXONOMIES                                     #
+#                                                                                  #
+####################################################################################
+
+/**
+* Task skills allows skills to be found by freelancers based on their skill-set.
+* 
+* Ability to use specific software is also a skill and so adding the name of software
+* or techniques is acceptable. I didn't want to add too many taxonomies that are similar.
+* 
+* Experience/certification/qualifications could also be added if very specific demands
+* wanted for a task. Keep in mind that a task can be highly detailed, like a full project posting.
 * 
 * @author Ryan R. Bayne
 * @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.0
 */
-function keywords_taxonomy_for_tasksmanager() {
+function skills_taxonomy_for_tasksmanager() {
     $labels = array(
-        'name'                       => _x( 'Task Keywords', 'taxonomy general name' ),
-        'singular_name'              => _x( 'Keyword', 'taxonomy singular name' ),
-        'search_items'               => __( 'Search Keywords' ),
-        'popular_items'              => __( 'Popular Keywords' ),
-        'all_items'                  => __( 'All Keywords' ),
+        'name'                       => _x( 'Task Skills', 'taxonomy general name' ),
+        'singular_name'              => _x( 'Skill', 'taxonomy singular name' ),
+        'search_items'               => __( 'Search Skills' ),
+        'popular_items'              => __( 'Popular Skills' ),
+        'all_items'                  => __( 'All Skills' ),
         'parent_item'                => null,
         'parent_item_colon'          => null,
-        'edit_item'                  => __( 'Edit Keyword' ),
-        'update_item'                => __( 'Update Keyword' ),
-        'add_new_item'               => __( 'Add New Keyword' ),
-        'new_item_name'              => __( 'New Keyword' ),
-        'separate_items_with_commas' => __( "Enter keywords separated by commas." ),
-        'add_or_remove_items'        => __( 'Add or remove keywords' ),
-        'choose_from_most_used'      => __( 'Choose from the most used keywords' ),
-        'not_found'                  => __( 'No keywords found.' ),
-        'menu_name'                  => __( 'Keywords' ),
+        'edit_item'                  => __( 'Edit Skill' ),
+        'update_item'                => __( 'Update Skill' ),
+        'add_new_item'               => __( 'Add New Skill' ),
+        'new_item_name'              => __( 'New Skill' ),
+        'separate_items_with_commas' => __( "Enter skills separated by commas." ),
+        'add_or_remove_items'        => __( 'Add or remove skills' ),
+        'choose_from_most_used'      => __( 'Choose from the most used skills' ),
+        'not_found'                  => __( 'No skills found.' ),
+        'menu_name'                  => __( 'Skills' ),
     );
 
     $args = array(
@@ -95,11 +264,14 @@ function keywords_taxonomy_for_tasksmanager() {
         'show_admin_column'     => true,
         'update_count_callback' => '_update_post_term_count',
         'query_var'             => true,
-        'rewrite'               => array( 'slug' => 'tasksmanagerkeywords' ),
+        'rewrite'               => array( 'slug' => 'tasksmanagerskills' ),
     );
 
-    register_taxonomy( 'wtgtaskmanagerkeywords', 'wtgtasks', $args );
-}add_action( 'init', 'keywords_taxonomy_for_tasksmanager', 0 );
+    register_taxonomy( 'wtgtaskmanagerskills', 'wtgtasks', $args );
+}
+
+add_action( 'init', 'skills_taxonomy_for_tasksmanager', 0 );
+
 
 function custom_post_status_wtgtasks_new(){
      register_post_status( 'newtask', array(
@@ -247,124 +419,9 @@ function projecttaskmanager_append_post_status_list(){
     }
 }add_action('admin_footer-post.php', 'projecttaskmanager_append_post_status_list');
 
-/**
-* Change the post data or respond to inputs.
-* 
-* @author Ryan R. Bayne
-* @package WTG Tasks Manager
-* @since 0.0.1
-* @version 1.0
-*/
-function wtg_post_change_save( $data, $postarr ) {  
-    // if no post ID - return
-    if ( ! isset($postarr['ID']) || ! $postarr['ID'] ) { 
-        return $data;
-    }
-  
-    // apply to wtgtasks post type only - else return
-    if ( $postarr['post_type'] != 'wtgtasks' ) {
-        return $data;
-    }
-  
-    // apply users selected status if it is a custom one
-
-  /*
-    $old = get_post($postarr['ID']); // the post before update
-    if (
-        $old->post_status != 'incomplete' &&
-        $old->post_status != 'trash' && // without this post restoring from trash fail
-        $data['post_status'] == 'publish' 
-    ) {
-        // force a post to be setted as incomplete before be pubblished
-        $data['post_status'] == 'incomplete';
-    }
-    */
-    
-    return $data;
-}
-//add_filter( 'wp_insert_post_data', 'wtg_post_change_save', 10, 2 );
-
-
-/**
-* Save flag meta box's
-* 
-* @param mixed $post_id
-* @param mixed $post
-*/
-function save_meta_boxes_wtgtasks( $post_id, $post ) {
-
-    /* Verify the nonce before proceeding. */
-    if ( !isset( $_POST['wtgtasksnonce'] ) || !wp_verify_nonce( $_POST['wtgtasksnonce'], basename( __FILE__ ) ) )    
-        return $post_id;
-        
-    // check autosave
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return $post_id;
-    }
-                                        
-    // check permissions
-    if ( (key_exists( 'post_type', $post) ) && ( 'page' == $post->post_type) ) {
-        if (!current_user_can( 'edit_page', $post_id ) ) {
-            return $post_id;
-        }
-    } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
-        return $post_id;
-    }        
-
-    /* Get the post type object. */
-    $post_type = get_post_type_object( $post->post_type );
-
-    /* Check if the current user has permission to edit the post. */
-    if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ){
-        return $post_id;
-    }
-
-    // array of custom meta fields - used in nonce security on a per field basis
-    $flagmeta_array = array( 'taskstatus' );
-
-    // loop through our terms and meta functions
-    foreach( $flagmeta_array as $key => $term ){  
-        $new_meta_value = '';
-         
-        /* Get the meta key. */
-        $meta_key = '_wtgtasks_' . $term;
-
-        if( isset( $_POST['wtgtasks_'.$term] ) ){
-            $new_meta_value = $_POST['wtgtasks_'.$term];    
-        }
-        
-        /* Get the meta value of the custom field key. */
-        $meta_value = get_post_meta( $post_id, $meta_key, true );
-
-        if ( $new_meta_value && '' == $meta_value ){
-            add_post_meta( $post_id, $meta_key, $new_meta_value, true );# new meta value was added and there was no previous value
-        }elseif ( $new_meta_value && $new_meta_value != $meta_value ){
-            update_post_meta( $post_id, $meta_key, $new_meta_value );# new meta value does not match the old value, update it
-        }elseif ( '' == $new_meta_value && $meta_value ){
-            delete_post_meta( $post_id, $meta_key, $meta_value );# no new meta value but an old value exists, delete it
-        }
-    }
-} 
-
-function add_meta_boxes_wtgtasks() {
-    // start task
-    /* add_meta_box(
-        'wtgtasks-meta-starttask',// form id            
-        esc_html__( 'Start Task' ),// meta box title       
-        'metabox_wtgtasks_starttask',// function name        
-        'wtgtasks',                  
-        'side',                 
-        'default'                  
-    );  */
-}
-
-// start task meta box
-function metabox_wtgtasks_starttask( $object, $box ) { 
-    
-    ?>
-    <?php wp_nonce_field( basename( __FILE__ ), 'wtgtasks_starttasknonce' ); ?>
-    <p>
-        <input class="widefat" type="text" name="wtgtasks_starttask" id="starttask" value="<?php echo esc_attr( get_post_meta( $object->ID, '_wtgtasks_starttask', true ) ); ?>" size="30" />
-    </p><?php 
-}
+####################################################################################
+#                                                                                  #
+#                                     FILTERS                                      #
+#                                                                                  #
+####################################################################################
 ?>

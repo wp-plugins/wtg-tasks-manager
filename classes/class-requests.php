@@ -29,7 +29,11 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 * @since 0.0.1
 * @version 1.0.2
 */
-class WTGTASKSMANAGER_Requests {  
+class WTGTASKSMANAGER_Requests { 
+
+    // array of permitted "action" or early validation
+    var $permitted_GET = array( 'canceltasks' );
+     
     public function __construct() {
         global $tasksmanager_settings;
     
@@ -41,61 +45,34 @@ class WTGTASKSMANAGER_Requests {
         $this->Files = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
         $this->Forms = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_Formbuilder', 'class-forms.php', 'classes' );
         $this->WPCore = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_WPCore', 'class-wpcore.php', 'classes' );
-        $this->TabMenu = $this->WTGTASKSMANAGER->load_class( "WTGTASKSMANAGER_TabMenu", "class-pluginmenu.php", 'classes','pluginmenu' );    
-    }
+   }
     
     /**
-    * Processes security for $_POST and $_GET requests,
-    * then calls another function to complete the specific request made.
+    * Applies WebTechGlobals own security for $_POST and $_GET requests. It involves
+    * a range of validation, including ensuring HTML source edit was not performed before
+    * users submission.
     * 
     * This function is called by process_admin_POST_GET() which is hooked by admin_init.
+    * None security is done in that function before this class-request.php file is loaded.
+    * 
+    * @parameter $method is post or get or ajax
+    * @parameter $function the method for completing the request, to be found in this class
     * 
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 0.0.1
-    * @version 1.0
+    * @version 1.3
     */
-    public function process_admin_request() {  
-        $method = 'post';// post or get
-        
-        // ensure processing requested
-        // if a hacker changes this, no processing happens so no validation required
-        if(!isset( $_POST['wtgtasksmanager_admin_action'] ) && !isset( $_GET['wtgtasksmanageraction'] ) ) {
-            return;
-        }          
-               
-        // handle $_POST action - form names are validated
-        if( isset( $_POST['wtgtasksmanager_admin_action'] ) && $_POST['wtgtasksmanager_admin_action'] == true){        
-            if( isset( $_POST['wtgtasksmanager_admin_referer'] ) ){        
-                
-                // a few forms have the wtgtasksmanager_admin_referer where the default hidden values are not in use
-                check_admin_referer( $_POST['wtgtasksmanager_admin_referer'] ); 
-                $function_name = $_POST['wtgtasksmanageraction'];     
-                   
-            } else {                                       
-                
-                // 99% of forms will use this method
-                check_admin_referer( $_POST['wtgtasksmanager_form_name'] );
-                $function_name = $_POST['wtgtasksmanager_form_name'];
-            
-            }        
-        }
-                          
-        // $_GET request
-        if( isset( $_GET['wtgtasksmanageraction'] ) ){      
-            check_admin_referer( $_GET['wtgtasksmanageraction'] );        
-            $function_name = $_GET['wtgtasksmanageraction'];
-            $method = 'get';
-        }     
-                   
+    public function process_admin_request( $method, $function ) {  
+      
         // arriving here means check_admin_referer() security is positive       
-        global $c2p_debug_mode, $cont;
+        global $wtgtasksmanager_debug_mode, $cont;
 
         $this->PHP->var_dump( $_POST, '<h1>$_POST</h1>' );           
         $this->PHP->var_dump( $_GET, '<h1>$_GET</h1>' );    
         
         // $_POST security
-        if( $method == 'post' ) {                      
+        if( $method == 'post' || $method == 'POST' || $method == '$_POST' ) {                      
             // check_admin_referer() wp_die()'s if security fails so if we arrive here WordPress security has been passed
             // now we validate individual values against their pre-registered validation method
             // some generic notices are displayed - this system makes development faster
@@ -118,15 +95,15 @@ class WTGTASKSMANAGER_Requests {
         }
         
         // handle a situation where the submitted form requests a function that does not exist
-        if( !method_exists( $this, $function_name ) ){
+        if( !method_exists( $this, $function ) ){
             wp_die( sprintf( __( "The method for processing your request was not found. This can usually be resolved quickly. Please report method %s does not exist. <a href='https://www.youtube.com/watch?v=vAImGQJdO_k' target='_blank'>Watch a video</a> explaining this problem.", 'wtgtasksmanager' ), 
-            $function_name) ); 
+            $function ) ); 
             return false;// should not be required with wp_die() but it helps to add clarity when browsing code and is a precaution.   
         }
         
         // all security passed - call the processing function
-        if( isset( $function_name) && is_string( $function_name ) ) {
-            eval( 'self::' . $function_name .'();' );
+        if( isset( $function) && is_string( $function ) ) {
+            eval( 'self::' . $function .'();' );
         }
     }  
 
@@ -282,8 +259,8 @@ class WTGTASKSMANAGER_Requests {
             $this->UI->create_notice( $update_result_array['failedreason'], 'info', 'Small', 'Update Failed Reason' );
         }else{  
             // storing the current file version will prevent user coming back to the update screen
-            global $c2p_currentversion;        
-            update_option( 'wtgtasksmanager_installedversion', $c2p_currentversion);
+            global $wtgtasksmanager_currentversion;        
+            update_option( 'wtgtasksmanager_installedversion', $wtgtasksmanager_currentversion);
 
             $this->UI->create_notice( __( 'Good news, the update procedure was complete. If you do not see any errors or any notices indicating a problem was detected it means the procedure worked. Please ensure any new changes suit your needs.', 'wtgtasksmanager' ), 'success', 'Small', __( 'Update Complete', 'wtgtasksmanager' ) );
             
@@ -297,70 +274,70 @@ class WTGTASKSMANAGER_Requests {
     * Save drip feed limits  
     */
     public function schedulerestrictions() {
-        $c2p_schedule_array = $this->WTGTASKSMANAGER->get_option_schedule_array();
+        $wtgtasksmanager_schedule_array = $this->WTGTASKSMANAGER->get_option_schedule_array();
         
         // if any required values are not in $_POST set them to zero
         if(!isset( $_POST['day'] ) ){
-            $c2p_schedule_array['limits']['day'] = 0;        
+            $wtgtasksmanager_schedule_array['limits']['day'] = 0;        
         }else{
-            $c2p_schedule_array['limits']['day'] = $_POST['day'];            
+            $wtgtasksmanager_schedule_array['limits']['day'] = $_POST['day'];            
         }
         
         if(!isset( $_POST['hour'] ) ){
-            $c2p_schedule_array['limits']['hour'] = 0;
+            $wtgtasksmanager_schedule_array['limits']['hour'] = 0;
         }else{
-            $c2p_schedule_array['limits']['hour'] = $_POST['hour'];            
+            $wtgtasksmanager_schedule_array['limits']['hour'] = $_POST['hour'];            
         }
         
         if(!isset( $_POST['session'] ) ){
-            $c2p_schedule_array['limits']['session'] = 0;
+            $wtgtasksmanager_schedule_array['limits']['session'] = 0;
         }else{
-            $c2p_schedule_array['limits']['session'] = $_POST['session'];            
+            $wtgtasksmanager_schedule_array['limits']['session'] = $_POST['session'];            
         }
                                  
-        // ensure $c2p_schedule_array is an array, it may be boolean false if schedule has never been set
-        if( isset( $c2p_schedule_array ) && is_array( $c2p_schedule_array ) ){
+        // ensure $wtgtasksmanager_schedule_array is an array, it may be boolean false if schedule has never been set
+        if( isset( $wtgtasksmanager_schedule_array ) && is_array( $wtgtasksmanager_schedule_array ) ){
             
             // if times array exists, unset the [times] array
-            if( isset( $c2p_schedule_array['days'] ) ){
-                unset( $c2p_schedule_array['days'] );    
+            if( isset( $wtgtasksmanager_schedule_array['days'] ) ){
+                unset( $wtgtasksmanager_schedule_array['days'] );    
             }
             
             // if hours array exists, unset the [hours] array
-            if( isset( $c2p_schedule_array['hours'] ) ){
-                unset( $c2p_schedule_array['hours'] );    
+            if( isset( $wtgtasksmanager_schedule_array['hours'] ) ){
+                unset( $wtgtasksmanager_schedule_array['hours'] );    
             }
             
         }else{
             // $schedule_array value is not array, this is first time it is being set
-            $c2p_schedule_array = array();
+            $wtgtasksmanager_schedule_array = array();
         }
         
         // loop through all days and set each one to true or false
         if( isset( $_POST['wtgtasksmanager_scheduleday_list'] ) ){
             foreach( $_POST['wtgtasksmanager_scheduleday_list'] as $key => $submitted_day ){
-                $c2p_schedule_array['days'][$submitted_day] = true;        
+                $wtgtasksmanager_schedule_array['days'][$submitted_day] = true;        
             }  
         } 
         
         // loop through all hours and add each one to the array, any not in array will not be permitted                              
         if( isset( $_POST['wtgtasksmanager_schedulehour_list'] ) ){
             foreach( $_POST['wtgtasksmanager_schedulehour_list'] as $key => $submitted_hour){
-                $c2p_schedule_array['hours'][$submitted_hour] = true;        
+                $wtgtasksmanager_schedule_array['hours'][$submitted_hour] = true;        
             }           
         }    
 
         if( isset( $_POST['deleteuserswaiting'] ) )
         {
-            $c2p_schedule_array['eventtypes']['deleteuserswaiting']['switch'] = 'enabled';                
+            $wtgtasksmanager_schedule_array['eventtypes']['deleteuserswaiting']['switch'] = 'enabled';                
         }
         
         if( isset( $_POST['eventsendemails'] ) )
         {
-            $c2p_schedule_array['eventtypes']['sendemails']['switch'] = 'enabled';    
+            $wtgtasksmanager_schedule_array['eventtypes']['sendemails']['switch'] = 'enabled';    
         }        
   
-        $this->WTGTASKSMANAGER->update_option_schedule_array( $c2p_schedule_array );
+        $this->WTGTASKSMANAGER->update_option_schedule_array( $wtgtasksmanager_schedule_array );
         $this->UI->notice_depreciated( __( 'Schedule settings have been saved.', 'wtgtasksmanager' ), 'success', 'Large', __( 'Schedule Times Saved', 'wtgtasksmanager' ) );   
     } 
     
@@ -434,18 +411,16 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */
     public function pagecapabilitysettings() {
+        global $wtgtasksmanager_menu_array;
         
         // get the capabilities array from WP core
         $capabilities_array = $this->WPCore->capabilities();
 
         // get stored capability settings 
         $saved_capability_array = get_option( 'wtgtasksmanager_capabilities' );
-        
-        // get the tab menu 
-        $pluginmenu = $this->TabMenu->menu_array();
-                
+
         // to ensure no extra values are stored (more menus added to source) loop through page array
-        foreach( $pluginmenu as $key => $page_array ) {
+        foreach( $wtgtasksmanager_menu_array as $key => $page_array ) {
             
             // ensure $_POST value is also in the capabilities array to ensure user has not hacked form, adding their own capabilities
             if( isset( $_POST['pagecap' . $page_array['name'] ] ) && in_array( $_POST['pagecap' . $page_array['name'] ], $capabilities_array ) ) {
@@ -468,12 +443,9 @@ class WTGTASKSMANAGER_Requests {
     * @version 1.0
     */
     public function dashboardwidgetsettings() {
-        global $tasksmanager_settings;
-        
-        // loop through pages
-        $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();       
-        foreach( $menu_array as $key => $section_array ) {
+        global $tasksmanager_settings, $wtgtasksmanager_menu_array;
+       
+        foreach( $wtgtasksmanager_menu_array as $key => $section_array ) {
 
             if( isset( $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ] ) ) {
                 $tasksmanager_settings['widgetsettings'][ $section_array['name'] . 'dashboardwidgetsswitch'] = $_POST[ $section_array['name'] . 'dashboardwidgetsswitch' ];    
@@ -895,6 +867,32 @@ class WTGTASKSMANAGER_Requests {
         
         $this->UI->create_notice( __( 'Your project with ID ' . $_GET['projectid'] . ' is now being focused on. All of the plugins interfaces will hide information about other projects. This does not apply to the custom post type which allows all projects tasks to be viewed as a secondary method.' ),'success', 'Small', __( 'Project Focused', 'wtgtasksmanager' ) );
     }
-         
+    
+    /**
+    * Bulk action request for cancelling tasks.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function canceltasks() {
+        $this->UI->create_notice( sprintf( __( 'Just testing. %s  %s.', 'wtgtasksmanager'), '', '' ), 'success', 'Small', __( 'Just A Test', 'wtgtasksmanager' ) );                  
+    }
+ 
+    /**
+    * Called when a new task is created (Edit Post). 
+    * 
+    * Nonce, WTG security and WTG validation is done prior to this being called.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function wtgtasksmainoptions() {
+        WTGTASKSMANAGER::task_meta( $_POST['post_ID'], $_POST['projectid'], $_POST['priority'], $_POST['requiredtasks'], $_POST['freelanceroffer'], $_POST['requiredcapability'], false );
+    }
+            
 }// WTGTASKSMANAGER_Requests       
 ?>

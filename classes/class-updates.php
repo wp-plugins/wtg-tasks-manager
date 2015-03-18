@@ -55,7 +55,7 @@ class WTGTASKSMANAGER_UpdatePlugin {
         }
     }    
     public function nextversion_clean() {
-        global $c2p_currentversion;
+        global $wtgtasksmanager_currentversion;
         
         $installed_version = WTGTASKSMANAGER::get_installed_version();
         
@@ -64,7 +64,7 @@ class WTGTASKSMANAGER_UpdatePlugin {
         return $installed_version_cleaned + 1;       
     }
     public function changelist( $scope = 'next' ){
-        global $c2p_currentversion;
+        global $wtgtasksmanager_currentversion;
         
         // standard messages for change types
         $added = __( 'New features added to the plugin, be sure to configure them to suit your needs.', 'wtgtasksmanager' );

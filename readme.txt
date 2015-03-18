@@ -1,11 +1,11 @@
 === Plugin Name ===
-Contributors: WebTechGlobal
+Contributors: WebTechGlobal, Ryan Bayne
 Donate link: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: WTG, Task Manager, Tasks, Task Management, Task, todo, TO DO, to-do, Workflow, project management
 Requires at least: 3.8.0
-Tested up to: 4.1.0
+Tested up to: 4.1.1
 Stable tag: trunk
 
 Task management with a plan - this plugin will grow to meet the needs of online business managed within WordPress.
@@ -13,7 +13,7 @@ Task management with a plan - this plugin will grow to meet the needs of online 
 == Description ==
 
 Released November 2014 and created to act as a workflow system. This task management solution is already being
-used on the WebTechGlobal website. Such early use will drive the project forward and turn the plugin into something
+used on the WebTechGlobal website. Early use will drive the project forward and turn the plugin into something
 more than a fancy todo list. A planned feature includes a reward system with the purpose of attracting freelancers or 
 talented members within a softwares community. I also intend for the plugin to make use of social networking and cloud
 services. WTG needs this projects to be complete so you can trust that this is just the beginning. 
@@ -45,6 +45,15 @@ You can import tasks to WTG Tasks Manager from a .csv file using my CSV 2 POST p
 simply posts and CSV 2 POST allows the creation of posts for custom post types. Please use my forum to get help
 on this subject.
 
+= Can I integrate WTG Tasks Manager with WTG Project Manager? =
+Yes these two plugins are being designed to work together and create a larger solution. Other plugins will integrate with both of these
+and the larger goal is to create a professional project management system.
+
+= Why choose WTG Tasks Manager over other tasks management plugins? =
+I have a keen interest in allowing freelancers to access and complete tasks. I also want to be able to award credits instead of money
+for selected tasks. Credits would be spent on services and products. I have many ideas aimed at getting the community involved in development
+that I do not see in other plugins. As I roll out new features or new plugins that integrate with this one, you may find your desired solution.
+
 = As a WebTechGlobal subscriber can I get higher priority support for this plugin? =
 Yes - subscribers are put ahead of my Free Workflow and will not only result in a quicker response for support
 but requests for new features are marked with higher priority.
@@ -67,7 +76,31 @@ Please update this plugin using your WordPress Installed Plugins screen. Click o
 This method is safer than using any other source for the files.
 
 == Changelog == 
-
+= 0.0.36 = 
+* Feature Changes
+    * Plugin no longer adds a parent menu to the admin. All admin items can be found in the plugins post type menu.
+    * Edit Post screen for tasks now has the same options as found on the Create Tasks view.
+    * Removed Keywords and setup standard Tags instead so that we can integrate tasks a little more within a blog.
+    * Added Skills taxonomy so that developers can find tasks that suit them more. Skills taxonomy can have software, experiences, certification added also. 
+    * Priority and Project columns added to Tasks custom post type view.
+* Technical Information
+    * $_POST and $_GET processing procedure changed.
+    * Approach to dealing with data list bulk requests has been improved.
+* Known Issues
+    * Search abilities are limited.
+    * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * post-new.php for the plugins custom post type (Create Task) cannot be used properly yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+    
+= 0.0.35 = 
+* Feature Changes
+    * None
+* Technical Information
+    * Mass replace on $c2pm and removal of lines related to loading the plugins menu array
+* Known Issues
+    * Search abilities are limited.
+    * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * post-new.php for the plugins custom post type (Create Task) cannot be used properly yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+    
 = 0.0.34 =
 * Feature Changes
     * Attempting to use the same project name twice now displays a clearer error.

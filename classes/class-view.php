@@ -104,8 +104,10 @@ abstract class WTGTASKSMANAGER_View {
      * @since 0.0.1
      */
     public function __construct() {
+        global $wtgtasksmanager_menu_array;// set in main class as it is needed in many classes
+        
         $screen = get_current_screen();
-          
+
         // discontinue if the view is dashboard, this class is loaded by view classes while processes dashboard widgets
         if( $screen->base === 'dashboard' ) {
             return false;    
@@ -120,7 +122,6 @@ abstract class WTGTASKSMANAGER_View {
        
         // load classes
         $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' );        
-        $this->Tabmenu = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
         $this->Help = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_Help', 'class-help.php', 'classes' );
         $this->PHP = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_PHP', 'class-phplibary.php', 'classes' );
         $this->UI = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' );
@@ -128,9 +129,6 @@ abstract class WTGTASKSMANAGER_View {
         // load the help array
         $this->help_array = $this->Help->get_help_array();
 
-        // call the menu_array
-        $this->menu_array = $this->Tabmenu->menu_array();
-                
         // get page name i.e. wtgtasksmanager_page_wtgtasksmanager_affiliates would return affiliates
         $page_name = $this->PHP->get_string_after_last_character( $screen->id, '_' );
         
@@ -160,20 +158,20 @@ abstract class WTGTASKSMANAGER_View {
                 $pagediscussionurl = '';
                 $pagefaqurl = '';
                 
-                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagereadmoreurl' ] ) ){
-                    $pagereadmeurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagereadmoreurl' ] . '" target="_blank">' . __( 'Documentation', 'wtgtasksmanager') . '</a></p>';        
+                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagereadmoreurl' ] ) && is_string( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagereadmoreurl' ] ) ){
+                    $pagereadmeurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagereadmoreurl' ] . '" target="_blank">' . __( 'Documentation', 'wtgpluginframework') . '</a></p>';        
                 } 
                                
-                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagevideourl' ] ) ){
-                    $pagevideourl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagevideourl' ] . '" target="_blank">' . __( 'Video', 'wtgtasksmanager') . '</a></p>';
+                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagevideourl' ] ) && is_string( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagevideourl' ] ) ){
+                    $pagevideourl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagevideourl' ] . '" target="_blank">' . __( 'Video', 'wtgpluginframework') . '</a></p>';
                 } 
                                
-                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagediscussurl' ] ) ){
-                    $pagediscussionurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagediscussurl' ] . '" target="_blank">' . __( 'Support', 'wtgtasksmanager') . '</a></p>';
+                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagediscussurl' ] ) && is_string( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagediscussurl' ] ) ){
+                    $pagediscussionurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagediscussurl' ] . '" target="_blank">' . __( 'Support', 'wtgpluginframework') . '</a></p>';
                 }
         
-                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagefaqurl' ] ) ){
-                    $pagefaqurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagefaqurl' ]  . '" target="_blank">' . __( 'FAQ', 'wtgtasksmanager') . '</a></p>';
+                if( isset( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagefaqurl' ] ) && is_string( $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagefaqurl' ] ) ){
+                    $pagefaqurl = '<p><a href="' . $this->help_array[ $page_name ][ 'pageinfo' ][ 'pagefaqurl' ]  . '" target="_blank">' . __( 'FAQ', 'wtgpluginframework') . '</a></p>';
                 }
                                 
                 // help tab sidebar
@@ -514,14 +512,14 @@ abstract class WTGTASKSMANAGER_View {
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 7.0.0
-    * @version 1.0
+    * @version 1.1
     */       
     public function render() { 
 
-        global $c2p_tab_number, $wpecus_settings, $c2pm;
+        global $wtgtasksmanager_menu_array;
 
         // get the admin page name (slug in menu array, without prepend "wtgtasksmanager_")
-        $admin_page = $this->UI->get_admin_page_name();
+        $admin_page = $this->WTGTASKSMANAGER->get_admin_page_name();
         
         // if we are on the main page change $admin_page to 'main' as that is what we use in array
         if( $admin_page === 'wtgtasksmanager' ){
@@ -529,10 +527,10 @@ abstract class WTGTASKSMANAGER_View {
         }   
          
         // view header - includes notices output and some admin side automation such as conflict prevention
-        $this->WTGTASKSMANAGER->pageheader( $this->menu_array[ $admin_page ]['title'], 0);
+        $this->WTGTASKSMANAGER->pageheader( $wtgtasksmanager_menu_array[ $admin_page ]['title'], 0);
                                
         // create tab menu for the giving page if the section has two or more pages
-        if( !isset( $this->menu_array[ $admin_page ]['tabmenu'] ) || $this->menu_array[ $admin_page ]['tabmenu'] === true ) {
+        if( !isset( $wtgtasksmanager_menu_array[ $admin_page ]['tabmenu'] ) || $wtgtasksmanager_menu_array[ $admin_page ]['tabmenu'] === true ) {
             if( $admin_page !== 'main' ) {
                 $this->WTGTASKSMANAGER->build_tab_menu( $admin_page );
             }

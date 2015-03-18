@@ -90,7 +90,6 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' );  
         $this->DB = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_DB', 'class-wpdb.php', 'classes' );
         $this->PHP = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_PHP', 'class-phplibrary.php', 'classes' );
-        $this->TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
         $this->Log = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Log', 'class-log.php', 'classes' );
         $this->Forms = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Formbuilder', 'class-forms.php', 'classes' );
         
@@ -217,7 +216,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
                   'archived' => string '0' (length=1)
                   */
       
-                $link = $this->UI->linkaction( 'wtgtasksmanager', 'projectfocus', __( 'WTG Tasks Manager admin link', 'wtgtasksmanager' ), __( 'Focus', 'wtgtasksmanager' ), '&projectid=' . $project['project_id'], ' class="button c2pbutton"', 'admin.php' );
+                $link = $this->UI->linkaction( 'wtgtasksmanager', 'projectfocus', __( 'WTG Tasks Manager admin link', 'wtgtasksmanager' ), __( 'Focus', 'wtgtasksmanager' ), '&projectid=' . $project['project_id'], ' class="button wtgtasksmanagerbutton"', 'admin.php' );
                 $this->UI->option_subline( $link, $project['projectname'] );
                 //$this->UI->
             }       
@@ -537,11 +536,10 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function postbox_main_pagecapabilitysettings( $data, $box ) {
-        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Set the capability a user requires to view any of the plugins pages. This works independently of role plugins such as Role Scoper.', 'wtgtasksmanager' ), false );        
-        $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title']);
+        global $wtgtasksmanager_menu_array;
         
-        // get the tab menu 
-        $pluginmenu = $this->TabMenu->menu_array();
+        $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Set the capability a user requires to view any of the plugins pages. This works independently of role plugins such as Role Scoper.', 'wtgtasksmanager' ), false );        
+        $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title'] );
         ?>
         
         <table class="form-table">
@@ -551,7 +549,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $saved_capability_array = get_option( 'wtgtasksmanager_capabilities' );
         
         // add a menu for each page for the user selecting the required capability 
-        foreach( $pluginmenu as $key => $page_array ) {
+        foreach( $wtgtasksmanager_menu_array as $key => $page_array ) {
             
             // do not add the main page to the list as a strict security measure
             if( $page_array['name'] !== 'main' ) {
@@ -579,7 +577,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function postbox_main_dashboardwidgetsettings( $data, $box ) { 
-        global $tasksmanager_settings;
+        global $tasksmanager_settings, $wtgtasksmanager_menu_array;
            
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'This panel is new and is advanced.   
         Please seek my advice before using it.
@@ -593,9 +591,7 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         echo '<table class="form-table">';
 
         // now loop through views, building settings per box (display or not, permitted role/capability  
-        $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();
-        foreach( $menu_array as $key => $section_array ) {
+        foreach( $wtgtasksmanager_menu_array as $key => $section_array ) {
 
             /*
                 'groupname' => string 'main' (length=4)

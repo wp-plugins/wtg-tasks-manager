@@ -16,28 +16,13 @@ class WTGTASKSMANAGER_TabMenu {
         // main page
         $menu_array['main']['groupname'] = 'main';        
         $menu_array['main']['slug'] = 'wtgtasksmanager';// home page slug set in main file
-        $menu_array['main']['menu'] = __( 'Tasks Dashboard', 'wtgtasksmanager' );// plugin admin menu
-        $menu_array['main']['pluginmenu'] = __( 'WTG Tasks Manager Dashboard' ,'wtgtasksmanager' );// for tabbed menu
+        $menu_array['main']['menu'] = __( 'Settings', 'wtgtasksmanager' );// plugin admin menu
+        $menu_array['main']['pluginmenu'] = __( 'WTG Tasks Manager Settings' ,'wtgtasksmanager' );// for tabbed menu
         $menu_array['main']['name'] = "main";// name of page (slug) and unique
-        $menu_array['main']['title'] = 'Dashboard';// title at the top of the admin page
+        $menu_array['main']['title'] = 'Settings';// title at the top of the admin page
         $menu_array['main']['parent'] = 'parent';// either "parent" or the name of the parent - used for building tab menu         
         $menu_array['main']['tabmenu'] = false;// boolean - true indicates multiple pages in section, false will hide tab menu and show one page 
-        
-        ######################################################
-        #                                                    #
-        #                   PLUGIN UPDATE                    #
-        #                                                    #
-        ######################################################
-        // requests user to initiate plugin update
-        $menu_array['pluginupdate']['groupname'] = 'installation';        
-        $menu_array['pluginupdate']['slug'] = 'wtgtasksmanager_pluginupdate';// home page slug set in main file
-        $menu_array['pluginupdate']['menu'] = __( 'WTG Tasks Manager Update Ready', 'wtgtasksmanager' );// plugin admin menu
-        $menu_array['pluginupdate']['pluginmenu'] = __( 'Update Information' ,'wtgtasksmanager' );// for tabbed menu
-        $menu_array['pluginupdate']['name'] = "pluginupdate";// name of page (slug) and unique
-        $menu_array['pluginupdate']['title'] = __( 'Update Ready', 'wtgtasksmanager' );// title at the top of the admin page
-        $menu_array['pluginupdate']['parent'] = 'parent';// either "parent" or the name of the parent - used for building tab menu 
-        $menu_array['pluginupdate']['tabmenu'] = false;
-        
+                
         ######################################################
         #                                                    #
         #                OVERVIEW SECTION                    #
@@ -73,7 +58,7 @@ class WTGTASKSMANAGER_TabMenu {
         // All Tasks
         $menu_array['alltasks']['groupname'] = 'tasks';
         $menu_array['alltasks']['slug'] = 'wtgtasksmanager_alltasks'; 
-        $menu_array['alltasks']['menu'] = __( 'All', 'wtgtasksmanager' );
+        $menu_array['alltasks']['menu'] = __( 'Extra Views', 'wtgtasksmanager' );
         $menu_array['alltasks']['pluginmenu'] = __( 'All', 'wtgtasksmanager' );
         $menu_array['alltasks']['name'] = "alltasks";
         $menu_array['alltasks']['title'] = __( 'All Tasks', 'wtgtasksmanager' ); 

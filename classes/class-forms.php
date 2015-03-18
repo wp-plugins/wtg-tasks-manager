@@ -325,6 +325,7 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
                         return false;                        
                     }
                 } elseif( $input_array['inputtype'] === 'checkboxes' ) {
+                    
                     // ensure required checkboxes selected
                     // loop through items and ensure one more checkboxes have been selected (if not selected, it will not be in $_POST)    
                     $box_checked = 0;
@@ -633,8 +634,8 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
     * 
     * @todo each hidden input should be registered
     */
-    public function form_start( $form_id, $form_name, $form_title, $uploader = false ){
-        global $c2p_page_name;
+    public function form_start( $form_id, $form_name, $form_title, $uploader = false, $newform = true ){
+        global $wtgtasksmanager_page_name;
         
         $form_name = strtolower( $form_name ); 
         $form_id = strtolower( $form_id );
@@ -647,18 +648,31 @@ class WTGTASKSMANAGER_Formbuilder extends WTGTASKSMANAGER_UI {
             $enctype = ' enctype="multipart/form-data"';
         }
         
-        // begin building the start of form and add standard hidden inputs
-        echo '<form' . $enctype . ' method="post" name="' . $form_name . '" id="' . $form_id . '" action="' . $this->PHP->currenturl() . '">';
-        
-        // add WP nonce
-        wp_nonce_field( $form_name ); 
-
-        // add packages hidden inputs (mostly part of security system)
+        // the $newform = false allows us to register forms on core pages that already have <form 
+        if( $newform ) {
+            echo '<form' . $enctype . ' method="post" name="' . $form_name . '" id="' . $form_id . '" action="' . $this->PHP->currenturl() . '">';
+            
+            // add WP nonce - if not a $newform add the nonce elsewhere or use one that exists in the view
+            wp_nonce_field( $form_name );
+        }
+                                                                                                          
+        self::form_start_hidden( $wtgtasksmanager_page_name, $form_id, $form_name, $form_title );        
+    }
+    
+    /**
+    * Adds hidden inputs to forms. Form ID and form name are usually the same value.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function form_start_hidden( $page_name, $form_id, $form_name, $form_title ) {
         echo '<input type="hidden" name="wtgtasksmanager_admin_action" value="true">';
-        echo '<input type="hidden" name="wtgtasksmanager_hidden_pagename" value="' . $c2p_page_name . '">';
-        echo '<input type="hidden" name="wtgtasksmanager_form_formid" value="' . $form_name . '">';
+        echo '<input type="hidden" name="wtgtasksmanager_hidden_pagename" value="' . $page_name . '">';
+        echo '<input type="hidden" name="wtgtasksmanager_form_formid" value="' . $form_id . '">';
         echo '<input type="hidden" name="wtgtasksmanager_form_name" value="' . $form_name . '">';
-        echo '<input type="hidden" name="wtgtasksmanager_form_title" value="' . $form_title . '">';        
+        echo '<input type="hidden" name="wtgtasksmanager_form_title" value="' . $form_title . '">';    
     }
     
     /**

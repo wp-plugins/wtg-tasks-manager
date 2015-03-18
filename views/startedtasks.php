@@ -333,7 +333,7 @@ class WTGTASKSMANAGER_WPTable_StartedTasks extends WP_List_Table {
 
     function column_ID( $item ) {
         $actions = array(                      
-            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID ),
+            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button wtgtasksmanagerbutton">Edit</a>', $item->ID ),
             'canceltask'    => $this->UI->linkaction( 'wtgtasksmanager_startedtasks', 'canceltask', __( 'Cancel this task.', 'wtgtasksmanager' ), __( 'Cancel', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
             'finishtask'    => $this->UI->linkaction( 'wtgtasksmanager_startedtasks', 'finishtask', __( 'Finish this task.', 'wtgtasksmanager' ), __( 'Finish', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
         );

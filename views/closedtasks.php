@@ -309,7 +309,7 @@ class WTGTASKSMANAGER_WPTable_ClosedTasks extends WP_List_Table {
 
     function column_ID( $item ) {
         $actions = array(                      
-            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID ),
+            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button wtgtasksmanagerbutton">Edit</a>', $item->ID ),
             'continuetask'    => $this->UI->linkaction( 'wtgtasksmanager_closedtasks', 'continuetask', __( 'Continue this task.', 'wtgtasksmanager' ), __( 'Continue', 'wtgtasksmanager' ), $values = '&task=' . $item->ID ),
         );
 

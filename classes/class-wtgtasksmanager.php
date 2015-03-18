@@ -42,7 +42,7 @@ class WTGTASKSMANAGER {
      *
      * @const string
      */
-    const version = '0.0.34';
+    const version = '0.0.36';
     
     /**
      * WTGTASKSMANAGER major version
@@ -57,28 +57,32 @@ class WTGTASKSMANAGER {
     const majorversion = 'Beta';  
     
     protected
-        $filters = array(),
+        $filters = array(
+            //array( 'manage_edit-wtgtasks_custom_columns',              array( 'set_custom_edit_book_columns', 10, 10 ),                'all' ),
+        ),
+       
         $actions = array(),    
                                 
         // add_action() controller
         // Format: array( event | function in this class(in an array if optional arguments are needed) | loading circumstances)
         // Other class requiring WordPress hooks start here also, with a method in this main class that calls one or more methods in one or many classes
-        // create a method in this class for each hook required plugin wide
+        // create a method in this class for each hook required plugin wide  
         $plugin_actions = array( 
-            array( 'admin_menu',                     'admin_menu',                                             'all' ),
-            array( 'admin_init',                     'process_admin_POST_GET',                                 'all' ),
-            array( 'admin_init',                     'add_adminpage_actions',                                  'all' ), 
-            array( 'init',                           'event_check',                                            'all' ),
-            array( 'eventcheckwpcron',               'eventcheckwpcron',                                       'all' ),
-            array( 'event_check_servercron',         'event_check_servercron',                                 'all' ),
-            array( 'wp_dashboard_setup',             'add_dashboard_widgets',                                  'all' ),
-            array( 'wp_insert_post',                 'hook_insert_post',                                       'all' ),
-            array( 'admin_footer',                   'pluginmediabutton_popup',                                'pluginscreens' ),
-            array( 'media_buttons_context',          'pluginmediabutton_button',                               'pluginscreens' ),
-            array( 'admin_enqueue_scripts',          'plugin_admin_enqueue_scripts',                           'pluginscreens' ),
-            array( 'init',                           'plugin_admin_register_styles',                           'pluginscreens' ),
-            array( 'admin_print_styles',             'plugin_admin_print_styles',                              'pluginscreens' ),
-            array( 'admin_notices',                  'admin_notices',                                          'admin_notices' ),
+            array( 'admin_menu',                              'set_admin_globals',                              'all' ),        
+            array( 'admin_menu',                              'admin_menu',                                     'all' ),
+            array( 'admin_init',                              'process_admin_POST_GET',                         'all' ),
+            array( 'admin_init',                              'add_adminpage_actions',                          'all' ), 
+            array( 'init',                                    'event_check',                                    'all' ),
+            array( 'eventcheckwpcron',                        'eventcheckwpcron',                               'all' ),
+            array( 'event_check_servercron',                  'event_check_servercron',                         'all' ),
+            array( 'wp_dashboard_setup',                      'add_dashboard_widgets',                          'all' ),
+            array( 'wp_insert_post',                          'hook_insert_post',                               'all' ),
+            array( 'admin_footer',                            'pluginmediabutton_popup',                        'pluginscreens' ),
+            array( 'media_buttons_context',                   'pluginmediabutton_button',                       'pluginscreens' ),
+            array( 'admin_enqueue_scripts',                   'plugin_admin_enqueue_scripts',                   'pluginscreens' ),
+            array( 'init',                                    'plugin_admin_register_styles',                   'pluginscreens' ),
+            array( 'admin_print_styles',                      'plugin_admin_print_styles',                      'pluginscreens' ),
+            array( 'admin_notices',                           'admin_notices',                                  'admin_notices' ),
         ),        
                               
         $plugin_filters = array(
@@ -106,25 +110,42 @@ class WTGTASKSMANAGER {
         $this->Files = self::load_class( 'WTGTASKSMANAGER_Files', 'class-files.php', 'classes' );
   
         $tasksmanager_settings = self::adminsettings();
-  
+                      
+        $this->add_filters();               
         $this->add_actions();
-        $this->add_filters();
-
+      
         if( is_admin() ){
         
             // admin globals 
-            global $c2p_notice_array;
+            global $wtgtasksmanager_notice_array;
             
-            $c2p_notice_array = array();// set notice array for storing new notices in (not persistent notices)
+            $wtgtasksmanager_notice_array = array();// set notice array for storing new notices in (not persistent notices)
             
             // load class used from admin only                   
             $this->UI = self::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' );
             $this->Helparray = self::load_class( 'WTGTASKSMANAGER_Help', 'class-help.php', 'classes' );
-            $this->Tabmenu = self::load_class( "WTGTASKSMANAGER_TabMenu", "class-pluginmenu.php", 'classes','pluginmenu' );    
-        
         }            
+    }    
+        
+    /**
+    * Set variables that are required on most pages.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.1
+    */
+    public function set_admin_globals() {
+        global $wtgtasksmanager_menu_array;
+        
+        // load tab menu class which contains help content array
+        $WTGTASKSMANAGER_TabMenu = self::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
+        $wtgtasksmanager_menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();   
+        
+        // set page name (it's my own approach, each tab/view has a name which is shorter than the WP view ID)
+        $wtgtasksmanager_page_name = self::get_admin_page_name();             
     }
-    
+        
     /**
     * register admin only .css must be done before printing styles
     * 
@@ -309,7 +330,7 @@ class WTGTASKSMANAGER {
      * @return object Instance of the initialized view, already set up, just needs to be render()ed
      */
     public static function load_draggableboxes_view( $page_slug, array $data = array() ) {
-        global $c2pm;
+        global $WTGTASKSMANAGER_Menu;
         
         // include the view class
         require_once( WTGTASKSMANAGER_ABSPATH . 'classes/class-view.php' );
@@ -357,21 +378,9 @@ class WTGTASKSMANAGER {
      * @author Ryan Bayne
      * @package WTG Tasks Manager
      * @since 0.0.1
-     * @version 1.0
+     * @version 1.2
      */
      public function load_admin_page() {
-        // check if action is a supported action, and whether the user is allowed to access this screen
-        /*
-        if ( ! isset( $this->view_actions[ $action ] ) || ! current_user_can( $this->view_actions[ $action ]['required_cap'] ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'default' ) );
-        }
-        */
-        
-        // load tab menu class which contains help content array
-        $WTGTASKSMANAGER_TabMenu = self::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();        
 
         // remove "wtgtasksmanager_" from page value in URL which leaves the page name
         $page = 'main';
@@ -401,7 +410,7 @@ class WTGTASKSMANAGER {
         foreach( $this->plugin_actions as $actionArray ) {        
             list( $action, $details, $whenToLoad) = $actionArray;
                                    
-            if(!$this->filteraction_should_beloaded( $whenToLoad) ) {      
+            if(!$this->filteraction_should_beloaded( $whenToLoad ) ) {      
                 continue;
             }
                  
@@ -423,7 +432,7 @@ class WTGTASKSMANAGER {
         foreach( $this->plugin_filters as $filterArray ) {
             list( $filter, $details, $whenToLoad) = $filterArray;
                            
-            if(!$this->filteraction_should_beloaded( $whenToLoad) ) {
+            if(!$this->filteraction_should_beloaded( $whenToLoad ) ) {
                 continue;
             }
             
@@ -537,8 +546,8 @@ class WTGTASKSMANAGER {
     * @version 1.0
     */
     public function debugmode() {
-        global $c2p_debug_mode;
-        if( $c2p_debug_mode){
+        global $wtgtasksmanager_debug_mode;
+        if( $wtgtasksmanager_debug_mode){
             global $wpdb;
             ini_set( 'display_errors',1);
             error_reporting(E_ALL);      
@@ -675,10 +684,11 @@ class WTGTASKSMANAGER {
     * @author Ryan Bayne
     * @package WTG Tasks Manager
     * @since 0.0.1
-    * @version 1.0.2
+    * @version 1.3
     */
-    public function help_tab () {
-                               
+    public function help_tab() {
+        global $wtgtasksmanager_menu_array;
+                              
         // get the current screen array
         $screen = get_current_screen();
         
@@ -687,13 +697,7 @@ class WTGTASKSMANAGER {
 
         // call the array
         $help_array = $WTGTASKSMANAGER_Help->get_help_array();
-        
-        // load tab menu class which contains help content array
-        $WTGTASKSMANAGER_TabMenu = self::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();
-             
+
         // get page name i.e. wtgtasksmanager_page_wtgtasksmanager_affiliates would return affiliates
         $page_name = $this->PHP->get_string_after_last_character( $screen->id, '_' );
         
@@ -701,7 +705,7 @@ class WTGTASKSMANAGER {
         if( $page_name == 'wtgtasksmanager' ){$page_name = 'main';}
      
         // does the page have any help content? 
-        if( !isset( $menu_array[ $page_name ] ) ){
+        if( !isset( $wtgtasksmanager_menu_array[ $page_name ] ) ){
             return false;
         }
         
@@ -740,7 +744,7 @@ class WTGTASKSMANAGER {
             $help_content .= '.</p>';
         }
 
-        // add a link to a Youtube
+        // add a link to a forum discussion
         if( isset( $help_array[ $page_name ][ $view_name ][ 'viewinfo' ][ 'viewdiscussurl' ] ) ){
             $help_content .= '<p>';
             $help_content .= __( 'We invite you to take discuss', 'wtgtasksmanager' ) . ' ';
@@ -858,6 +862,22 @@ class WTGTASKSMANAGER {
     }   
     
     /**
+    * removes plugins name from $_GET['page'] and returns the rest, else returns main to indicate parent
+    * 
+    * @author Ryan Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.1
+    */
+    public function get_admin_page_name() {
+        if( !isset( $_GET['page'] ) ){
+            return 'main';
+        }
+        $exloded = explode( '_', $_GET['page'] );
+        return end( $exloded );        
+    }
+        
+    /**
     * WordPress plugin menu
     * 
     * @author Ryan R. Bayne
@@ -866,21 +886,14 @@ class WTGTASKSMANAGER {
     * @version 1.2.8
     */
     public function admin_menu() {    
-        global $c2p_currentversion, $c2pm, $tasksmanager_settings;
-         
-        $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        $WTGTASKSMANAGER_Menu = $WTGTASKSMANAGER_TabMenu->menu_array();
- 
+        global $wtgtasksmanager_currentversion, $wtgtasksmanager_menu_array, $tasksmanager_settings;
+
         // set the callback, we can change this during the loop and call methods more dynamically
         // this approach allows us to call the same function for all pages
         $subpage_callback = array( $this, 'show_admin_page' );
        
-        // add menu
-        $this->page_hooks[] = add_menu_page( $WTGTASKSMANAGER_Menu['main']['title'], 
-        __( 'WTG Tasks Manager', 'wtgtasksmanager' ), 
-        'administrator', 
-        'wtgtasksmanager',  
-        $subpage_callback ); 
+        // the menu array is modified in this function
+        $modified_menu_array = $wtgtasksmanager_menu_array; 
         
         // help tab                                                 
         add_action( 'load-toplevel_page_wtgtasksmanager', array( $this, 'help_tab' ) );
@@ -888,55 +901,52 @@ class WTGTASKSMANAGER {
         // track which group has already been displayed using the parent name
         $groups = array();
         
-        // remove arrayinfo from the menu array
-        unset( $WTGTASKSMANAGER_Menu['arrayinfo'] );
-        
         // get all group menu titles
         $group_titles_array = array();
-        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
+        foreach( $modified_menu_array as $key_pagename => $page_array ){ 
             if( $page_array['parent'] === 'parent' ){                
                 $group_titles_array[ $page_array['groupname'] ]['grouptitle'] = $page_array['menu'];
             }
         }          
         
         // loop through sub-pages - remove pages that are not to be registered
-        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){                 
+        foreach( $modified_menu_array as $key_pagename => $page_array ){                 
 
             // if not visiting this plugins pages, simply register all the parents
             if( !isset( $_GET['page'] ) || !strstr( $_GET['page'], 'wtgtasksmanager' ) ){
                 
                 // remove none parents
                 if( $page_array['parent'] !== 'parent' ){    
-                    unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] ); 
+                    unset( $modified_menu_array[ $key_pagename ] ); 
                 }        
             
             }elseif( isset( $_GET['page'] ) && strstr( $_GET['page'], 'wtgtasksmanager' ) ){
                 
                 // remove pages that are not the main, the current visited or a parent
                 if( $key_pagename !== 'main' && $page_array['slug'] !== $_GET['page'] && $page_array['parent'] !== 'parent' ){
-                    unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] );
+                    unset( $modified_menu_array[ $key_pagename ] );
                 }     
                 
             } 
             
             // remove the parent of a group for the visited page
             if( isset( $_GET['page'] ) && $page_array['slug'] === $_GET['page'] ){
-                unset( $WTGTASKSMANAGER_Menu[ $WTGTASKSMANAGER_Menu[ $key_pagename ]['parent'] ] );
+                unset( $modified_menu_array[ $modified_menu_array[ $key_pagename ]['parent'] ] );
             }
             
             // remove update page as it is only meant to show when new version of files applied
             if( $page_array['slug'] == 'wtgtasksmanager_pluginupdate' ) {
-                unset( $WTGTASKSMANAGER_Menu[ $key_pagename ] );
+                unset( $modified_menu_array[ $key_pagename ] );
             }
         }
 
-        foreach( $WTGTASKSMANAGER_Menu as $key_pagename => $page_array ){ 
+        foreach( $modified_menu_array as $key_pagename => $page_array ){ 
             
-            $new_hook = add_submenu_page( 'wtgtasksmanager', 
+            $new_hook = add_submenu_page( 'edit.php?post_type=wtgtasks', 
                    $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
                    $group_titles_array[ $page_array['groupname'] ]['grouptitle'], 
                    self::get_page_capability( $key_pagename ), 
-                   $WTGTASKSMANAGER_Menu[ $key_pagename ]['slug'], 
+                   $modified_menu_array[ $key_pagename ]['slug'], 
                    $subpage_callback );     
          
             $this->page_hooks[] = $new_hook;
@@ -951,19 +961,15 @@ class WTGTASKSMANAGER {
      * 
      * @param string $thepagekey this is the screen being visited
      */
-    public function build_tab_menu( $current_page_name ){           
-        // load tab menu class which contains help content array
-        $WTGTASKSMANAGER_TabMenu = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_TabMenu', 'class-pluginmenu.php', 'classes' );
-        
-        // call the menu_array
-        $menu_array = $WTGTASKSMANAGER_TabMenu->menu_array();
-                
+    public function build_tab_menu( $current_page_name ){ 
+        global $wtgtasksmanager_menu_array;
+                  
         echo '<h2 class="nav-tab-wrapper">';
         
         // get the current pages viewgroup for building the correct tab menu
-        $view_group = $menu_array[ $current_page_name ][ 'groupname'];
+        $view_group = $wtgtasksmanager_menu_array[ $current_page_name ][ 'groupname'];
             
-        foreach( $menu_array as $page_name => $values ){
+        foreach( $wtgtasksmanager_menu_array as $page_name => $values ){
                                                          
             if( $values['groupname'] === $view_group ){
                 
@@ -980,19 +986,59 @@ class WTGTASKSMANAGER {
     }   
         
     /**
-    * $_POST and $_GET request processing procedure.
-    * 
-    * function was reduced to two lines, the contents mode to WTGTASKSMANAGER_Requests itself.
+    * $_POST and $_GET request processing procedure for custom views only.
     *
     * @author Ryan R. Bayne
     * @package WTG Tasks Manager
     * @since 0.0.1
-    * @version 1.0.4
+    * @version 1.5
     */
-    public function process_admin_POST_GET() {  
+    public function process_admin_POST_GET() {
+        // no processing for autosaves in this plugin
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+        
+        // no processing during these actions, processing for these may be handled elsewhere
+        // i.e. processing for post types is handed by save_post hook
+        $views_to_avoid = array( 'editpost' );
+        if( isset( $_POST['action'] ) && in_array( $_POST['action'], $views_to_avoid ) ) {
+            return;    
+        }
+
+        $method = 'unknown';
+        $function = 'nofunctionestablished123';
+                   
+        // $_POST request check then nonce validation 
+        if( isset( $_POST['wtgtasksmanager_admin_action'] ) ) {
+            
+            // run nonce security for a form submission
+            if( !isset( $_POST['wtgtasksmanager_form_name'] ) ) {    
+                return false;
+            }
+
+            check_admin_referer( $_POST['wtgtasksmanager_form_name'] );# exists here if failed
+            $function = $_POST['wtgtasksmanager_form_name'];
+                    
+            // set method - used to apply the correct security procedures
+            $method = 'post';
+        }          
+              
+        // $_GET reuest check by plugin OR a WP core $_GET request that is handled by the plugin
+        if( isset( $_GET['wtgtasksmanageraction'] )  ) {
+               
+            check_admin_referer( $_GET['wtgtasksmanageraction'] );# exists here if failed
+            $function = $_GET['wtgtasksmanageraction'];  
+
+            // set method - used to apply the correct security procedures
+            $method = 'get';  
+        }
+              
         // include the class that processes form submissions and nonce links
-        $WTGTASKSMANAGER_REQ = self::load_class( 'WTGTASKSMANAGER_Requests', 'class-requests.php', 'classes' );
-        $WTGTASKSMANAGER_REQ->process_admin_request();
+        if( $method !== 'unknown' ) {   
+            $WTGTASKSMANAGER_REQ = self::load_class( 'WTGTASKSMANAGER_Requests', 'class-requests.php', 'classes' );
+            $WTGTASKSMANAGER_REQ->process_admin_request( $method, $function );
+        }
     }  
 
     /**
@@ -1041,13 +1087,13 @@ class WTGTASKSMANAGER {
     * 3. This function itself is considered part of the event, we cycle through event types
     * 
     * Debugging Trace
-    * $c2p_schedule_array['history']['trace'] is used to indicate how far the this script went before a return.
+    * $wtgtasksmanager_schedule_array['history']['trace'] is used to indicate how far the this script went before a return.
     * This is a simple way to quickly determine where we are arriving.
     * 
     * @return boolean false if no due events else returns true to indicate event was due and full function ran
     */
     public function event_check() {
-        $c2p_schedule_array = self::get_option_schedule_array();
+        $wtgtasksmanager_schedule_array = self::get_option_schedule_array();
         
         // do not continue if WordPress is DOING_AJAX
         if( self::request_made() ){return;}
@@ -1058,17 +1104,17 @@ class WTGTASKSMANAGER {
         //  get and ensure we have the schedule array
         //  we do not initialize the schedule array as the user may be in the processing of deleting it
         //  do not use wtgtasksmanager_event_refused as we do not want to set the array
-        if(!isset( $c2p_schedule_array ) || !is_array( $c2p_schedule_array ) ){       
+        if(!isset( $wtgtasksmanager_schedule_array ) || !is_array( $wtgtasksmanager_schedule_array ) ){       
             self::log_schedule( __( 'Scheduled events cannot be peformed due to the schedule array of stored settings not existing.', 'wtgtasksmanager' ), __( 'schedule settings missing', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             return false;
         }
                       
         // check when last event was run - avoid running two events within 1 minute of each other
         // I've set it here because this function could grow over time and we dont want to go through all the checks PER VISIT or even within a few seconds of each other.
-        if( isset( $c2p_schedule_array['history']['lasteventtime'] ) )
+        if( isset( $wtgtasksmanager_schedule_array['history']['lasteventtime'] ) )
         {    
             // increase lasteventtime by 60 seconds
-            $soonest = $c2p_schedule_array['history']['lasteventtime'] + 60;//hack info page http://www.webtechglobal.co.uk/hacking/increase-automatic-events-delay-time
+            $soonest = $wtgtasksmanager_schedule_array['history']['lasteventtime'] + 60;//hack info page http://www.webtechglobal.co.uk/hacking/increase-automatic-events-delay-time
             
             if( $soonest > time() ){
                 self::log_schedule( __( 'No changed made as it has not been 60 seconds since the last event.', 'wtgtasksmanager' ), __( 'enforcing schedule event delay', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1079,9 +1125,9 @@ class WTGTASKSMANAGER {
         else
         {               
             // set lasteventtime value for the first time
-            $c2p_schedule_array['history']['lasteventtime'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last even time event was set for the first time, no further processing was done.', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['lasteventtime'] = time();
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The last even time event was set for the first time, no further processing was done.', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'The plugin initialized the timer for enforcing a delay between events. This action is treated as an event itself and no further
             changes are made during this schedule check.', 'wtgtasksmanager' ), __( 'initialized schedule delay timer', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
 
@@ -1090,11 +1136,11 @@ class WTGTASKSMANAGER {
         }                             
                                            
         // is last event type value set? if not set default as dataupdate, this means postcreation is the next event
-        if(!isset( $c2p_schedule_array['history']['lasteventtype'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['history']['lasteventtype'] ) )
         {    
-            $c2p_schedule_array['history']['lasteventtype'] = 'dataupdate';
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last event type value was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['lasteventtype'] = 'dataupdate';
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The last event type value was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
 
             self::log_schedule( __( 'The plugin initialized last event type value, this tells the plugin what event was last performed and it is used to
             determine what event comes next.', 'wtgtasksmanager' ), __( 'initialized schedule last event value', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1104,11 +1150,11 @@ class WTGTASKSMANAGER {
         }
                  
         // does the "day_lastreset"" time value exist, if not we set it now then return
-        if(!isset( $c2p_schedule_array['history']['day_lastreset'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['history']['day_lastreset'] ) )
         {    
-            $c2p_schedule_array['history']['day_lastreset'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The last daily reset time was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['day_lastreset'] = time();
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The last daily reset time was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             
             self::log_schedule( __( 'Day timer was set in schedule system. This is the 24 hour timer used to track daily events. It was set, no further action was taking 
             and should only happen once.', 'wtgtasksmanager' ), __( '24 hour timer set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1118,11 +1164,11 @@ class WTGTASKSMANAGER {
         } 
                                                          
         // does the "hour_lastreset"" time value exist, if not we set it now then return
-        if(!isset( $c2p_schedule_array['history']['hour_lastreset'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['history']['hour_lastreset'] ) )
         { 
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The hourly reset time was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['hour_lastreset'] = time();
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The hourly reset time was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             
             self::log_schedule( __( 'Hourly timer was set in schedule system. The time has been set for hourly countdown. No further action was 
             taking. This should only happen once.', 'wtgtasksmanager' ), __( 'one hour timer set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);        
@@ -1132,22 +1178,22 @@ class WTGTASKSMANAGER {
         }    
                
         // does the hourcounter value exist, if not we set it now then return (this is to initialize the variable)
-        if(!isset( $c2p_schedule_array['history']['hourcounter'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['history']['hourcounter'] ) )
         {     
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The hourly events counter was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['hourcounter'] = 0;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The hourly events counter was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'Number of events per hour has been set for the first time, this change is treated as an event.', 'wtgtasksmanager' ), __( 'hourly events counter set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);     
             self::event_return( __( 'initialised hourly events counter', 'wtgtasksmanager' ) );   
             return;
         }     
                                      
         // does the daycounter value exist, if not we set it now then return (this is to initialize the variable)
-        if(!isset( $c2p_schedule_array['history']['daycounter'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['history']['daycounter'] ) )
         {
-            $c2p_schedule_array['history']['daycounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'The daily events counter was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['daycounter'] = 0;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'The daily events counter was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'The daily events counter was not set. No further action was taking. This measure should only happen once.', 'wtgtasksmanager' ), __( 'daily events counter set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);     
             self::event_return( __( 'initialised daily events counter', 'wtgtasksmanager' ) );           
             return;
@@ -1155,29 +1201,29 @@ class WTGTASKSMANAGER {
 
         // has hourly target counter been reset for this hour - if not, reset now then return (this is an event)
         // does not actually start at the beginning of an hour, it is a 60 min allowance not hour to hour
-        $hour_reset_time = $c2p_schedule_array['history']['hour_lastreset'] + 3600;
+        $hour_reset_time = $wtgtasksmanager_schedule_array['history']['hour_lastreset'] + 3600;
         if( time() > $hour_reset_time )
         {     
             // reset hour_lastreset value and the hourlycounter
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Hourly counter was reset for another 60 minute period', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['history']['hour_lastreset'] = time();
+            $wtgtasksmanager_schedule_array['history']['hourcounter'] = 0;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'Hourly counter was reset for another 60 minute period', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'Hourly counter has been reset, no further action is taking during this event. This should only happen once every hour.', 'wtgtasksmanager' ), __( 'hourly counter reset', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             self::event_return( __( 'hourly counter was reset', 'wtgtasksmanager' ) );        
             return;
         }  
 
         // have all target counters been reset for today - if not we will reset now and end event check (in otherwords this was the event)
-        $day_reset_time = $c2p_schedule_array['history']['day_lastreset'] + 86400;
+        $day_reset_time = $wtgtasksmanager_schedule_array['history']['day_lastreset'] + 86400;
         if( time() > $day_reset_time )
         {
-            $c2p_schedule_array['history']['hour_lastreset'] = time();
-            $c2p_schedule_array['history']['day_lastreset'] = time();
-            $c2p_schedule_array['history']['hourcounter'] = 0;
-            $c2p_schedule_array['history']['daycounter'] = 0;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Daily and hourly events counter reset for a new 24 hours period', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array ); 
+            $wtgtasksmanager_schedule_array['history']['hour_lastreset'] = time();
+            $wtgtasksmanager_schedule_array['history']['day_lastreset'] = time();
+            $wtgtasksmanager_schedule_array['history']['hourcounter'] = 0;
+            $wtgtasksmanager_schedule_array['history']['daycounter'] = 0;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'Daily and hourly events counter reset for a new 24 hours period', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array ); 
             self::log_schedule( __( '24 hours had passed and the daily counter had to be reset. No further action is taking during these events and this should only happen once a day.', 'wtgtasksmanager' ), __( 'daily counter reset', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);   
             self::event_return( '24 hour counter was reset' );            
             return;
@@ -1185,7 +1231,7 @@ class WTGTASKSMANAGER {
 
         // ensure event processing allowed today
         $day = strtolower(date( 'l' ) );
-        if(!isset( $c2p_schedule_array['days'][$day] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['days'][$day] ) )
         {
             self::event_return( __( 'Event processing is has not been permitted for today', 'wtgtasksmanager' ) );
             self::log_schedule( __( 'Event processing is not permitted for today. Please check schedule settings to change this.', 'wtgtasksmanager' ), __( 'schedule not permitted today', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1195,7 +1241,7 @@ class WTGTASKSMANAGER {
 
         // ensure event processing allow this hour   
         $hour = strtolower( date( 'G' ) );
-        if(!isset( $c2p_schedule_array['hours'][$hour] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['hours'][$hour] ) )
         {
             self::event_return( __( 'Event processing is has not been permitted for the hour', 'wtgtasksmanager' ) );
             self::log_schedule( __( 'Processsing is not permitted for the current hour. Please check schedule settings to change this.', 'wtgtasksmanager' ), __( 'hour not permitted', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1204,29 +1250,29 @@ class WTGTASKSMANAGER {
         }
 
         // ensure hourly limit value has been set
-        if(!isset( $c2p_schedule_array['limits']['hour'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['limits']['hour'] ) )
         {  
-            $c2p_schedule_array['limits']['hour'] = 1;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Hourly limit was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['limits']['hour'] = 1;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'Hourly limit was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'The hourly limit value had not been set yet. You can change the limit but the default has been set to one. No further action is taking during this event and this should only happen once.', 'wtgtasksmanager' ), __( 'no hourly limit set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             self::event_return( __( 'initialised hourly limit', 'wtgtasksmanager' ) );        
             return;
         }     
                     
         // ensure daily limit value has been set
-        if(!isset( $c2p_schedule_array['limits']['day'] ) )
+        if(!isset( $wtgtasksmanager_schedule_array['limits']['day'] ) )
         {
-            $c2p_schedule_array['limits']['day'] = 1;
-            $c2p_schedule_array['history']['lastreturnreason'] = __( 'Daily limit was set for the first time', 'wtgtasksmanager' );
-            self::update_option_schedule_array( $c2p_schedule_array );
+            $wtgtasksmanager_schedule_array['limits']['day'] = 1;
+            $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = __( 'Daily limit was set for the first time', 'wtgtasksmanager' );
+            self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
             self::log_schedule( __( 'The daily limit value had not been set yet. It has now been set as one which allows only one post to be created or updated etc. This action should only happen once.', 'wtgtasksmanager' ), __( 'no daily limit set', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__); 
             self::event_return( __( 'initialised daily limit', 'wtgtasksmanager' ) );           
             return;
         }
 
         // if this hours target has been met return
-        if( $c2p_schedule_array['history']['hourcounter'] >= $c2p_schedule_array['limits']['hour'] )
+        if( $wtgtasksmanager_schedule_array['history']['hourcounter'] >= $wtgtasksmanager_schedule_array['limits']['hour'] )
         {
             self::event_return( 'The hours event limit/target has been met' );
             self::log_schedule( __( 'The events target for the current hour has been met so no further processing is permitted.', 'wtgtasksmanager' ), __( 'hourly target met', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1235,7 +1281,7 @@ class WTGTASKSMANAGER {
         }
          
         // if this days target has been met return
-        if( $c2p_schedule_array['history']['daycounter'] >= $c2p_schedule_array['limits']['day'] )
+        if( $wtgtasksmanager_schedule_array['history']['daycounter'] >= $wtgtasksmanager_schedule_array['limits']['day'] )
         {
             self::event_return( __( 'The days event limit/target has been met', 'wtgtasksmanager' ) );
             self::log_schedule( __( 'The daily events target has been met for the current 24 hour period (see daily timer counter). No events will be processed until the daily timer reaches 24 hours and is reset.', 'wtgtasksmanager' ), __( 'daily target met', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
@@ -1248,12 +1294,12 @@ class WTGTASKSMANAGER {
                   
         self::log_schedule(sprintf( __( 'The schedule system decided that the next event type is %s.', 'wtgtasksmanager' ), $run_event_type), __( 'next event type determined', 'wtgtasksmanager' ),1, 'scheduledeventcheck', __LINE__, __FILE__, __FUNCTION__);
             
-        // update $c2p_schedule_array with decided event type to advance the cycle and increase hourly plus daily counter
-        $c2p_schedule_array['history']['lasteventtype'] = $run_event_type;
-        $c2p_schedule_array['history']['lasteventtime'] = time(); 
-        $c2p_schedule_array['history']['hourcounter'] = $c2p_schedule_array['history']['hourcounter'] + 1; 
-        $c2p_schedule_array['history']['daycounter'] = $c2p_schedule_array['history']['daycounter'] + 1;
-        self::update_option_schedule_array( $c2p_schedule_array );
+        // update $wtgtasksmanager_schedule_array with decided event type to advance the cycle and increase hourly plus daily counter
+        $wtgtasksmanager_schedule_array['history']['lasteventtype'] = $run_event_type;
+        $wtgtasksmanager_schedule_array['history']['lasteventtime'] = time(); 
+        $wtgtasksmanager_schedule_array['history']['hourcounter'] = $wtgtasksmanager_schedule_array['history']['hourcounter'] + 1; 
+        $wtgtasksmanager_schedule_array['history']['daycounter'] = $wtgtasksmanager_schedule_array['history']['daycounter'] + 1;
+        self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
         
         // run procedure for decided event
         $event_action_outcome = $this->event_action( $run_event_type); 
@@ -1301,7 +1347,7 @@ class WTGTASKSMANAGER {
     * @link http://www.webtechglobal.co.uk/hacking/event-types
     */
     public function event_decide() {
-        global $c2p_schedule_array, $tasksmanager_settings;
+        global $wtgtasksmanager_schedule_array, $tasksmanager_settings;
         
         // return focused event if active
         $override_event = $this->event_decide_focus();// returns false if no override settings in place    
@@ -1315,14 +1361,14 @@ class WTGTASKSMANAGER {
         $run_event_type = 'createposts';
         
         // if we have no last event to establish the next event return the default
-        if(!isset( $c2p_schedule_array['history']['lasteventtype'] ) ){
+        if(!isset( $wtgtasksmanager_schedule_array['history']['lasteventtype'] ) ){
             return $run_event_type;
         }
         $bypass = false;// change to true when the next event after the last is not active, then the first available in the list will be the event 
         
         // dataimport -> dataupdate  
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'dataimport' ){
-            if( isset( $c2p_schedule_array['eventtypes']['dataupdate']['switch'] ) && $c2p_schedule_array['eventtypes']['dataupdate']['switch'] == true){
+        if( $wtgtasksmanager_schedule_array['history']['lasteventtype'] == 'dataimport' ){
+            if( isset( $wtgtasksmanager_schedule_array['eventtypes']['dataupdate']['switch'] ) && $wtgtasksmanager_schedule_array['eventtypes']['dataupdate']['switch'] == true){
                  return 'dataupdate';    
             }else{
                 $bypass = true; 
@@ -1330,8 +1376,8 @@ class WTGTASKSMANAGER {
         }
         
         // dataupdate -> postcreation
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'dataupdate' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['postcreation']['switch'] ) && $c2p_schedule_array['eventtypes']['postcreation']['switch'] == true){
+        if( $wtgtasksmanager_schedule_array['history']['lasteventtype'] == 'dataupdate' || $bypass == true){
+            if( isset( $wtgtasksmanager_schedule_array['eventtypes']['postcreation']['switch'] ) && $wtgtasksmanager_schedule_array['eventtypes']['postcreation']['switch'] == true){
                  return 'postcreation';    
             }else{
                 $bypass = true; 
@@ -1339,8 +1385,8 @@ class WTGTASKSMANAGER {
         }    
         
         // postcreation -> postupdate
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'postcreation' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['postupdate']['switch'] ) && $c2p_schedule_array['eventtypes']['postupdate']['switch'] == true){
+        if( $wtgtasksmanager_schedule_array['history']['lasteventtype'] == 'postcreation' || $bypass == true){
+            if( isset( $wtgtasksmanager_schedule_array['eventtypes']['postupdate']['switch'] ) && $wtgtasksmanager_schedule_array['eventtypes']['postupdate']['switch'] == true){
                 return 'postupdate';    
             }else{
                 $bypass = true; 
@@ -1348,8 +1394,8 @@ class WTGTASKSMANAGER {
         }    
 
         // postupdate -> dataimport
-        if( $c2p_schedule_array['history']['lasteventtype'] == 'postupdate' || $bypass == true){
-            if( isset( $c2p_schedule_array['eventtypes']['dataimport']['switch'] ) && $c2p_schedule_array['eventtypes']['dataimport']['switch'] == true){
+        if( $wtgtasksmanager_schedule_array['history']['lasteventtype'] == 'postupdate' || $bypass == true){
+            if( isset( $wtgtasksmanager_schedule_array['eventtypes']['dataimport']['switch'] ) && $wtgtasksmanager_schedule_array['eventtypes']['dataimport']['switch'] == true){
                  return 'dataimport';    
             }else{
                 $bypass = true; 
@@ -1363,9 +1409,9 @@ class WTGTASKSMANAGER {
     * Determines if user wants the schedule to focus on one specific event type
     */
     public function event_decide_focus() {
-        $c2p_schedule_array = self::get_option_schedule_array();
-        if( isset( $c2p_schedule_array['focus'] ) && $c2p_schedule_array['focus'] != false ){
-            return $c2p_schedule_array['focus'];    
+        $wtgtasksmanager_schedule_array = self::get_option_schedule_array();
+        if( isset( $wtgtasksmanager_schedule_array['focus'] ) && $wtgtasksmanager_schedule_array['focus'] != false ){
+            return $wtgtasksmanager_schedule_array['focus'];    
         }
     }
     
@@ -1379,8 +1425,8 @@ class WTGTASKSMANAGER {
     */
     public function event_action( $run_event_type){    
         global $tasksmanager_settings, $WTGTASKSMANAGER;
-        $c2p_schedule_array = WTGTASKSMANAGER::get_option_schedule_array();       
-        $c2p_schedule_array['history']['lasteventaction'] = $run_event_type . ' Requested'; 
+        $wtgtasksmanager_schedule_array = WTGTASKSMANAGER::get_option_schedule_array();       
+        $wtgtasksmanager_schedule_array['history']['lasteventaction'] = $run_event_type . ' Requested'; 
             
         // we can override the $run_event_type                          
         // run specific script for the giving action      
@@ -1412,135 +1458,14 @@ class WTGTASKSMANAGER {
                 //wtgtasksmanager_event_return( 'post creation procedure complete' );
                 
                 break;
-            case "postupdate":
-
-                /*
-                * This has been designed to carry out one method of updating at a time.
-                * 1st = Changed Records: search for records updated but not applied (post update function will update the wtgtasksmanager_applied or at least the sql function called will)
-                * 2nd = Meta Key: wtgtasksmanager_outdated meta is searched, any meta value of 'yes' indicates posts needs to be updated 
-                * 3rd = Changed Projected: project array includes a value ['updatecomplete'] which is set to true when no posts can be found with wtgtasksmanager_updated dates older than ['modified']. This allows an update to all posts. 
-                */                                
-
-                $updating_carried_out = false;// change to true to avoid processing further methods after update performed
-                
-                ############################################################################
-                #                                                                          #
-                #                     UPDATED JOB TABLE RECORD METHOD                      #
-                #                                                                          #
-                ############################################################################
-
-                // check which project was auto updated last and do the next, if none get the first project
-                
-                // does our project have updated rows not applied to their post
-      
-                if( $record){
-         
-                    // determine number of rows to apply to posts based on settings
-                    
-                    // ensure no further methods are processed if one or more rows are about to be updated
-                    $updating_carried_out = true; 
-                                        
-                    // query that number of applicable rows
-                    
-                    // loop through those rows, updating their linked posts
-                    
-                    // lasteventaction value needs a few words explaining what was done during schedule event
-                    $c2p_schedule_array['history']['lasteventaction'] = 'post with ID ' . $r['wtgtasksmanager_postid'] . ' was updated with a new record';        
-
-                }
-          
-                ############################################################################
-                #                                                                          #
-                #             wtgtasksmanager_outdated META VALUE SET TO "yes" METHOD             #
-                #                                                                          #
-                ############################################################################         
-                if(!$updating_carried_out){
-
-                    // locate a post that have been marked as wtgtasksmanager_outdated
-                    //$post = wtgtasksmanager_WP_SQL_get_posts_join_meta( 'wtgtasksmanager_outdated', 'yes', $limit = 1, $select = 'ID' );
-                    if( $post){
-                        
-                        // discontinue further post update methods
-                        $updating_carried_out = true;
-                        
-                        // loop through posts
-                        foreach( $post as $key => $p){
-
-                            // continue foreach if no $project_code exists
-                            $project_code = get_post_meta( $p->ID, 'wtgtasksmanager_project_code', true);
-                            if(!$project_code){continue;}
-                            
-                            //wtgtasksmanager_post_updatepost( $p->ID,get_post_meta( $p->ID, 'wtgtasksmanager_record_id', true), $project_code);
-             
-                            //wtgtasksmanager_log_schedule( 'Post with ID '.$p->ID.' was updated because it was marked as outdated', 'post updated',1, $run_event_type, __LINE__, __FILE__, __FUNCTION__, 'medium' );
-             
-                            // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                            $c2p_schedule_array['history']['lasteventaction'] = 'post ' . $p->ID . ' was updated using wtgtasksmanager_outdated method';        
-                        }
-                    }                  
-                }
-
-                ############################################################################
-                #                                                                          #
-                #                  CHANGED PROJECT CONFIGURATION METHOD                    #
-                #                                                                          #
-                ############################################################################          
-                // this method checks $c2p_projectslist_array[PROJECTCODE]['updatecomplete']
-                // if ['updatecomplete'] = false then it means we have yet to determine if some or no posts need updating
-                // if we cannot locate just 1 post requiring updating, we change ['updatecomplete'] to true
-                // we determine if a post requires updating by comparing $c2p_projectslist_array[PROJECTCODE]['modified']
-                // against the wtgtasksmanager_updated meta value  
-                if(!$updating_carried_out){
-                                         
-                    // locate a project with ['updatecomplete'] set to false
-                    
-                    // if we find an outdated project we will store the code
-                    $outdated_project_code = false;                    
-                    
-                    // get the projects full array
-                    
-                    /*
-                        now using the ['modified'] date not stored in $project_modified, we can search for a post not updated
-                        1. if we find no posts then we change ['updatecomplete'] to true to avoid doing all this again
-                        2. if we find a post we will update just one post due to the amount of processing involved in this                     
-                    */
-                    
-                    // run query for a post that has an older wtgtasksmanager_last_updated date than the projects modified date                        
-                    $post = wtgtasksmanager_SQL_get_posts_oudated( $project_modified, $project_code, $limit = 1, $select = 'ID' );
-            
-                    if( $post){
-    
-                        foreach( $post as $key => $p){
-
-                            // get record ID used to create post and ensure the value is numeric (precaution against user editing the value)
-                            $record_id = get_post_meta( $p->ID, 'wtgtasksmanager_record_id', true);
-                            if( $record_id && is_numeric( $record_id) ){
-                                
-                                // update the post, this function does not just use new records
-                                //wtgtasksmanager_post_updatepost( $p->ID, $record_id, $project_code);
-             
-                                // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                                $c2p_schedule_array['history']['lasteventaction'] = 'post with ID ' . $p->ID . ' was updated because project configuration was changed';
-                                
-                            }
-                        }                         
-
-                    }else{
-                                
-                        // update the lasteventaction value - a very short sentence explaining the specific changes in blog
-                        $c2p_schedule_array['history']['lasteventaction'] = 'schedule determine posts for project '.$outdated_project_code.' are all updated';
-                                                            
-                        // set the ['updatecomplete'] value to true to indicate all posts have been updated 
-                            
-                    }
-                }                
+            case "postupdate":       
         
                 wtgtasksmanager_event_return( 'data update procedure finished' ); 
                     
             break;
             
         }// end switch
-        self::update_option_schedule_array( $c2p_schedule_array );
+        self::update_option_schedule_array( $wtgtasksmanager_schedule_array );
     } 
     
     /**
@@ -1548,10 +1473,9 @@ class WTGTASKSMANAGER {
     * 
     * @param mixed $context
     */
-    public function pluginmediabutton_button( $context) {
+    public function pluginmediabutton_button( $context ) {
         //append the icon
-        $context = "<a class='button thickbox' title='WTG Tasks Manager Column Replacement Tokens (CTRL + C then CTRL + V)'
-        href='#TB_inline?width=400&inlineId=wtgtasksmanager_popup_container'>WTG Tasks Manager</a>";
+        //$context = "<a class='button thickbox' title='WTG Tasks Manager Column Replacement Tokens (CTRL + C then CTRL + V)' href='#TB_inline?width=400&inlineId=wtgtasksmanager_popup_container'>WTG Tasks Manager</a>";
         return $context;
     }  
       
@@ -1608,44 +1532,6 @@ class WTGTASKSMANAGER {
     }
     
     /**
-    * gets the specific row/s for a giving post ID
-    * 
-    * UPDATE: "c2p_postid != $post_id" was in use but this is wrong. I'm not sure how this has gone
-    * undetected considering where the function has been used. 
-    *
-    * @param mixed $project_id
-    * @param mixed $total
-    * 
-    * @author Ryan Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0
-    */
-    public function get_posts_rows( $project_id, $post_id, $idcolumn = false ){
-        $this->DB = self::load_class( 'WTGTASKSMANAGER_DB', 'class-wpdb.php', 'classes' );
-        $tables_array = $this->get_dbtable_sources( $project_id );
-        return $this->DB->query_multipletables( $tables_array, $idcolumn, 'c2p_postid = '.$post_id );
-    }
-    
-    /**
-    * gets one or more rows from imported data for specific post created by specific project
-    * 
-    * @uses get_posts_rows() which does a join query 
-    * 
-    * @param mixed $project_id
-    * @param mixed $post_id
-    * @param mixed $idcolumn
-    * 
-    * @author Ryan Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
-    * @version 1.0 
-    */
-    public function get_posts_record( $project_id, $post_id, $idcolumn = false ){
-        return self::get_posts_rows( $project_id, $post_id, $idcolumn );
-    } 
-    
-    /**
     * Gets the MySQL version of column
     * 
     * @author Ryan R. Bayne
@@ -1681,7 +1567,7 @@ class WTGTASKSMANAGER {
         }
         
         // WTG Tasks Manager own special processing triggers
-        if( isset( $_GET['c2pprocsub'] ) || isset( $_GET['wtgtasksmanageraction'] ) || isset( $_GET['nonceaction'] ) ){
+        if( isset( $_GET['wtgtasksmanageraction'] ) || isset( $_GET['nonceaction'] ) ){
             return true;
         }
         
@@ -1698,7 +1584,7 @@ class WTGTASKSMANAGER {
     * @link http://www.wtgtasksmanager.com/hacking/log-table
     */
     public function newlog( $atts ){     
-        global $tasksmanager_settings, $wpdb, $c2p_currentversion;
+        global $tasksmanager_settings, $wpdb, $wtgtasksmanager_currentversion;
 
         $table_name = $wpdb->prefix . 'webtechglobal_log';
         
@@ -1725,7 +1611,7 @@ class WTGTASKSMANAGER {
             'screenshoturl' => false,# screenshot URL to aid debugging 
             'userscomment' => false,# beta testers comment to aid debugging (may double as other types of comments if log for other purposes) 
             'page' => false,# related page 
-            'version' => $c2p_currentversion, 
+            'version' => $wtgtasksmanager_currentversion, 
             'panelid' => false,# id of submitted panel
             'panelname' => false,# name of submitted panel 
             'tabscreenid' => false,# id of the menu tab  
@@ -1948,7 +1834,7 @@ class WTGTASKSMANAGER {
     * Adds Script Start and Stylesheets to the beginning of pages
     */
     public function pageheader( $pagetitle, $layout ){
-        global $current_user, $c2pm, $tasksmanager_settings, $c2p_pub_set;
+        global $current_user, $WTGTASKSMANAGER_Menu, $tasksmanager_settings;
 
         // get admin settings again, all submissions and processing should update settings
         // if the interface does not show expected changes, it means there is a problem updating settings before this line
@@ -1991,7 +1877,7 @@ class WTGTASKSMANAGER {
             $this->UI->display_all();              
           
             // process global security and any other types of checks here such such check systems requirements, also checks installation status
-            $c2p_requirements_missing = self::check_requirements( true );
+            self::check_requirements( true );
     }                          
     
     /**
@@ -2144,8 +2030,8 @@ class WTGTASKSMANAGER {
     * Array [limits] holds the maximum post creation numbers 
     */
     public static function get_option_schedule_array() {
-        $c2p_schedule_array = get_option( 'wtgtasksmanager_schedule' );
-        return maybe_unserialize( $c2p_schedule_array );    
+        $wtgtasksmanager_schedule_array = get_option( 'wtgtasksmanager_schedule' );
+        return maybe_unserialize( $wtgtasksmanager_schedule_array );    
     }
     
     /**
@@ -2221,39 +2107,6 @@ class WTGTASKSMANAGER {
     */
     public function is_plugin_page( $page){
         return strstr( $page, 'wtgtasksmanager' );  
-    } 
-    
-    /**
-    * Determines if giving tab for the giving page should be displayed or not based on current user.
-    * 
-    * Checks for reasons not to display and returns false. If no reason found to hide the tab then true is default.
-    * 
-    * @param mixed $page
-    * @param mixed $tab
-    * 
-    * @return boolean
-    */
-    public function should_tab_be_displayed( $page, $tab){
-        global $c2pm;
-
-        if( isset( $c2pm[$page]['tabs'][$tab]['permissions']['capability'] ) ){
-            $boolean = current_user_can( $c2pm[$page]['tabs'][$tab]['permissions']['capability'] );
-            if( $boolean ==  false ){
-                return false;
-            }
-        }
-
-        // if screen not active
-        if( isset( $c2pm[$page]['tabs'][$tab]['active'] ) && $c2pm[$page]['tabs'][$tab]['active'] == false ){
-            return false;
-        }    
-        
-        // if screen is not active at all (used to disable a screen in all packages and configurations)
-        if( isset( $c2pm[$page]['tabs'][$tab]['active'] ) && $c2pm[$page]['tabs'][$tab]['active'] == false ){
-            return false;
-        }
-                     
-        return true;      
     } 
     
     /**
@@ -2360,9 +2213,9 @@ class WTGTASKSMANAGER {
     * Stores the last known reason why auto event was refused during checks in event_check()
     */
     public function event_return( $return_reason){
-        $c2p_schedule_array = self::get_option_schedule_array();
-        $c2p_schedule_array['history']['lastreturnreason'] = $return_reason;
-        self::update_option_schedule_array( $c2p_schedule_array );   
+        $wtgtasksmanager_schedule_array = self::get_option_schedule_array();
+        $wtgtasksmanager_schedule_array['history']['lastreturnreason'] = $return_reason;
+        self::update_option_schedule_array( $wtgtasksmanager_schedule_array );   
     }  
     
     /**
@@ -2682,7 +2535,7 @@ class WTGTASKSMANAGER {
     * @since 0.0.1
     * @version 1.2
     */
-    public function tasknew( $name, $long_description, $short_description, $author, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability, $notificationemailaddress = false ) {
+    public function tasknew( $name, $long_description, $short_description, $author, $project_id, $priority = 3, $requires = null, $freelanceroffer = '0.00', $requiredcapability = 'activate_plugins', $notificationemailaddress = false ) {
               
         $new_task = array();
         $new_task['post_title'] = $name;
@@ -2698,35 +2551,49 @@ class WTGTASKSMANAGER {
             
         $post_id = wp_insert_post( $new_task );
 
-        // add meta project progress
-        add_post_meta( $post_id, 'wtgtaskprogress', 0, true );        
-        
-        // add meta project status
-        add_post_meta( $post_id, 'wtgtaskstatus', 'new', true );        
-        
-        // add meta project id
-        add_post_meta( $post_id, 'wtgprojectid', $project_id, true );
-        
-        // add priority
-        add_post_meta( $post_id, 'wtgpriority', $priority, true );
-        
-        // add "requires" - the tasks that must be complete before this
-        add_post_meta( $post_id, 'wtgrequires', $requires, true );     
-            
-        // add "freelancerpayouttotal" 
-        add_post_meta( $post_id, 'freelancerpayouttotal', '0.00', true );     
-
-        // add "freelanceroffer" 
-        add_post_meta( $post_id, 'wtgfreelanceroffer', $freelanceroffer, true );     
-        
-        // add "requiredcapability" 
-        add_post_meta( $post_id, 'wtgrequiredcapability', $requiredcapability, true );     
-    
-        // add 'notificationemailaddress'
-        add_post_meta( $post_id, 'notificationemailaddress', $notificationemailaddress , false );
+        if( is_numeric( $post_id ) ) {
+            self::task_meta( $post_id, $project_id, $priority, $requires, $freelanceroffer, $requiredcapability, $notificationemailaddress );
+        }
         
         // return what is now a project id
         return $post_id;
+    }
+    
+    /**
+    * Handles the adding and updating of tasks meta.
+    * 
+    * @author Ryan R. Bayne
+    * @package WTG Tasks Manager
+    * @since 0.0.1
+    * @version 1.0
+    */
+    public function task_meta( $post_id, $project_id, $priority = 3, $requires = null, $freelanceroffer = '0.00', $requiredcapability = 'activate_plugins', $notificationemailaddress = false ) {
+        // add meta project progress   
+        update_post_meta( $post_id, 'wtgtaskprogress', 0, true );        
+                
+        // add meta project status
+        update_post_meta( $post_id, 'wtgtaskstatus', 'new', true );        
+        
+        // add meta project id
+        update_post_meta( $post_id, 'wtgprojectid', $project_id, true );
+        
+        // add priority
+        update_post_meta( $post_id, 'wtgpriority', $priority, true );
+        
+        // add "requires" - the tasks that must be complete before this
+        update_post_meta( $post_id, 'wtgrequires', $requires, true );     
+            
+        // add "freelancerpayouttotal" 
+        update_post_meta( $post_id, 'freelancerpayouttotal', '0.00', true );     
+
+        // add "freelanceroffer" 
+        update_post_meta( $post_id, 'wtgfreelanceroffer', $freelanceroffer, true );     
+        
+        // add "requiredcapability" 
+        update_post_meta( $post_id, 'wtgrequiredcapability', $requiredcapability, true );     
+    
+        // add 'notificationemailaddress'
+        update_post_meta( $post_id, 'notificationemailaddress', $notificationemailaddress , false );    
     }
     
     /**
@@ -2812,7 +2679,7 @@ class WTGTASKSMANAGER {
         $tablename = $wpdb->webtechglobal_projects;
         return $wpdb->get_var( "SELECT project_id FROM $tablename WHERE projectname = '$project_name'" );
     }       
-    
+            
 }// end WTGTASKSMANAGER class 
 
 if(!class_exists( 'WP_List_Table' ) ){

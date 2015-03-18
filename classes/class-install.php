@@ -132,8 +132,8 @@ class WTGTASKSMANAGER_Install {
         
         require_once( WTGTASKSMANAGER_ABSPATH . 'arrays/tableschema_array.php' );
         
-        if(is_array( $c2p_tables_array ) ){
-            foreach( $c2p_tables_array['tables'] as $key => $table){
+        if(is_array( $wtgtasksmanager_tables_array ) ){
+            foreach( $wtgtasksmanager_tables_array['tables'] as $key => $table){
                 if( $this->DB->does_table_exist( $table['name'] ) ){         
                     $wpdb->query( 'DROP TABLE '. $table['name'] );
                 }                                                             
@@ -150,7 +150,7 @@ class WTGTASKSMANAGER_Install {
         
         // schedule settings
         require( WTGTASKSMANAGER_ABSPATH . 'arrays/schedule_array.php' );        
-        add_option( 'wtgtasksmanager_schedule', serialize( $c2p_schedule_array ) );
+        add_option( 'wtgtasksmanager_schedule', serialize( $wtgtasksmanager_schedule_array ) );
 
         // notifications array (persistent notice feature)
         add_option( 'wtgtasksmanager_notifications', serialize( array() ) ); 

@@ -69,7 +69,7 @@ class WTGTASKSMANAGER_Createtasks_View extends WTGTASKSMANAGER_View {
         $this->UI = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); 
         $this->DB = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_DB', 'class-wpdb.php', 'classes' );
         $this->PHP = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_PHP', 'class-phplibrary.php', 'classes' );
-        $this->Forms = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Formbuilder', 'class-forms.php', 'classes' );
+        $this->FORMS = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Formbuilder', 'class-forms.php', 'classes' );
         
         parent::setup( $action, $data );
         
@@ -133,7 +133,7 @@ class WTGTASKSMANAGER_Createtasks_View extends WTGTASKSMANAGER_View {
     */
     public function postbox_createtasks_advanced( $data, $box ) {    
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'Create a task with detailed requirements.', 'wtgtasksmanager' ), false );        
-        $this->Forms->form_start( $box['args']['formid'], $box['args']['formid'], $box['title']);
+        $this->FORMS->form_start( $box['args']['formid'], $box['args']['formid'], $box['title']);
         ?>  
             <div id="poststuff">
             
@@ -149,12 +149,17 @@ class WTGTASKSMANAGER_Createtasks_View extends WTGTASKSMANAGER_View {
                 }               
                 
                 // task name
-                $this->Forms->text_basic( $box['args']['formid'], 'taskname', 'taskname', __( 'Task Name', 'wtgtasksmanager' ), '', true, array(), array( 'alphanumeric' ) );
-                $this->Forms->input(  $box['args']['formid'], 'menu', 'projectid', 'projectid', __( 'Project', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => $projects_array ), array( 'numeric' ) );    
-                $this->Forms->input(  $box['args']['formid'], 'menu', 'priority', 'priority', __( 'Priority', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => array( 1 => __( 'Urgent' ), 2 => __( 'High' ), 3 => __( 'Important' ), 4 => __( 'Low' ), 5 => __( 'Optional' ) ) ) );    
-                $this->Forms->input(  $box['args']['formid'], 'text', 'requiredtasks', 'requiredtasks', __( 'Required Tasks', 'wtgtasksmanager' ), '', false, '', array(), array( 'numericlist' ) );                    
-                $this->Forms->input(  $box['args']['formid'], 'text', 'freelanceroffer', 'freelanceroffer', __( 'Freelancer Offer', 'wtgtasksmanager' ), '', false, '', array(), array( 'numeric' ) );                                    
-                $this->Forms->input(  $box['args']['formid'], 'menu_capabilities', 'requiredcapability', 'requiredcapability', __( 'Required Capability', 'wtgtasksmanager' ), '', false, '', array(), array() );                                    
+                $this->FORMS->text_basic( $box['args']['formid'], 'taskname', 'taskname', __( 'Task Name', 'wtgtasksmanager' ), '', true, array(), array( 'alphanumeric' ) );
+                
+                $this->FORMS->input(  $box['args']['formid'], 'menu', 'projectid', 'projectid', __( 'Project', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => $projects_array ), array( 'numeric' ) );    
+                
+                $this->FORMS->input(  $box['args']['formid'], 'menu', 'priority', 'priority', __( 'Priority', 'wtgtasksmanager' ), '', true, '', array( 'itemsarray' => array( 1 => __( 'Urgent' ), 2 => __( 'High' ), 3 => __( 'Important' ), 4 => __( 'Low' ), 5 => __( 'Optional' ) ) ) );    
+                
+                $this->FORMS->input(  $box['args']['formid'], 'text', 'requiredtasks', 'requiredtasks', __( 'Required Tasks', 'wtgtasksmanager' ), '', false, '', array(), array( 'numericlist' ) );                    
+                
+                $this->FORMS->input(  $box['args']['formid'], 'text', 'freelanceroffer', 'freelanceroffer', __( 'Freelancer Offer', 'wtgtasksmanager' ), '', false, '', array(), array( 'numeric' ) );                                    
+                
+                $this->FORMS->input(  $box['args']['formid'], 'menu_capabilities', 'requiredcapability', 'requiredcapability', __( 'Required Capability', 'wtgtasksmanager' ), '', false, '', array(), array() );                                    
                 ?>
                 </table>
                 

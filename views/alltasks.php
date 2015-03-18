@@ -69,7 +69,7 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
         $this->UI = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); 
         $this->DB = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_DB', 'class-wpdb.php', 'classes' );
         $this->PHP = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_PHP', 'class-phplibrary.php', 'classes' );
-   
+        
         parent::setup( $action, $data );
 
         // create a data table ( use "head" to position before any meta boxes and outside of meta box related divs)
@@ -81,7 +81,7 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
             if( isset( $metabox[7] ) && current_user_can( $metabox[7] ) ) {
                 $this->add_meta_box( $metabox[0], $metabox[1], $metabox[2], $metabox[3], $metabox[4], $metabox[5] );   
             }               
-        }
+        } 
     }
                          
     /**
@@ -93,14 +93,24 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
     * @version 1.0
     */
     public function datatables( $data, $box ) {    
+        global $wpdb; 
+         
+        // begin table
         $WPTableObject = new WTGTASKSMANAGER_WPTable_AllTasks();
-        $WPTableObject->prepare_items_further( array(), 20 );
+        
+        // process bulk actions/requests (before data is queried for display)
+        $WPTableObject->process_bulk_action();
+        
+        // get data for display
+        $data = $WPTableObject->get_data();
+        
+        // prepare items using filters
+        $WPTableObject->prepare_items_further( $data, $WPTableObject->per_page );
         ?>
         
         <form method="get">
             <input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
             <?php
-            $WPTableObject->prepare_items_further( false, 999999 );
             $WPTableObject->search_box( 'search', 'theidhere' ); 
             $WPTableObject->display(); 
             ?>
@@ -170,19 +180,24 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
 * @package WTG Tasks Manager
 * @since 0.0.1
 * @version 1.1
+* 
+* @link http://codex.wordpress.org/Class_Reference/WP_List_Table
 */
 class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
     
+    protected 
+        $genuine_actions = array( 'canceltasks' ),
+        $per_page = 20;
+        
     /** ************************************************************************
      * REQUIRED. Set up a constructor that references the parent constructor. We 
      * use the parent reference to set some default configs.
      ***************************************************************************/
     function __construct() {
-        global $status, $page;
 
-        $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' ); # plugin specific functions
-        $this->UI = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); # interface, mainly notices
-                    
+        $this->UI = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); # interface, mainly notices
+        $this->REQUESTS = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_Requests', 'class-requests.php', 'classes' );
+              
         //Set parent defaults
         parent::__construct( array(
             'singular'  => 'task',     //singular name of the listed records
@@ -327,8 +342,7 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
         return $columns;
     }
     
-    function column_cb( $item ) {
-                     
+    function column_cb( $item ) {     
         return sprintf(                        
             '<input type="checkbox" name="tasks[]" value="%s" />', $item->ID
         );    
@@ -336,7 +350,7 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
      
     function column_ID( $item ) {
         $actions = array(                      
-            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button c2pbutton">Edit</a>', $item->ID )
+            'edit'      => sprintf( '<a href="post.php?post=%s&action=edit" class="button wtgtasksmanagerbutton">Edit</a>', $item->ID )
         );
            
         // add another action button based on the tasks state
@@ -366,6 +380,41 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
         }        
     
         return sprintf( '%1$s %2$s', $item->ID, $this->row_actions($actions) );
+    }
+    
+    function get_data() {
+        $meta_key = '';
+        $meta_value = '';
+        $project_focus_id = get_user_meta( get_current_user_id(), 'wtgprojectfocus', true );
+        if( $project_focus_id )
+        {
+            if( is_numeric( $project_focus_id ) )
+            {
+                $meta_key = 'wtgprojectid';
+                $meta_value = $project_focus_id;                
+            }    
+        }
+                
+        // get all tasks posts
+        $data = array();
+              
+        $args = array(
+        'posts_per_page'   => $this->per_page,
+        //'offset'           => $this->get_pagenum(),
+        'category'         => '',
+        'orderby'          => 'post_date',
+        'order'            => 'DESC',
+        'include'          => '',
+        'exclude'          => '',
+        'meta_key'         => $meta_key,
+        'meta_value'       => $meta_value,
+        'post_type'        => 'wtgtasks',
+        'post_mime_type'   => '',
+        'post_parent'      => '',
+        'post_status'      => 'all',
+        'suppress_filters' => true ); 
+
+        return get_posts( $args );
     }
  
     /** ************************************************************************
@@ -405,7 +454,7 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
      **************************************************************************/
     function get_bulk_actions() {
         $actions = array(
-            'canceltask' => __( 'Cancel Tasks', 'wtgtasksmanager' )
+            'canceltasks' => __( 'Cancel Tasks', 'wtgtasksmanager' )
         );
         return $actions;
     }
@@ -417,21 +466,57 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
      * 
      * @see $this->prepare_items_further()
      **************************************************************************/
+     
+    /**
+    * Process bulk actions, an optional approach but choosing by WebTechGlobal for
+    * the sake of a less confusing design.
+    * 
+    * Call this method before prepare_items_further() and before querying the set of 
+    * data passed to it. 
+    * 
+    * @link http://wordpress.stackexchange.com/questions/76374/wp-list-tables-bulk-actions
+    */
     function process_bulk_action() {
-        
-        //Detect when a bulk action is being triggered...
-        if( 'delete' === $this->current_action() ) {
-            wp_die( 'Items deleted (or they would be if we had items to delete)!' );
+        // return quickly if no bulk processing requested
+        $current_action = $this->current_action();
+        if( $current_action === false ) {
+            return;    
         }
         
+        // ensure the action is genuine for this class/table
+        if( !in_array( $current_action, $this->genuine_actions ) ) {
+            return; 
+        }
+        
+        // ensure nonce value in URL
+        if ( !isset( $_GET['_wpnonce'] ) ) {
+            wp_die( 'WTG Tasks Manager could not continue because a security check failed! This may be temporary.' );
+        }
+        
+        // ensure nonce is a string 
+        if( !is_string( $_GET['_wpnonce'] ) ) {
+            wp_die( 'WordPress security detected a problem. Please return to WTG Tasks Manager and try again if you feel this is a mistake!' );    
+        }
+        
+        // filter nonce values and confirm nonce 
+        $nonce  = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+        $nonceaction = 'bulk-' . $this->_args['plural'];
+        if ( ! wp_verify_nonce( $_GET['_wpnonce'], $nonceaction ) ) {
+            wp_die( 'Sorry a WordPress security check has denied your request!' );
+        }
+        
+        // run the final method for handling the request
+        $action = $this->current_action();
+        $this->REQUESTS->process_admin_request( 'GET', $action );
+
+        // we need a refresh to make the latest notice/s show and clear values from URL
+        wp_redirect( $_GET['_wp_http_referer'] );
+        exit;        
     }
     
     /** ************************************************************************
-     * REQUIRED! This is where you prepare your data for display. This method will
-     * usually be used to query the database, sort and filter the data, and generally
-     * get it ready to be displayed. At a minimum, we should set $this->items and
-     * $this->set_pagination_args(), although the following properties and methods
-     * are frequently interacted with here...
+     * Prepare data for display. Sort and filter the data, and generally
+     * get it ready to be displayed. 
      * 
      * @global WPDB $wpdb
      * @uses $this->_column_headers
@@ -441,55 +526,12 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
      * @uses $this->get_pagenum()
      * @uses $this->set_pagination_args()
      **************************************************************************/
-    function prepare_items_further( $data = false, $per_page = 20 ) {
-        // get required data
-        global $wpdb;  
-        
-        /**
-         * REQUIRED. Now we need to define our column headers. This includes a complete
-         * array of columns to be displayed (slugs & titles), a list of columns
-         * to keep hidden, and a list of columns that are sortable. Each of these
-         * can be defined in another method (as we've done here) before being
-         * used to build the value for our _column_headers property.
-         */
+    function prepare_items_further( $data, $per_page ) {
+        // get column settings
         $columns = $this->get_columns();
         $hidden = array();
         $sortable = $this->get_sortable_columns();
-        
-        // does current user have project focus set
-        $meta_key = '';
-        $meta_value = '';
-        $project_focus_id = get_user_meta( get_current_user_id(), 'wtgprojectfocus', true );
-        if( $project_focus_id )
-        {
-            if( is_numeric( $project_focus_id ) )
-            {
-                $meta_key = 'wtgprojectid';
-                $meta_value = $project_focus_id;                
-            }    
-        }
                 
-        // get all tasks posts
-        $data = array();
-              
-        $args = array(
-        'posts_per_page'   => $per_page,
-        //'offset'           => $this->get_pagenum(),
-        'category'         => '',
-        'orderby'          => 'post_date',
-        'order'            => 'DESC',
-        'include'          => '',
-        'exclude'          => '',
-        'meta_key'         => $meta_key,
-        'meta_value'       => $meta_value,
-        'post_type'        => 'wtgtasks',
-        'post_mime_type'   => '',
-        'post_parent'      => '',
-        'post_status'      => 'all',
-        'suppress_filters' => true ); 
-
-        $data = get_posts( $args );
-        
         // in this example I'm going to remove records from the array that do not have the searched string (test string is: 2)
         if( isset( $_GET['s'] ) && !empty( $_GET['s'] ) ) {
             $searched_string = wp_unslash( $_GET['s'] );
@@ -516,12 +558,6 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
          * for sortable columns.
          */
         $this->_column_headers = array( $columns, $hidden, $sortable);
-        
-        /**
-         * Optional. You can handle your bulk actions however you see fit. In this
-         * case, we'll handle them within our package just to keep things clean.
-         */
-        $this->process_bulk_action();
       
         /**
          * REQUIRED for pagination. Let's figure out what page the user is currently 
@@ -537,7 +573,7 @@ class WTGTASKSMANAGER_WPTable_AllTasks extends WP_List_Table {
          * in your own package classes.
          */
         $total_items = count( $data );
-
+                                 
         /**
          * The WP_List_Table class does not handle pagination for us, so we need
          * to ensure that the data is trimmed to only the current page. We can use
