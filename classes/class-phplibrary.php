@@ -16,16 +16,15 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 class WTGTASKSMANAGER_PHP {  
     /**
     * Performs a var_dump if debug_mode active (debug_mode is only active when on installation blog unless manually activated)
+    * 
+    * @todo use WP_DEBUG_DISPLAY to determine if dump should be done or not
     */
     public function var_dump( $value, $header = false, $append = '<br>' ){
-        global $wtgtasksmanager_debug_mode;
-        if( $wtgtasksmanager_debug_mode){
-            if( $header !== false ){echo '<h1>'.$header.'</h1>';}
-            echo '<pre>';
-            var_dump( $value );
-            echo '</pre>';
-            echo $append;
-        }
+        if( $header !== false ){echo '<h1>'.$header.'</h1>';}
+        echo '<pre>';
+        var_dump( $value );
+        echo '</pre>';
+        echo $append;
     }    
   
     /**

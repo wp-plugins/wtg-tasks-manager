@@ -103,9 +103,11 @@ class WTGTASKSMANAGER_Alltasks_View extends WTGTASKSMANAGER_View {
         
         // get data for display
         $data = $WPTableObject->get_data();
-        
+       
         // prepare items using filters
-        $WPTableObject->prepare_items_further( $data, $WPTableObject->per_page );
+        if( $data ){
+            $WPTableObject->prepare_items_further( $data, $WPTableObject->per_page );
+        }
         ?>
         
         <form method="get">

@@ -5,7 +5,7 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: WTG, Task Manager, Tasks, Task Management, Task, todo, TO DO, to-do, Workflow, project management
 Requires at least: 3.8.0
-Tested up to: 4.1.1
+Tested up to: 4.3.0
 Stable tag: trunk
 
 Task management with a plan - this plugin will grow to meet the needs of online business managed within WordPress.
@@ -76,6 +76,17 @@ Please update this plugin using your WordPress Installed Plugins screen. Click o
 This method is safer than using any other source for the files.
 
 == Changelog == 
+
+= 0.0.37 = 
+* Feature Changes
+    * New Developer menu: display/hiding debug information added. 
+* Technical Information
+    * Each use of WP table class had a bug.
+* Known Issues
+    * Search abilities are limited.
+    * Posts view "All" does not show all posts - I think it is a WordPress limitation at this time when using custom statuses. I'll seek a workaround like hooking into the query.
+    * post-new.php for the plugins custom post type (Create Task) cannot be used properly yet - it does not have all required fields. Please use form provided on plugins own pages until it is improved.
+
 = 0.0.36 = 
 * Feature Changes
     * Plugin no longer adds a parent menu to the admin. All admin items can be found in the plugins post type menu.

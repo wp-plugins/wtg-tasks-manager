@@ -94,13 +94,12 @@ class WTGTASKSMANAGER_Finishedtasks_View extends WTGTASKSMANAGER_View {
     */
     public function datatables( $data, $box ) {    
         $WPTableObject = new WTGTASKSMANAGER_WPTable_FinishedTasks();
-        $WPTableObject->prepare_items_further( array(), 10 );
+        $WPTableObject->prepare_items_further( array(), 20 );
         ?>
         
         <form method="get">
             <input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>" />
             <?php
-            $WPTableObject->prepare_items_further( false, 5 );
             $WPTableObject->search_box( 'search', 'theidhere' ); 
             $WPTableObject->display(); 
             ?>
@@ -181,7 +180,7 @@ class WTGTASKSMANAGER_WPTable_FinishedTasks extends WP_List_Table {
         global $status, $page;
 
         $this->WTGTASKSMANAGER = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER', 'class-wtgtasksmanager.php', 'classes' ); # plugin specific functions
-        $this->UI = $this->WTGTASKSMANAGER->load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); # interface, mainly notices
+        $this->UI = WTGTASKSMANAGER::load_class( 'WTGTASKSMANAGER_UI', 'class-ui.php', 'classes' ); # interface, mainly notices
         
         //Set parent defaults
         parent::__construct( array(

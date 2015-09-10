@@ -36,10 +36,10 @@ class WTGTASKSMANAGER_Install {
         $this->PHP = new WTGTASKSMANAGER_PHP();
                 
         // on activation run install_plugin() method which then runs more methods i.e. create_tables();
-        register_activation_hook( WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php', array( $this, 'install_plugin' ) ); 
+        register_activation_hook( WTGTASKSMANAGER_ABSPATH . 'wtg-tasks-manager.php', array( $this, 'install_plugin' ) ); 
 
         // on deactivation run disabled_plugin() - not a full uninstall
-        register_deactivation_hook( WTGTASKSMANAGER_ABSPATH . 'wtgtasksmanager.php',  array( $this, 'deactivate_plugin' ) );
+        register_deactivation_hook( WTGTASKSMANAGER_ABSPATH . 'wtg-tasks-manager.php',  array( $this, 'deactivate_plugin' ) );
         
         // register webtechglobal_log table
         add_action( 'init', array( $this, 'register_webtechglobal_log_table' ) );
@@ -60,6 +60,8 @@ class WTGTASKSMANAGER_Install {
     }    
     
     // projects table - set $wpdb
+    // this table is being used in multiple WTG plugins for easy integration
+    // changes must be reflected in all plugins
     function register_webtechglobal_projects_table() {
         global $wpdb;
         $wpdb->webtechglobal_projects = "{$wpdb->prefix}webtechglobal_projects";
@@ -67,25 +69,65 @@ class WTGTASKSMANAGER_Install {
          
     /**
     * Creates the plugins database tables
-    * 
-    * @uses dbDelta()
-    * 
-    * @uses upgrade.php however a bug was reported regarding this being included, still awaiting information
+    *
+    * @author Ryan R. Bayne
+    * @package Training Tools
+    * @since 0.0.1
+    * @version 1.3
+    */
+    function create_tables() {      
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );         
+        self::webtechglobal_log();
+        self::webtechglobal_projects();
+    }
+    
+    /**
+    * Global WebTechGlobal log table as used in all WTG plugins.
+    * This approach helps to keep the database tidy, while still providing
+    * an still improving log system and with all log entries in a single table.
+    * Behaviours relating to integration of these plugins can be spotted easier.
     * 
     * @author Ryan R. Bayne
-    * @package WTG Tasks Manager
-    * @since 0.0.1
+    * @package Training Tools
+    * @since 0.0.3
     * @version 1.0
     */
-    function create_tables() {       
-        global $charset_collate, $wpdb, $WTGTASKSMANAGER;
+    public function webtechglobal_log() {
+        global $charset_collate,$wpdb;
         
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-          
         // webtechglobal_log - log everything in this table and use the data for multiple purposes
-        $sql_create_table = "CREATE TABLE {$wpdb->webtechglobal_log} (row_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,outcome tinyint(1) unsigned NOT NULL DEFAULT 1,timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,line int(11) unsigned DEFAULT NULL,file varchar(250) DEFAULT NULL,function varchar(250) DEFAULT NULL,sqlresult blob,sqlquery varchar(45) DEFAULT NULL,sqlerror mediumtext,wordpresserror mediumtext,screenshoturl varchar(500) DEFAULT NULL,userscomment mediumtext,page varchar(45) DEFAULT NULL,version varchar(45) DEFAULT NULL,panelid varchar(45) DEFAULT NULL,panelname varchar(45) DEFAULT NULL,tabscreenid varchar(45) DEFAULT NULL,tabscreenname varchar(45) DEFAULT NULL, dump longblob,ipaddress varchar(45) DEFAULT NULL,userid int(11) unsigned DEFAULT NULL,comment mediumtext,type varchar(45) DEFAULT NULL,category varchar(45) DEFAULT NULL,action varchar(45) DEFAULT NULL,priority varchar(45) DEFAULT NULL,triga varchar(45) DEFAULT NULL,PRIMARY KEY (row_id) ) $charset_collate; ";
+        $sql_create_table = "CREATE TABLE {$wpdb->webtechglobal_log} (
+        row_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        service varchar(250) DEFAULT 'trainingtools',
+        outcome tinyint(1) unsigned NOT NULL DEFAULT 1,
+        timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        line int(11) unsigned DEFAULT NULL,
+        file varchar(250) DEFAULT NULL,
+        function varchar(250) DEFAULT NULL,
+        sqlresult blob,sqlquery varchar(45) DEFAULT NULL,
+        sqlerror mediumtext,
+        wordpresserror mediumtext,
+        screenshoturl varchar(500) DEFAULT NULL,
+        userscomment mediumtext,
+        page varchar(45) DEFAULT NULL,
+        version varchar(45) DEFAULT NULL,
+        panelid varchar(45) DEFAULT NULL,
+        panelname varchar(45) DEFAULT NULL,
+        tabscreenid varchar(45) DEFAULT NULL,
+        tabscreenname varchar(45) DEFAULT NULL,
+        dump longblob,ipaddress varchar(45) DEFAULT NULL,
+        userid int(11) unsigned DEFAULT NULL,
+        comment mediumtext,type varchar(45) DEFAULT NULL,
+        category varchar(45) DEFAULT NULL,
+        action varchar(45) DEFAULT NULL,
+        priority varchar(45) DEFAULT NULL,
+        triga varchar(45) DEFAULT NULL,
+        PRIMARY KEY (row_id) ) $charset_collate; ";
+        
         dbDelta( $sql_create_table );   
+        
         // row_id
+        // service - the plugin, theme or web service triggering log entry
         // outcome - set a positive (1) or negative (0) outcome
         // timestamp
         // line - __LINE__
@@ -111,17 +153,43 @@ class WTGTASKSMANAGER_Install {
         // category - any term that suits the section or system
         // action - what was being attempted, if known 
         // priority - low|medium|high (low should be default, medium if the log might help improve the plugin or user experience or minor PHP errors, high for critical errors especially security related
-        // triga - (trigger but that word is taking) not sure we need this       
+        // triga - (trigger but that word is taking) not sure we need this        
+    }
         
-        // webtechglobal_projects
-        $sql_create_table = "CREATE TABLE {$wpdb->webtechglobal_projects} (project_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,projectname varchar(250) DEFAULT NULL,description mediumtext,mainmanager varchar(45) DEFAULT NULL,phase varchar(45) DEFAULT NULL, archived tinyint(1) unsigned NOT NULL DEFAULT '0',PRIMARY KEY (project_id),UNIQUE KEY `projectname_UNIQUE` (`projectname`) ) $charset_collate; ";
-        dbDelta( $sql_create_table );   
+    /**
+    * Create WTG global projects table as used with many plugins.
+    * 
+    * @author Ryan R. Bayne
+    * @package Training Tools
+    * @since 0.0.3
+    * @version 1.0
+    * 
+    * @todo requires unique or consraint on project name
+    */
+    public function webtechglobal_projects() {
+        global $charset_collate,$wpdb;
+        
+        // webtechglobal_projects                                                                                                                                                                                                                                                                                                                                                                                            
+        $sql_create_table = "CREATE TABLE {$wpdb->webtechglobal_projects} (
+        project_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        projectname varchar(250) DEFAULT NULL,
+        description mediumtext,
+        mainmanager varchar(45) DEFAULT NULL,
+        phase varchar(45) DEFAULT NULL, 
+        archived tinyint(1) unsigned NOT NULL DEFAULT '0',
+        PRIMARY KEY (project_id) 
+        ) $charset_collate; ";
+        
+        dbDelta( $sql_create_table );  
+         
         // project_id 
-        // timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        // timestamp
+        // projectname
         // description
         // mainmanager
         // phase    
-        // archived (boolean) - archived projects wont show on most interfaces
+        // archived (boolean) - archived projects wont show on most interfaces        
     }
                                        
     /**

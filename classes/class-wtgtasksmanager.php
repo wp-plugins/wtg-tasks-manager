@@ -83,6 +83,8 @@ class WTGTASKSMANAGER {
             array( 'init',                                    'plugin_admin_register_styles',                   'pluginscreens' ),
             array( 'admin_print_styles',                      'plugin_admin_print_styles',                      'pluginscreens' ),
             array( 'admin_notices',                           'admin_notices',                                  'admin_notices' ),
+            array( 'wp_before_admin_bar_render',              array('admin_toolbars',999),                      'pluginscreens' ),
+
         ),        
                               
         $plugin_filters = array(
@@ -541,26 +543,84 @@ class WTGTASKSMANAGER {
     * When request will display maximum php errors including WordPress errors 
     * 
     * @author Ryan R. Bayne
-    * @package WordPress Plugin WTG Tasks Manager Pro
-    * @since 0.0.1
-    * @version 1.0
+    * @package Training Tools
+    * @version 1.2
     */
     public function debugmode() {
-        global $wtgtasksmanager_debug_mode;
-        if( $wtgtasksmanager_debug_mode){
-            global $wpdb;
-            ini_set( 'display_errors',1);
-            error_reporting(E_ALL);      
-            if(!defined( "WP_DEBUG_DISPLAY") ){define( "WP_DEBUG_DISPLAY", true);}
-            if(!defined( "WP_DEBUG_LOG") ){define( "WP_DEBUG_LOG", true);}
-            //add_action( 'all', create_function( '', 'var_dump( current_filter() );' ) );
-            //define( 'SAVEQUERIES', true );
-            //define( 'SCRIPT_DEBUG', true );
-            $wpdb->show_errors();
-            $wpdb->print_error();
+
+        $debug_status = get_option( 'webtechglobal_displayerrors' );
+        if( !$debug_status ){ return false; }
+
+        // times when this error display is normally not  required
+        if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
+                || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
+                || ( defined( 'DOING_CRON' ) && DOING_CRON )
+                || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+                    return;
         }
+                
+        global $wpdb;
+        ini_set( 'display_errors',1);
+        error_reporting(E_ALL);      
+        if(!defined( "WP_DEBUG_DISPLAY") ){define( "WP_DEBUG_DISPLAY", true);}
+        if(!defined( "WP_DEBUG_LOG") ){define( "WP_DEBUG_LOG", true);}
+        //add_action( 'all', create_function( '', 'var_dump( current_filter() );' ) );
+        //define( 'SAVEQUERIES', true );
+        //define( 'SCRIPT_DEBUG', true );
+        $wpdb->show_errors();
+        $wpdb->print_error();
     }
-      
+    
+    /**
+    * Admin toolbar for developers.
+    * 
+    * @author Ryan R. Bayne
+    * @package Training Tools
+    * @version 1.0
+    */
+    function admin_toolbars() {   
+        // admin only
+        if( user_can( get_current_user_id(), 'activate_plugins' ) ) {
+            self::developer_toolbar();
+        }        
+    }
+    
+    /**
+    * Admin toolbar for developers.
+    * 
+    * @author Ryan R. Bayne
+    * @package Training Tools
+    * @version 1.0
+    */
+    function developer_toolbar() {
+
+        global $wp_admin_bar;
+        
+        $args = array(
+            'id'     => 'webtechglobal-toolbarmenu-developers',
+            'title'  => __( 'Developers', 'text_domain' ),          
+        );
+        $wp_admin_bar->add_menu( $args );
+        
+        // error display switch        
+        $href = wp_nonce_url( admin_url() . 'admin.php?page=' . $_GET['page'] . '&wtgtasksmanageraction=' . 'debugmodeswitch'  . '', 'debugmodeswitch' );
+        $debug_status = get_option( 'webtechglobal_displayerrors' );
+        if($debug_status){
+            $error_display_title = __( 'Hide Errors', 'trainingtools' );
+        } else {
+            $error_display_title = __( 'Display Errors', 'trainingtools' );
+        }
+        
+        $args = array(
+            'id'     => 'webtechglobal-toolbarmenu-errordisplay',
+            'parent' => 'webtechglobal-toolbarmenu-developers',
+            'title'  => $error_display_title,
+            'href'   => $href,            
+        );
+        
+        $wp_admin_bar->add_menu( $args );
+    }
+         
     /**
     * "The wp_insert_post action is called with the same parameters as the save_post action 
     * (the post ID for the post being created), but is only called for new posts and only 

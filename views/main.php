@@ -50,6 +50,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
             
             // array( id, title, callback (usually parent, approach created by Ryan Bayne), context (position), priority, call back arguments array, add to dashboard (boolean), required capability
             array( 'main-welcome', __( 'About WTG Tasks Manager', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'welcome' ), true, 'activate_plugins' ),
+            array( 'main-mailchimp', __( 'Subscribe for Updates', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'mailchimp' ), true, 'activate_plugins' ),
+             
             array( 'main-createproject', __( 'Start New Project', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'startnewproject' ), true, 'activate_plugins' ),
             array( 'main-projectlist', __( 'Project List', 'wtgtasksmanager' ), array( $this, 'parent' ), 'normal','default',array( 'formid' => 'projectlist' ), true, 'activate_plugins' ),
 
@@ -194,6 +196,8 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
     * @package WTG Tasks Manager
     * @since 0.0.1
     * @version 1.0
+    * 
+    * @todo it is too easy to initiate project deletion
     */
     public function postbox_main_projectlist( $data, $box ) {    
         $this->UI->postbox_content_header( $box['title'], $box['args']['formid'], __( 'A list of projects with quick actions.', 'wtgtasksmanager' ), false );        
@@ -627,4 +631,64 @@ class WTGTASKSMANAGER_Main_View extends WTGTASKSMANAGER_View {
         $this->UI->postbox_content_footer();
     }    
 
+    /**
+    * Mailchimp subscribers list form.
+    * 
+    * @author Ryan Bayne
+    * @package CSV 2 POST
+    * @version 1.1
+    */
+    public function postbox_main_mailchimp( $data, $box ) {  
+    ?>
+
+        <!-- Begin MailChimp Signup Form -->
+        <link href="//cdn-images.mailchimp.com/embedcode/classic-081711.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+            #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+            /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+               We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+        </style>
+        <div id="mc_embed_signup">
+        <form action="//webtechglobal.us9.list-manage.com/subscribe/post?u=99272fe1772de14ff2be02fe6&amp;id=018f5572ec" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+            <div id="mc_embed_signup_scroll">
+            <h2>Please Subscribe to WTG Mailing List</h2>
+            <h3>Mail will not be frequent from this subscribers list and information sent to you
+            may be critical i.e. bug finds. I have no intention of
+            generating traffic from nusiance email campaigns.</h3>
+        <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+        <div class="mc-field-group">
+            <label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+        </label>
+            <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+        </div>
+        <div class="mc-field-group">
+            <label for="mce-FNAME">First Name </label>
+            <input type="text" value="" name="FNAME" class="" id="mce-FNAME">
+        </div>
+        <div class="mc-field-group">
+            <label for="mce-LNAME">Last Name </label>
+            <input type="text" value="" name="LNAME" class="" id="mce-LNAME">
+        </div>
+        <div class="mc-field-group input-group">
+            <strong>Email Format </strong>
+            <ul><li><input type="radio" value="html" name="EMAILTYPE" id="mce-EMAILTYPE-0"><label for="mce-EMAILTYPE-0">html</label></li>
+        <li><input type="radio" value="text" name="EMAILTYPE" id="mce-EMAILTYPE-1"><label for="mce-EMAILTYPE-1">text</label></li>
+        </ul>
+        </div>
+        <p>Powered by <a href="http://eepurl.com/2W_2n" title="MailChimp - email marketing made easy and fun">MailChimp</a></p>
+            <div id="mce-responses" class="clear">
+                <div class="response" id="mce-error-response" style="display:none"></div>
+                <div class="response" id="mce-success-response" style="display:none"></div>
+            </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+            <div style="position: absolute; left: -5000px;"><input type="text" name="b_99272fe1772de14ff2be02fe6_018f5572ec" tabindex="-1" value=""></div>
+            <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+            </div>
+        </form>
+        </div>
+
+        <!--End mc_embed_signup-->
+
+    <?php   
+
+    }    
 }?>

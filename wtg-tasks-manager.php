@@ -1,12 +1,12 @@
 <?php         
 /*
 Plugin Name: WTG Tasks Manager Beta
-Version: 0.0.36
+Version: 0.0.37
 Plugin URI: http://www.webtechglobal.co.uk/wtg-tasks-manager-wordpress
 Description: Tasks management for multiple projects or use as an advanced To-Do list.
 Author: WebTechGlobal
 Author URI: http://www.webtechglobal.co.uk/
-Last Updated: March 2015
+Last Updated: September 2015
 Text Domain: wtgtasksmanager
 Domain Path: /languages
 
@@ -38,22 +38,8 @@ if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) // Login scr
 }
               
 // package variables
-$wtgtasksmanager_currentversion = '0.0.36';# to be removed, version is now in the WTGTASKSMANAGER() class 
-$wtgtasksmanager_debug_mode = false;# to be phased out, going to use environment variables (both WP and php.ini instead)
-
-// go into dev mode if on test installation (if directory contains the string you will see errors and other fun stuff for geeks)               
-if( strstr( ABSPATH, 'projecttasksmanager' ) ){
-    $wtgtasksmanager_debug_mode = true;     
-}               
-
-// avoid error output here and there for the sake of performance...              
-if ( ( 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) )
-        || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
-        || ( defined( 'DOING_CRON' ) && DOING_CRON )
-        || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-    $wtgtasksmanager_debug_mode = false;
-}                               
-
+$wtgtasksmanager_currentversion = '0.0.37';# to be removed, version is now in the WTGTASKSMANAGER() class 
+                                       
 // define constants, feel free to add some of your own...                              
 if(!defined( "WTGTASKSMANAGER_NAME") ){define( "WTGTASKSMANAGER_NAME", 'WTG Tasks Manager Beta' );} 
 if(!defined( "WTGTASKSMANAGER__FILE__") ){define( "WTGTASKSMANAGER__FILE__", __FILE__);}

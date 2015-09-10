@@ -893,6 +893,34 @@ class WTGTASKSMANAGER_Requests {
     public function wtgtasksmainoptions() {
         WTGTASKSMANAGER::task_meta( $_POST['post_ID'], $_POST['projectid'], $_POST['priority'], $_POST['requiredtasks'], $_POST['freelanceroffer'], $_POST['requiredcapability'], false );
     }
+
+    /**
+    * Debug mode switch.
+    * 
+    * @author Ryan R. Bayne
+    * @package WebTechGlobal WordPress Plugins
+    * @version 1.0
+    */
+    public function debugmodeswitch() {
+        $debug_status = get_option( 'webtechglobal_displayerrors' );
+        if($debug_status){
+            update_option( 'webtechglobal_displayerrors',false );
+            $new = 'disabled';
             
+            $this->UI->create_notice( __( "Error display mode has been $new." ), 'success', 'Tiny', __( 'Debug Mode Switch', 'wtgtasksmanager' ) );               
+                        
+            wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=' . $_GET['page'] );
+            exit;
+        } else {
+            update_option( 'webtechglobal_displayerrors',true );
+            $new = 'enabled';
+            
+            $this->UI->create_notice( __( "Error display mode has been $new." ), 'success', 'Tiny', __( 'Debug Mode Switch', 'wtgtasksmanager' ) );               
+            
+            wp_redirect( get_bloginfo( 'url' ) . '/wp-admin/admin.php?page=' . $_GET['page'] );
+            exit;
+        }
+    }
+               
 }// WTGTASKSMANAGER_Requests       
 ?>
